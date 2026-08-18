@@ -1,6 +1,11 @@
 from django.urls import path
 
 from .views import (
+    CultivationCreateView,
+    CultivationDeleteView,
+    CultivationDetailView,
+    CultivationListView,
+    CultivationUpdateView,
     FieldCreateView,
     FieldDeleteView,
     FieldDetailView,
@@ -24,4 +29,21 @@ urlpatterns = [
     path("fields/<int:pk>/", FieldDetailView.as_view(), name="field_detail"),
     path("fields/<int:pk>/edit/", FieldUpdateView.as_view(), name="field_update"),
     path("fields/<int:pk>/delete/", FieldDeleteView.as_view(), name="field_delete"),
+    path("cultivations/", CultivationListView.as_view(), name="cultivation_list"),
+    path("cultivations/add/", CultivationCreateView.as_view(), name="cultivation_create"),
+    path(
+        "cultivations/<int:pk>/",
+        CultivationDetailView.as_view(),
+        name="cultivation_detail",
+    ),
+    path(
+        "cultivations/<int:pk>/edit/",
+        CultivationUpdateView.as_view(),
+        name="cultivation_update",
+    ),
+    path(
+        "cultivations/<int:pk>/delete/",
+        CultivationDeleteView.as_view(),
+        name="cultivation_delete",
+    ),
 ]
