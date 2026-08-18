@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ field.name }} – Farmer App{% endblock %}
+
+{% block content %}
+    <article>
+        <h1>{{ field.name }}</h1>
+        <dl>
+            <dt>Powierzchnia</dt>
+            <dd>{{ field.area_ha }} ha</dd>
+            <dt>Rodzaj gleby</dt>
+            <dd>{{ field.get_soil_type_display }}</dd>
+            <dt>Sposób lokalizacji</dt>
+            <dd>{{ field.get_location_method_display }}</dd>
+            <dt>Identyfikator działki</dt>
+            <dd>{{ field.parcel_identifier|default:"—" }}</dd>
+            <dt>Adres</dt>
+            <dd>{{ field.address|default:"—" }}</dd>
+            <dt>Szerokość geograficzna</dt>
+            <dd>{{ field.latitude|default_if_none:"—" }}</dd>
+            <dt>Długość geograficzna</dt>
+            <dd>{{ field.longitude|default_if_none:"—" }}</dd>
+            <dt>Opis</dt>
+            <dd>{{ field.description|default:"—" }}</dd>
+        </dl>
+        <p>
+            <a href="{% url 'core:field_list' %}">Wróć do listy</a>
+            <a href="{% url 'core:field_update' field.pk %}">Edytuj</a>
+            <a href="{% url 'core:field_delete' field.pk %}">Usuń</a>
+        </p>
+    </article>
+{% endblock %}

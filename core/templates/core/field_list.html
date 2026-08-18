@@ -1,0 +1,66 @@
+{% extends "core/base.html" %}
+
+{% block title %}Moje pola – Farmer App{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Moje pola</h1>
+        <a href="{% url 'core:field_create' %}">Dodaj pole</a>
+    </header>
+
+    <form method="get" action="{% url 'core:field_list' %}">
+        <p>
+            <label for="id_q">Szukaj</label>
+            <input id="id_q" type="search" name="q" value="{{ query }}"
+                   placeholder="Nazwa, działka lub adres">
+        </p>
+        <p>
+            <label for="id_soil_type">Rodzaj gleby</label>
+            <select id="id_soil_type" name="soil_type">
+                <option value="">Wszystkie</option>
+                {% for value, label in soil_type_choices %}
+                    <option value="{{ value }}"{% if selected_soil_type == value %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="id_location_method">Sposób lokalizacji</label>
+            <select id="id_location_method" name="location_method">
+                <option value="">Wszystkie</option>
+                {% for value, label in location_method_choices %}
+                    <option value="{{ value }}"{% if selected_location_method == value %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <button type="submit">Filtruj</button>
+        <a href="{% url 'core:field_list' %}">Wyczyść filtry</a>
+    </form>
+
+    {% if fields %}
+        <ul>
+            {% for field in fields %}
+                <li>
+                    <strong>{{ field.name }}</strong> – {{ field.area_ha }} ha,
+                    {{ field.get_soil_type_display }}
+                    <a href="{% url 'core:field_detail' field.pk %}">Szczegóły</a>
+                    <a href="{% url 'core:field_update' field.pk %}">Edytuj</a>
+                    <a href="{% url 'core:field_delete' field.pk %}">Usuń</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if is_paginated %}
+            <nav aria-label="Paginacja pól">
+                {% if page_obj.has_previous %}
+                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Poprzednia</a>
+                {% endif %}
+                <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Następna</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <p>Nie znaleziono pól spełniających podane kryteria.</p>
+    {% endif %}
+{% endblock %}
