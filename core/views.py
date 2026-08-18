@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import LogoutView as DjangoLogoutView
@@ -22,6 +24,7 @@ from .forms import (
     FieldForm,
     FieldWorkForm,
     HarvestForm,
+    ProfileEditForm,
     RegistrationForm,
     SprayingForm,
 )
@@ -85,6 +88,39 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["error_report_count"] = self.request.user.error_reports.count()
         return context
+
+
+class ProfileEditView(LoginRequiredMixin, FormView):
+    template_name = "core/profile_edit.html"
+    form_class = ProfileEditForm
+    success_url = reverse_lazy("core:profile")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Dane profilu zostały zaktualizowane.")
+        return super().form_valid(form)
+
+
+class PasswordChangeView(LoginRequiredMixin, FormView):
+    template_name = "core/password_change.html"
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy("core:profile")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        user = form.save()
+        update_session_auth_hash(self.request, user)
+        messages.success(self.request, "Hasło zostało zmienione.")
+        return super().form_valid(form)
 
 
 class FieldOwnerQuerysetMixin(LoginRequiredMixin):
