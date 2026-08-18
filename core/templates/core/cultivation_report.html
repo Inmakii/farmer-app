@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+
+{% block title %}Raport uprawy – Farmer App{% endblock %}
+
+{% block content %}
+    <h1>Raport: {{ cultivation.crop.name }} – {{ cultivation.field.name }} ({{ cultivation.season_year }})</h1>
+    <p><a href="{% url 'core:report_dashboard' %}">Wszystkie raporty</a> <a href="{% url 'core:field_report' cultivation.field.pk %}">Raport pola</a> <a href="{% url 'core:cultivation_detail' cultivation.pk %}">Szczegóły uprawy</a></p>
+    <section><h2>Podsumowanie</h2><dl><dt>Koszty prac</dt><dd>{{ report.work_costs|floatformat:2 }} zł</dd><dt>Koszty oprysków</dt><dd>{{ report.spraying_costs|floatformat:2 }} zł</dd><dt>Koszty zbiorów</dt><dd>{{ report.harvest_costs|floatformat:2 }} zł</dd><dt>Koszty całkowite</dt><dd><strong>{{ report.total_costs|floatformat:2 }} zł</strong></dd><dt>Przychód</dt><dd><strong>{{ report.total_revenue|floatformat:2 }} zł</strong></dd><dt>Zysk/strata</dt><dd><strong>{{ report.profit|floatformat:2 }} zł</strong></dd></dl></section>
+    <section><h2>Prace</h2>{% if report.works %}<ul>{% for work in report.works %}<li>{{ work.work_date|date:"d.m.Y" }} – {{ work.get_work_type_display }} – {{ work.cost|floatformat:2 }} zł</li>{% endfor %}</ul>{% else %}<p>Brak prac.</p>{% endif %}</section>
+    <section><h2>Opryski</h2>{% if report.sprayings %}<ul>{% for spraying in report.sprayings %}<li>{{ spraying.spraying_date|date:"d.m.Y" }} – {{ spraying.product_name }} – {{ spraying.cost|floatformat:2 }} zł</li>{% endfor %}</ul>{% else %}<p>Brak oprysków.</p>{% endif %}</section>
+    <section><h2>Zbiory</h2>{% if report.harvests %}<ul>{% for harvest in report.harvests %}<li>{{ harvest.harvest_date|date:"d.m.Y" }} – {{ harvest.quantity }} {{ harvest.get_unit_display }} – przychód {{ harvest.revenue|floatformat:2 }} zł – koszt {{ harvest.harvest_cost|floatformat:2 }} zł</li>{% endfor %}</ul>{% else %}<p>Brak zbiorów.</p>{% endif %}</section>
+{% endblock %}
