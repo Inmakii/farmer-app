@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block title %}Szczegóły oprysku – Farmer App{% endblock %}
+
+{% block content %}
+    <article>
+        <h1>{{ spraying.product_name }}</h1>
+        <dl>
+            <dt>Data oprysku</dt><dd>{{ spraying.spraying_date|date:"d.m.Y" }}</dd>
+            <dt>Pole</dt><dd>{{ spraying.cultivation.field.name }}</dd>
+            <dt>Uprawa</dt><dd>{{ spraying.cultivation.crop.name }}</dd>
+            <dt>Sezon</dt><dd>{{ spraying.cultivation.season_year }}</dd>
+            <dt>Ilość</dt><dd>{{ spraying.quantity }} {{ spraying.get_unit_display }}</dd>
+            <dt>Koszt</dt><dd>{{ spraying.cost }} zł</dd>
+            <dt>Opis</dt><dd>{{ spraying.description|default:"—" }}</dd>
+        </dl>
+        <p><a href="{% url 'core:spraying_list' %}">Wróć do listy</a> <a href="{% url 'core:cultivation_detail' spraying.cultivation.pk %}">Zobacz uprawę</a> <a href="{% url 'core:spraying_update' spraying.pk %}">Edytuj</a> <a href="{% url 'core:spraying_delete' spraying.pk %}">Usuń</a></p>
+    </article>
+{% endblock %}

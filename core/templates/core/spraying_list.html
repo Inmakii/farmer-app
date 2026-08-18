@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+
+{% block title %}Opryski – Farmer App{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Opryski</h1>
+        <a href="{% url 'core:spraying_create' %}">Dodaj oprysk</a>
+    </header>
+    <form method="get" action="{% url 'core:spraying_list' %}">
+        <p><label for="id_q">Szukaj</label> <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Preparat, opis, pole lub uprawa"></p>
+        <p><label for="id_field">Pole</label> <select id="id_field" name="field"><option value="">Wszystkie</option>{% for field in user_fields %}<option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>{% endfor %}</select></p>
+        <p><label for="id_cultivation">Uprawa</label> <select id="id_cultivation" name="cultivation"><option value="">Wszystkie</option>{% for cultivation in user_cultivations %}<option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>{% endfor %}</select></p>
+        <p><label for="id_unit">Jednostka</label> <select id="id_unit" name="unit"><option value="">Wszystkie</option>{% for value, label in unit_choices %}<option value="{{ value }}"{% if selected_unit == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></p>
+        <p><label for="id_date_from">Od</label> <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}"> <label for="id_date_to">Do</label> <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}"></p>
+        <button type="submit">Filtruj</button> <a href="{% url 'core:spraying_list' %}">Wyczyść filtry</a>
+    </form>
+    {% if sprayings %}
+        <ul>{% for spraying in sprayings %}<li>{{ spraying.spraying_date|date:"d.m.Y" }} – <strong>{{ spraying.product_name }}</strong> – {{ spraying.quantity }} {{ spraying.get_unit_display }} – {{ spraying.cultivation.field.name }} – {{ spraying.cultivation.crop.name }} – {{ spraying.cultivation.season_year }} – {{ spraying.cost }} zł <a href="{% url 'core:spraying_detail' spraying.pk %}">Szczegóły</a> <a href="{% url 'core:spraying_update' spraying.pk %}">Edytuj</a> <a href="{% url 'core:spraying_delete' spraying.pk %}">Usuń</a></li>{% endfor %}</ul>
+        {% if is_paginated %}<nav aria-label="Paginacja oprysków">{% if page_obj.has_previous %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Poprzednia</a>{% endif %} <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span> {% if page_obj.has_next %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Następna</a>{% endif %}</nav>{% endif %}
+    {% else %}
+        <p>Nie znaleziono oprysków spełniających podane kryteria.</p>
+    {% endif %}
+{% endblock %}

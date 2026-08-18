@@ -20,6 +20,11 @@ from .views import (
     LogoutView,
     ProfileView,
     RegisterView,
+    SprayingCreateView,
+    SprayingDeleteView,
+    SprayingDetailView,
+    SprayingListView,
+    SprayingUpdateView,
 )
 
 app_name = "core"
@@ -56,4 +61,9 @@ urlpatterns = [
     path("works/<int:pk>/", FieldWorkDetailView.as_view(), name="fieldwork_detail"),
     path("works/<int:pk>/edit/", FieldWorkUpdateView.as_view(), name="fieldwork_update"),
     path("works/<int:pk>/delete/", FieldWorkDeleteView.as_view(), name="fieldwork_delete"),
+    path("sprayings/", SprayingListView.as_view(), name="spraying_list"),
+    path("sprayings/add/", SprayingCreateView.as_view(), name="spraying_create"),
+    path("sprayings/<int:pk>/", SprayingDetailView.as_view(), name="spraying_detail"),
+    path("sprayings/<int:pk>/edit/", SprayingUpdateView.as_view(), name="spraying_update"),
+    path("sprayings/<int:pk>/delete/", SprayingDeleteView.as_view(), name="spraying_delete"),
 ]
