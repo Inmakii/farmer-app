@@ -1,81 +1,93 @@
 # Farmer App
 
-Farmer App to studencka aplikacja internetowa do zarządzania gospodarstwem rolnym. Projekt umożliwia ewidencjonowanie pól, upraw sezonowych, wykonanych prac, oprysków, zbiorów, kosztów i przychodów. Backend został przygotowany w Django i może korzystać z MySQL albo z lokalnej bazy SQLite.
+Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządzających gospodarstwami rolnymi. Pozwala prowadzić ewidencję pól i sezonowych upraw, zapisywać wykonane zabiegi oraz zbiory, a następnie obliczać koszty, przychody i wynik finansowy. Administrator obsługuje słownik upraw i statusy zgłoszeń przez panel Django Admin.
 
-## Główne funkcje
+## Funkcje
 
-- zarządzanie polami przypisanymi do użytkowników;
-- katalog rodzajów upraw;
-- planowanie i śledzenie upraw w sezonach;
-- rejestrowanie prac polowych i ich kosztów;
-- ewidencja oprysków, preparatów i zużytych ilości;
-- ewidencja zbiorów, kosztów i przychodów;
-- obliczanie wyniku finansowego zbioru;
-- obsługa zgłoszeń błędów;
-- panel administracyjny Django;
-- idempotentna komenda tworząca dane demonstracyjne.
+- rejestracja, logowanie i bezpieczne wylogowanie przez POST;
+- profil użytkownika, edycja danych i zmiana hasła z zachowaniem sesji;
+- CRUD własnych pól, upraw sezonowych, prac, oprysków i zbiorów;
+- wyszukiwanie, filtry oraz paginacja list;
+- raport gospodarstwa, pola i uprawy z kosztami, przychodami i zyskiem;
+- zgłaszanie błędów i podgląd własnych zgłoszeń;
+- administracja rodzajami upraw i statusami zgłoszeń;
+- idempotentna komenda przygotowująca dane demonstracyjne;
+- izolacja danych każdego właściciela oraz testy bezpieczeństwa.
 
 ## Technologie
 
 - Python 3.14.6;
 - Django 6.0.7;
 - MySQL Server 8.0.46 i MySQL Workbench;
-- SQLite jako opcjonalna baza lokalna i testowa;
+- SQLite jako opcjonalna baza lokalna i baza testowa;
 - mysqlclient 2.2.8;
 - python-dotenv 1.2.3.
 
-Dokładne wersje zależności znajdują się w [`requirements.txt`](requirements.txt).
+Dokładne wersje zależności są zapisane w [`requirements.txt`](requirements.txt).
 
 ## Struktura repozytorium
 
 ```text
 farmer-app-main/
-├── config/                    # ustawienia i konfiguracja projektu Django
-├── core/                      # modele, panel admin, testy i logika domenowa
-│   ├── management/commands/   # komendy zarządzające, w tym seed_demo_data
-│   └── migrations/            # migracje schematu aplikacji core
+├── config/                       # ustawienia projektu i główne trasy
+├── core/
+│   ├── management/commands/      # seed_demo_data
+│   ├── migrations/               # migracje aplikacji
+│   ├── services/                 # agregacje raportów finansowych
+│   ├── templates/core/           # proste szablony Django
+│   ├── forms.py, views.py        # formularze i widoki
+│   └── test_*.py                 # testy funkcjonalne i bezpieczeństwa
 ├── docs/
-│   ├── diagrams/              # diagram ERD i model MySQL Workbench
+│   ├── database/                 # eksport schematu SQL
+│   ├── diagrams/                 # ERD i model Workbench
 │   └── dokumentacja_bazy_danych.md
-├── .env.example               # przykładowe zmienne środowiskowe
+├── .env.example
 ├── manage.py
-├── requirements.txt
-└── README.md
+└── requirements.txt
 ```
 
-## Dokumentacja bazy danych
+## Dokumentacja i diagramy
 
-Kompletna dokumentacja tabel, relacji, walidacji, konfiguracji i kopii zapasowych znajduje się w pliku [docs/dokumentacja_bazy_danych.md](docs/dokumentacja_bazy_danych.md).
-
-### Diagram ERD
+- [Dokumentacja bazy danych](docs/dokumentacja_bazy_danych.md)
+- [Diagram ERD](docs/diagrams/erd_farmer_app.png)
+- [Model MySQL Workbench](docs/diagrams/farmer_db_model.mwb)
+- [Eksport schematu SQL](docs/database/farmer_db_schema.sql)
 
 ![Diagram ERD](docs/diagrams/erd_farmer_app.png)
 
-## Instalacja na Windows
-
-Wymagany jest Python 3.14.6. W PowerShell uruchom:
+## Instalacja na Windows PowerShell
 
 ```powershell
+python --version
 python -m venv .venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-```
-
-Jeżeli polityka PowerShell blokuje aktywację skryptu, można uruchamiać interpreter bezpośrednio jako `.\.venv\Scripts\python.exe`.
-
-## Konfiguracja środowiska
-
-Skopiuj plik przykładowy:
-
-```powershell
 Copy-Item .env.example .env
 ```
 
-Uzupełnij lokalny `.env`. Nie zapisuj w repozytorium prawdziwych haseł ani kluczy:
+Jeśli nie chcesz aktywować środowiska, używaj `.\.venv\Scripts\python.exe` zamiast `python`. Lokalny `.env` trzeba uzupełnić przed uruchomieniem Django; plik jest ignorowany przez Git.
+
+## Konfiguracja `.env`
+
+W obu wariantach ustaw własny, długi i losowy `DJANGO_SECRET_KEY`. Nie kopiuj przykładowych haseł do środowiska produkcyjnego.
+
+SQLite:
 
 ```dotenv
-DJANGO_SECRET_KEY=change-me
+DJANGO_SECRET_KEY=change-me-to-a-long-random-value
 DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
+DB_ENGINE=sqlite
+```
+
+MySQL:
+
+```dotenv
+DJANGO_SECRET_KEY=change-me-to-a-long-random-value
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
 DB_ENGINE=mysql
 DB_NAME=farmer_db
 DB_USER=farmer_app_user
@@ -84,51 +96,80 @@ DB_HOST=localhost
 DB_PORT=3306
 ```
 
-Plik `.env` jest ignorowany przez Git. Jeśli `DB_ENGINE` ma inną wartość niż `mysql` albo nie jest ustawiony, projekt używa SQLite.
+`DJANGO_DEBUG=False` należy stosować poza środowiskiem deweloperskim. `DJANGO_ALLOWED_HOSTS` jest listą nazw oddzielonych przecinkami. Gdy `DB_ENGINE` nie ma wartości `mysql`, aplikacja korzysta z SQLite.
 
-## Migracje i uruchomienie
+## Przygotowanie MySQL
 
-Po skonfigurowaniu docelowej bazy wykonaj:
+Poniższe polecenia wykonaj jako administrator MySQL, zastępując przykładowe hasło:
+
+```sql
+CREATE DATABASE farmer_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'farmer_app_user'@'localhost' IDENTIFIED BY 'change-me-strong-password';
+GRANT ALL PRIVILEGES ON farmer_db.* TO 'farmer_app_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Aplikacja powinna używać dedykowanego konta `farmer_app_user`, a nie `root`.
+
+## Migracje i pierwsze uruchomienie
 
 ```powershell
+python manage.py check
 python manage.py migrate
 python manage.py createsuperuser
-python manage.py check
 python manage.py runserver --noreload
 ```
 
-Aplikacja będzie domyślnie dostępna pod adresem `http://127.0.0.1:8000/`, a panel administracyjny pod `http://127.0.0.1:8000/admin/`.
-
-Przydatne polecenia migracji:
+Aplikacja działa pod `http://127.0.0.1:8000/`, a panel administratora pod `http://127.0.0.1:8000/admin/`.
 
 ```powershell
-python manage.py makemigrations
+python manage.py makemigrations --check --dry-run
 python manage.py showmigrations
 python manage.py sqlmigrate core 0001
 ```
 
 ## Dane demonstracyjne
 
-Najpierw utwórz użytkownika, np. przez `createsuperuser`, a następnie uruchom:
+Komenda wymaga istniejącego użytkownika i nie tworzy konta ani hasła:
 
 ```powershell
 python manage.py seed_demo_data --username admin
 ```
 
-Komenda tworzy przykładowe rodzaje upraw, dwa pola, uprawy na sezon 2026, prace, opryski i zbiory. Można ją uruchamiać wielokrotnie dla tego samego użytkownika — dane zostaną zaktualizowane bez tworzenia duplikatów. Komenda nie tworzy użytkownika ani hasła.
+Tworzy lub aktualizuje rodzaje upraw, dwa pola, uprawy sezonu 2026, prace, opryski i zbiory. Ponowne uruchomienie dla tego samego użytkownika nie duplikuje danych.
 
-## Testy
-
-Aby wykonać kontrolę i testy na SQLite bez zmiany lokalnego `.env` ani danych MySQL, ustaw silnik tylko w bieżącej sesji PowerShell:
+## Testy na SQLite
 
 ```powershell
 $env:DB_ENGINE = "sqlite"
 python manage.py check
+python manage.py makemigrations --check --dry-run
 python manage.py test
 Remove-Item Env:DB_ENGINE
 ```
 
-Testy obejmują walidację modeli, ograniczenia danych, obliczanie zysku oraz poprawność i idempotencję komendy `seed_demo_data`.
+Django tworzy oddzielną bazę testową. Przy testach bezpośrednio na MySQL konto bazy musi zwykle mieć uprawnienie `CREATE`, ponieważ Django tworzy tymczasową bazę z prefiksem `test_`. Zalecanym wariantem lokalnym pozostaje SQLite.
+
+## Workflow Git
+
+```powershell
+git switch -c feature/nazwa-zadania
+git status
+git add <sprawdzone-pliki>
+git commit -m "Krótki opis zmiany"
+git push -u origin feature/nazwa-zadania
+```
+
+Przed scaleniem uruchom pełne testy, `git diff --check` i sprawdź konflikty. `.env`, `db.sqlite3`, `.venv` i dane uwierzytelniające nie mogą trafić do commita. Nazwa gałęzi bazowej i sposób tworzenia pull requestu powinny być zgodne z zasadami zespołu.
+
+## Bezpieczeństwo
+
+- dane gospodarstwa są filtrowane według zalogowanego właściciela;
+- cudze obiekty zwracają 404, a relacje w formularzach mają ograniczone querysety;
+- formularze POST korzystają z CSRF, wylogowanie i właściwe usuwanie nie odbywają się przez GET;
+- hasła są walidowane i hashowane przez Django, a nie przechowywane jawnie;
+- `SECRET_KEY`, ustawienia MySQL, `DEBUG` i `ALLOWED_HOSTS` pochodzą ze środowiska;
+- na produkcji należy uruchomić także `python manage.py check --deploy` i skonfigurować HTTPS.
 
 ## Autorzy
 

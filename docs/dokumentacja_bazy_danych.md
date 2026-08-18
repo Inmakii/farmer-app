@@ -210,13 +210,19 @@ Zastosowane reguły:
 
 MySQL 8.0.46 egzekwuje nazwane ograniczenia CHECK utworzone przez migrację. Klucze obce i ograniczenia UNIQUE są także wykonywane bezpośrednio przez silnik bazy.
 
+### Indeksy
+
+Migracja tworzy indeksy wynikające z kluczy głównych, kluczy obcych i ograniczeń unikalności. Obejmuje to m.in. unikalny indeks `core_crop.name`, unikalną parę (`owner_id`, `name`) pola oraz unikalną trójkę (`field_id`, `crop_id`, `season_year`) uprawy. Django/MySQL indeksuje także kolumny ForeignKey: `owner_id`, `user_id`, `field_id`, `crop_id` i `cultivation_id`. Modele nie deklarują dodatkowych indeksów przez `Meta.indexes`.
+
 ## 7. Bezpieczeństwo
 
 - Django przechowuje hasła jako bezpieczne skróty utworzone przez skonfigurowane mechanizmy haszowania, a nie jako tekst jawny.
 - Aplikacja powinna łączyć się z MySQL jako dedykowany użytkownik `farmer_app_user`, nie jako administracyjne konto `root`.
-- `SECRET_KEY`, tryb debugowania i dane dostępowe do MySQL są pobierane ze zmiennych środowiskowych ładowanych przez `python-dotenv`.
+- `SECRET_KEY`, tryb debugowania, `ALLOWED_HOSTS` i dane dostępowe do MySQL są pobierane ze zmiennych środowiskowych ładowanych przez `python-dotenv`. Brak `DJANGO_SECRET_KEY` zatrzymuje uruchomienie czytelnym błędem konfiguracyjnym.
 - Lokalny `.env` jest ignorowany przez Git. Repozytorium zawiera wyłącznie `.env.example` z wartościami przykładowymi.
-- Relacja `Field.owner` pozwala przypisywać dane do właściciela. Przyszłe widoki/API muszą wymuszać autoryzację i filtrować rekordy po zalogowanym użytkowniku (np. `owner=request.user`); obecna warstwa modeli nie zapewnia automatycznie uprawnień obiektowych.
+- Prywatne widoki wymagają logowania. Querysety pól, upraw, prac, oprysków, zbiorów, raportów i zgłoszeń są ograniczone do `request.user`; próba otwarcia cudzego obiektu zwraca 404. Querysety relacji w formularzach również obejmują tylko dane właściciela.
+- Formularze modyfikujące dane używają ochrony CSRF. Wylogowanie i właściwe usuwanie rekordów następuje przez POST; GET wyświetla co najwyżej stronę potwierdzenia usunięcia.
+- Rejestracja i zmiana hasła korzystają z walidatorów Django, a po zmianie hasła sesja jest bezpiecznie aktualizowana.
 - W repozytorium nie należy umieszczać prawdziwych haseł, kluczy ani kopii produkcyjnego `.env`.
 - W środowisku produkcyjnym `DJANGO_DEBUG` powinno mieć wartość `False`, a `DJANGO_SECRET_KEY` powinien być długą, losową wartością.
 
@@ -256,6 +262,7 @@ Następnie należy uzupełnić lokalny `.env` właściwymi wartościami:
 ```dotenv
 DJANGO_SECRET_KEY=change-me
 DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
 DB_ENGINE=mysql
 DB_NAME=farmer_db
 DB_USER=farmer_app_user
@@ -275,7 +282,7 @@ python manage.py runserver --noreload
 
 `seed_demo_data` wymaga, aby użytkownik wskazany przez `--username` już istniał. Komenda nie tworzy użytkownika ani hasła.
 
-Jeśli `DB_ENGINE` nie ma wartości `mysql`, ustawienia Django wybierają lokalną bazę SQLite `db.sqlite3`.
+Jeśli `DB_ENGINE` nie ma wartości `mysql`, ustawienia Django wybierają lokalną bazę SQLite `db.sqlite3`. `DJANGO_ALLOWED_HOSTS` zawiera nazwy hostów oddzielone przecinkami. W środowisku innym niż deweloperskie należy ustawić `DJANGO_DEBUG=False`, właściwe hosty oraz unikalny, losowy sekret.
 
 ## 10. Migracje
 
@@ -307,15 +314,9 @@ Komenda korzysta z `get_or_create` i `update_or_create`, dlatego ponowne uruchom
 
 ## 12. Testowanie
 
-Obecne testy modeli sprawdzają:
+Zestaw testów obejmuje modele i constrainty, rejestrację i uwierzytelnianie, profil i zmianę hasła, CRUD pól, upraw, prac, oprysków i zbiorów, raporty finansowe, zgłoszenia błędów oraz komendę demonstracyjną. Testy bezpieczeństwa sprawdzają wymaganie logowania, CSRF, odpowiedzi 404 dla cudzych danych, ograniczenie relacji przesyłanych przez POST, brak usuwania przez GET oraz izolację pełnego scenariusza gospodarstwa pomiędzy dwoma użytkownikami.
 
-- utworzenie poprawnego pola;
-- odrzucenie zerowej powierzchni;
-- unikalność nazwy pola dla jednego właściciela;
-- odrzucenie ujemnego kosztu pracy;
-- obliczanie właściwości `Harvest.profit`.
-
-Testy komendy demonstracyjnej sprawdzają poprawne wartości i liczby tworzonych rekordów, brak duplikatów po dwukrotnym uruchomieniu oraz błąd dla nieistniejącego użytkownika.
+Testy `seed_demo_data` sprawdzają poprawne wartości i liczby rekordów, brak duplikatów po dwukrotnym uruchomieniu oraz błąd dla nieistniejącego użytkownika.
 
 Aby uruchomić testy na SQLite bez modyfikowania `.env` i bez dotykania danych MySQL, w bieżącej sesji PowerShell należy jawnie nadpisać silnik:
 
@@ -342,14 +343,14 @@ Przywracanie wykonuje się przez **Server → Data Import/Restore**, wskazując 
 
 ## 14. Raporty
 
-Raporty nie są osobną tabelą. Będą wyliczane na podstawie rekordów prac, oprysków i zbiorów przypisanych do upraw:
+Raporty nie są osobną tabelą. Serwis `core/services/reports.py` wylicza je przez Django ORM na podstawie rekordów prac, oprysków i zbiorów przypisanych do upraw:
 
 ```text
 Koszty całkowite = koszty prac + koszty oprysków + koszty zbiorów
 Zysk = przychody ze zbiorów - koszty całkowite
 ```
 
-Właściwość `Harvest.profit` oblicza wyłącznie zysk pojedynczego zbioru jako `revenue - harvest_cost`. Pełny raport gospodarstwa musi dodatkowo uwzględnić koszty prac i oprysków.
+Właściwość `Harvest.profit` oblicza wyłącznie wynik pojedynczego zbioru jako `revenue - harvest_cost`. Raport gospodarstwa, pola lub uprawy uwzględnia koszty prac i oprysków. Każda kategoria jest agregowana osobnym zapytaniem, co zapobiega zwielokrotnianiu sum przez złączenia 1:N. Ilości w różnych jednostkach (`KG`, `T`, `L` itd.) nie są ze sobą sumowane.
 
 ## 15. Skalowalność
 
