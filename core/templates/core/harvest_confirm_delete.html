@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+
+{% block title %}Usuń zbiór – Farmer App{% endblock %}
+
+{% block content %}
+    <h1>Usuń zbiór</h1>
+    <p>Czy na pewno chcesz usunąć zbiór z dnia {{ harvest.harvest_date|date:"d.m.Y" }}?</p>
+    <form method="post">{% csrf_token %}<button type="submit">Tak, usuń zbiór</button> <a href="{% url 'core:harvest_detail' harvest.pk %}">Anuluj</a></form>
+{% endblock %}

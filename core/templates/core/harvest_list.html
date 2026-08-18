@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block title %}Zbiory – Farmer App{% endblock %}
+
+{% block content %}
+    <header><h1>Zbiory</h1><a href="{% url 'core:harvest_create' %}">Dodaj zbiór</a></header>
+    <form method="get" action="{% url 'core:harvest_list' %}">
+        <p><label for="id_q">Szukaj</label> <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Notatki, pole lub uprawa"></p>
+        <p><label for="id_field">Pole</label> <select id="id_field" name="field"><option value="">Wszystkie</option>{% for field in user_fields %}<option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>{% endfor %}</select></p>
+        <p><label for="id_cultivation">Uprawa</label> <select id="id_cultivation" name="cultivation"><option value="">Wszystkie</option>{% for cultivation in user_cultivations %}<option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>{% endfor %}</select></p>
+        <p><label for="id_unit">Jednostka</label> <select id="id_unit" name="unit"><option value="">Wszystkie</option>{% for value, label in unit_choices %}<option value="{{ value }}"{% if selected_unit == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></p>
+        <p><label for="id_date_from">Od</label> <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}"> <label for="id_date_to">Do</label> <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}"></p>
+        <button type="submit">Filtruj</button> <a href="{% url 'core:harvest_list' %}">Wyczyść filtry</a>
+    </form>
+    {% if harvests %}
+        <ul>{% for harvest in harvests %}<li>{{ harvest.harvest_date|date:"d.m.Y" }} – {{ harvest.quantity }} {{ harvest.get_unit_display }} – {{ harvest.cultivation.field.name }} – {{ harvest.cultivation.crop.name }} – {{ harvest.cultivation.season_year }} – przychód {{ harvest.revenue }} zł – koszt {{ harvest.harvest_cost }} zł – wynik {{ harvest.profit }} zł <a href="{% url 'core:harvest_detail' harvest.pk %}">Szczegóły</a> <a href="{% url 'core:harvest_update' harvest.pk %}">Edytuj</a> <a href="{% url 'core:harvest_delete' harvest.pk %}">Usuń</a></li>{% endfor %}</ul>
+        {% if is_paginated %}<nav aria-label="Paginacja zbiorów">{% if page_obj.has_previous %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Poprzednia</a>{% endif %} <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span> {% if page_obj.has_next %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Następna</a>{% endif %}</nav>{% endif %}
+    {% else %}<p>Nie znaleziono zbiorów spełniających podane kryteria.</p>{% endif %}
+{% endblock %}

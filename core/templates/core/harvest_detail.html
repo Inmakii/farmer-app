@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+
+{% block title %}Szczegóły zbioru – Farmer App{% endblock %}
+
+{% block content %}
+    <article>
+        <h1>Zbiór – {{ harvest.cultivation.crop.name }}</h1>
+        <dl>
+            <dt>Data zbioru</dt><dd>{{ harvest.harvest_date|date:"d.m.Y" }}</dd>
+            <dt>Pole</dt><dd>{{ harvest.cultivation.field.name }}</dd>
+            <dt>Uprawa</dt><dd>{{ harvest.cultivation.crop.name }}</dd>
+            <dt>Sezon</dt><dd>{{ harvest.cultivation.season_year }}</dd>
+            <dt>Ilość</dt><dd>{{ harvest.quantity }} {{ harvest.get_unit_display }}</dd>
+            <dt>Przychód</dt><dd>{{ harvest.revenue }} zł</dd>
+            <dt>Koszt zbioru</dt><dd>{{ harvest.harvest_cost }} zł</dd>
+            <dt>Wynik zbioru</dt><dd>{{ harvest.profit }} zł</dd>
+            <dt>Notatki</dt><dd>{{ harvest.notes|default:"—" }}</dd>
+        </dl>
+        <p>Wynik zbioru to przychód pomniejszony wyłącznie o koszt zbioru, przed uwzględnieniem kosztów prac polowych i oprysków.</p>
+        <p><a href="{% url 'core:harvest_list' %}">Wróć do listy</a> <a href="{% url 'core:cultivation_detail' harvest.cultivation.pk %}">Zobacz uprawę</a> <a href="{% url 'core:harvest_update' harvest.pk %}">Edytuj</a> <a href="{% url 'core:harvest_delete' harvest.pk %}">Usuń</a></p>
+    </article>
+{% endblock %}
