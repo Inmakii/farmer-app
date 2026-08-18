@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+
+{% block title %}Rejestracja – Farmer App{% endblock %}
+
+{% block content %}
+    <h1>Utwórz konto</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}
+                {{ field.errors }}
+            </p>
+        {% endfor %}
+        <button type="submit">Zarejestruj się</button>
+    </form>
+    <p>Masz już konto? <a href="{% url 'core:login' %}">Zaloguj się</a>.</p>
+{% endblock %}
