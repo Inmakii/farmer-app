@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Crop, Cultivation, Field, FieldWork, Spraying
+from .models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
 
 
 class RegistrationForm(UserCreationForm):
@@ -408,3 +408,95 @@ class SprayingForm(forms.ModelForm):
         if cost < 0:
             raise ValidationError("Koszt nie może być ujemny.")
         return cost
+
+
+class HarvestForm(forms.ModelForm):
+    cultivation = CultivationChoiceField(
+        queryset=Cultivation.objects.none(),
+        label="Uprawa",
+        help_text="Wybierz uprawę prowadzoną na jednym ze swoich pól.",
+        error_messages={
+            "required": "Wybierz uprawę.",
+            "invalid_choice": "Wybrana uprawa jest niedostępna.",
+        },
+    )
+
+    class Meta:
+        model = Harvest
+        fields = (
+            "cultivation",
+            "harvest_date",
+            "quantity",
+            "unit",
+            "revenue",
+            "harvest_cost",
+            "notes",
+        )
+        labels = {
+            "harvest_date": "Data zbioru",
+            "quantity": "Ilość",
+            "unit": "Jednostka",
+            "revenue": "Przychód",
+            "harvest_cost": "Koszt zbioru",
+            "notes": "Notatki",
+        }
+        help_texts = {
+            "harvest_date": "Podaj datę przeprowadzenia zbioru.",
+            "quantity": "Ilość musi być większa od zera.",
+            "revenue": "Przychód nie może być ujemny.",
+            "harvest_cost": "Koszt zbioru nie może być ujemny.",
+            "notes": "Opcjonalne informacje o zbiorze.",
+        }
+        error_messages = {
+            "harvest_date": {
+                "required": "Data zbioru jest wymagana.",
+                "invalid": "Podaj poprawną datę zbioru.",
+            },
+            "quantity": {
+                "required": "Ilość zbioru jest wymagana.",
+                "invalid": "Podaj poprawną ilość zbioru.",
+            },
+            "unit": {"required": "Wybierz jednostkę."},
+            "revenue": {
+                "required": "Przychód jest wymagany.",
+                "invalid": "Podaj poprawny przychód.",
+            },
+            "harvest_cost": {
+                "required": "Koszt zbioru jest wymagany.",
+                "invalid": "Podaj poprawny koszt zbioru.",
+            },
+        }
+        widgets = {
+            "harvest_date": forms.DateInput(
+                attrs={"type": "date"}, format="%Y-%m-%d"
+            )
+        }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["cultivation"].queryset = (
+            Cultivation.objects.filter(field__owner=user)
+            .select_related("field", "crop")
+            .order_by("-season_year", "field__name", "crop__name")
+            if user is not None
+            else Cultivation.objects.none()
+        )
+        self.fields["harvest_date"].input_formats = ["%Y-%m-%d"]
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data["quantity"]
+        if quantity <= 0:
+            raise ValidationError("Ilość zbioru musi być większa od zera.")
+        return quantity
+
+    def clean_revenue(self):
+        revenue = self.cleaned_data["revenue"]
+        if revenue < 0:
+            raise ValidationError("Przychód nie może być ujemny.")
+        return revenue
+
+    def clean_harvest_cost(self):
+        harvest_cost = self.cleaned_data["harvest_cost"]
+        if harvest_cost < 0:
+            raise ValidationError("Koszt zbioru nie może być ujemny.")
+        return harvest_cost

@@ -1,0 +1,8 @@
+{% extends "core/base.html" %}
+
+{% block title %}{% if harvest %}Edycja zbioru{% else %}Dodawanie zbioru{% endif %} – Farmer App{% endblock %}
+
+{% block content %}
+    <h1>{% if harvest %}Edytuj zbiór{% else %}Dodaj zbiór{% endif %}</h1>
+    {% if has_cultivations %}<form method="post">{% csrf_token %}{{ form.non_field_errors }}{% for form_field in form %}<p>{{ form_field.label_tag }} {{ form_field }}{% if form_field.help_text %}<small>{{ form_field.help_text }}</small>{% endif %}{{ form_field.errors }}</p>{% endfor %}<button type="submit">Zapisz</button></form>{% else %}<p>Nie masz jeszcze upraw. <a href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>.</p>{% endif %}
+{% endblock %}

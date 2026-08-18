@@ -71,4 +71,25 @@
             <p>Dla tej uprawy nie zarejestrowano jeszcze oprysków.</p>
         {% endif %}
     </section>
+
+    <section>
+        <h2>Zbiory</h2>
+        <p>
+            <a href="{% url 'core:harvest_create' %}?cultivation={{ cultivation.pk }}">Dodaj zbiór</a>
+        </p>
+        {% if harvests %}
+            <ul>
+                {% for harvest in harvests %}
+                    <li>
+                        {{ harvest.harvest_date|date:"d.m.Y" }} – {{ harvest.quantity }}
+                        {{ harvest.get_unit_display }} – przychód {{ harvest.revenue }} zł –
+                        koszt {{ harvest.harvest_cost }} zł – wynik {{ harvest.profit }} zł
+                        <a href="{% url 'core:harvest_detail' harvest.pk %}">Szczegóły</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Dla tej uprawy nie zarejestrowano jeszcze zbiorów.</p>
+        {% endif %}
+    </section>
 {% endblock %}
