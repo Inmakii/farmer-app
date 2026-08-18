@@ -25,6 +25,13 @@ from .forms import (
     SprayingForm,
 )
 from .models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
+from .services.reports import (
+    calculate_totals,
+    get_cultivation_report,
+    get_cultivation_reports,
+    get_field_report,
+    get_user_report,
+)
 
 
 def parse_filter_date(value):
@@ -32,6 +39,14 @@ def parse_filter_date(value):
         return parse_date(value)
     except ValueError:
         return None
+
+
+def parse_season_year(value):
+    if not value:
+        return None, True
+    if value.isdigit() and 2000 <= int(value) <= 2100:
+        return int(value), True
+    return None, False
 
 
 class RegisterView(FormView):
@@ -731,3 +746,92 @@ class HarvestDeleteView(HarvestOwnerQuerysetMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, "Zbiór został usunięty.")
         return super().form_valid(form)
+
+
+class ReportDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = "core/report_dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_fields = Field.objects.filter(owner=self.request.user).order_by("name")
+        field_value = self.request.GET.get("field", "")
+        season_value = self.request.GET.get("season_year", "")
+        season_year, valid_year = parse_season_year(season_value)
+        selected_field = None
+        valid_field = not field_value
+        if field_value.isdigit():
+            selected_field = user_fields.filter(pk=field_value).first()
+            valid_field = selected_field is not None
+
+        if valid_field and valid_year:
+            report = get_user_report(
+                self.request.user,
+                field=selected_field,
+                season_year=season_year,
+            )
+        else:
+            empty_queryset = Cultivation.objects.none()
+            report = {
+                "totals": calculate_totals(empty_queryset),
+                "cultivation_reports": get_cultivation_reports(empty_queryset),
+            }
+            report["totals"]["field_count"] = 0
+
+        context.update(
+            {
+                **report,
+                "user_fields": user_fields,
+                "selected_field": field_value,
+                "selected_season_year": season_value,
+                "invalid_filters": not (valid_field and valid_year),
+            }
+        )
+        return context
+
+
+class FieldReportView(LoginRequiredMixin, DetailView):
+    model = Field
+    template_name = "core/field_report.html"
+    context_object_name = "field"
+
+    def get_queryset(self):
+        return Field.objects.filter(owner=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        season_value = self.request.GET.get("season_year", "")
+        season_year, valid_year = parse_season_year(season_value)
+        if valid_year:
+            report = get_field_report(self.object, season_year=season_year)
+        else:
+            empty_queryset = Cultivation.objects.none()
+            report = {
+                "field": self.object,
+                "totals": calculate_totals(empty_queryset),
+                "cultivation_reports": [],
+            }
+            report["totals"]["field_count"] = 1
+        context.update(
+            {
+                **report,
+                "selected_season_year": season_value,
+                "invalid_filter": not valid_year,
+            }
+        )
+        return context
+
+
+class CultivationReportView(LoginRequiredMixin, DetailView):
+    model = Cultivation
+    template_name = "core/cultivation_report.html"
+    context_object_name = "cultivation"
+
+    def get_queryset(self):
+        return Cultivation.objects.filter(
+            field__owner=self.request.user
+        ).select_related("field", "crop")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["report"] = get_cultivation_report(self.object)
+        return context

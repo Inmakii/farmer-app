@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+
+{% block title %}Raport pola {{ field.name }} – Farmer App{% endblock %}
+
+{% block content %}
+    <h1>Raport pola: {{ field.name }}</h1>
+    <p><a href="{% url 'core:report_dashboard' %}">Wszystkie raporty</a> <a href="{% url 'core:field_detail' field.pk %}">Szczegóły pola</a></p>
+    <form method="get"><p><label for="id_season_year">Rok sezonu</label> <input id="id_season_year" type="number" min="2000" max="2100" name="season_year" value="{{ selected_season_year }}"> <button type="submit">Filtruj</button> <a href="{% url 'core:field_report' field.pk %}">Wyczyść filtr</a></p></form>
+    {% if invalid_filter %}<p>Podany rok jest nieprawidłowy.</p>{% endif %}
+    <section><h2>Podsumowanie pola</h2><dl><dt>Uprawy</dt><dd>{{ totals.cultivation_count }}</dd><dt>Prace</dt><dd>{{ totals.work_count }}</dd><dt>Opryski</dt><dd>{{ totals.spraying_count }}</dd><dt>Zbiory</dt><dd>{{ totals.harvest_count }}</dd><dt>Koszty prac</dt><dd>{{ totals.work_costs|floatformat:2 }} zł</dd><dt>Koszty oprysków</dt><dd>{{ totals.spraying_costs|floatformat:2 }} zł</dd><dt>Koszty zbiorów</dt><dd>{{ totals.harvest_costs|floatformat:2 }} zł</dd><dt>Koszty całkowite</dt><dd><strong>{{ totals.total_costs|floatformat:2 }} zł</strong></dd><dt>Przychód</dt><dd><strong>{{ totals.total_revenue|floatformat:2 }} zł</strong></dd><dt>Zysk/strata</dt><dd><strong>{{ totals.profit|floatformat:2 }} zł</strong></dd></dl></section>
+    <section><h2>Uprawy pola</h2>{% if cultivation_reports %}<ul>{% for item in cultivation_reports %}<li><a href="{% url 'core:cultivation_report' item.cultivation.pk %}">{{ item.cultivation.crop.name }} – {{ item.cultivation.season_year }}</a>: koszty {{ item.total_costs|floatformat:2 }} zł, przychód {{ item.total_revenue|floatformat:2 }} zł, wynik {{ item.profit|floatformat:2 }} zł</li>{% endfor %}</ul>{% else %}<p>Pole nie ma upraw dla wybranego okresu.</p>{% endif %}</section>
+{% endblock %}

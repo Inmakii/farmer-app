@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+
+{% block title %}Raporty finansowe – Farmer App{% endblock %}
+
+{% block content %}
+    <h1>Raporty finansowe</h1>
+    <form method="get" action="{% url 'core:report_dashboard' %}">
+        <p><label for="id_field">Pole</label> <select id="id_field" name="field"><option value="">Wszystkie pola</option>{% for field in user_fields %}<option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>{% endfor %}</select></p>
+        <p><label for="id_season_year">Rok sezonu</label> <input id="id_season_year" type="number" min="2000" max="2100" name="season_year" value="{{ selected_season_year }}"></p>
+        <button type="submit">Filtruj</button> <a href="{% url 'core:report_dashboard' %}">Wyczyść filtry</a>
+    </form>
+    {% if invalid_filters %}<p>Podane filtry są nieprawidłowe lub niedostępne.</p>{% endif %}
+    <section>
+        <h2>Podsumowanie</h2>
+        <dl>
+            <dt>Liczba pól</dt><dd>{{ totals.field_count }}</dd><dt>Liczba upraw</dt><dd>{{ totals.cultivation_count }}</dd><dt>Liczba prac</dt><dd>{{ totals.work_count }}</dd><dt>Liczba oprysków</dt><dd>{{ totals.spraying_count }}</dd><dt>Liczba zbiorów</dt><dd>{{ totals.harvest_count }}</dd>
+            <dt>Koszty prac</dt><dd>{{ totals.work_costs|floatformat:2 }} zł</dd><dt>Koszty oprysków</dt><dd>{{ totals.spraying_costs|floatformat:2 }} zł</dd><dt>Koszty zbiorów</dt><dd>{{ totals.harvest_costs|floatformat:2 }} zł</dd><dt>Koszty całkowite</dt><dd><strong>{{ totals.total_costs|floatformat:2 }} zł</strong></dd><dt>Przychód</dt><dd><strong>{{ totals.total_revenue|floatformat:2 }} zł</strong></dd><dt>Zysk/strata</dt><dd><strong>{{ totals.profit|floatformat:2 }} zł</strong></dd>
+        </dl>
+    </section>
+    <section>
+        <h2>Wyniki upraw</h2>
+        {% if cultivation_reports %}
+            <table><thead><tr><th>Pole</th><th>Uprawa</th><th>Rok</th><th>Status</th><th>Prace</th><th>Opryski</th><th>Zbiory</th><th>Koszty razem</th><th>Przychód</th><th>Zysk/strata</th></tr></thead><tbody>{% for item in cultivation_reports %}<tr><td><a href="{% url 'core:field_report' item.cultivation.field.pk %}">{{ item.cultivation.field.name }}</a></td><td><a href="{% url 'core:cultivation_report' item.cultivation.pk %}">{{ item.cultivation.crop.name }}</a></td><td>{{ item.cultivation.season_year }}</td><td>{{ item.cultivation.get_status_display }}</td><td>{{ item.work_costs|floatformat:2 }} zł</td><td>{{ item.spraying_costs|floatformat:2 }} zł</td><td>{{ item.harvest_costs|floatformat:2 }} zł</td><td>{{ item.total_costs|floatformat:2 }} zł</td><td>{{ item.total_revenue|floatformat:2 }} zł</td><td>{{ item.profit|floatformat:2 }} zł</td></tr>{% endfor %}</tbody></table>
+        {% else %}<p>Brak danych finansowych dla wybranych kryteriów.</p>{% endif %}
+    </section>
+{% endblock %}

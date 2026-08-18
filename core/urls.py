@@ -25,11 +25,14 @@ from .views import (
     LogoutView,
     ProfileView,
     RegisterView,
+    ReportDashboardView,
     SprayingCreateView,
     SprayingDeleteView,
     SprayingDetailView,
     SprayingListView,
     SprayingUpdateView,
+    FieldReportView,
+    CultivationReportView,
 )
 
 app_name = "core"
@@ -76,4 +79,11 @@ urlpatterns = [
     path("harvests/<int:pk>/", HarvestDetailView.as_view(), name="harvest_detail"),
     path("harvests/<int:pk>/edit/", HarvestUpdateView.as_view(), name="harvest_update"),
     path("harvests/<int:pk>/delete/", HarvestDeleteView.as_view(), name="harvest_delete"),
+    path("reports/", ReportDashboardView.as_view(), name="report_dashboard"),
+    path("reports/fields/<int:pk>/", FieldReportView.as_view(), name="field_report"),
+    path(
+        "reports/cultivations/<int:pk>/",
+        CultivationReportView.as_view(),
+        name="cultivation_report",
+    ),
 ]
