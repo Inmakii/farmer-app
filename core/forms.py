@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Crop, Cultivation, Field, FieldWork
+from .models import Crop, Cultivation, Field, FieldWork, Spraying
 
 
 class RegistrationForm(UserCreationForm):
@@ -316,6 +316,92 @@ class FieldWorkForm(forms.ModelForm):
             else Cultivation.objects.none()
         )
         self.fields["work_date"].input_formats = ["%Y-%m-%d"]
+
+    def clean_cost(self):
+        cost = self.cleaned_data["cost"]
+        if cost < 0:
+            raise ValidationError("Koszt nie może być ujemny.")
+        return cost
+
+
+class SprayingForm(forms.ModelForm):
+    cultivation = CultivationChoiceField(
+        queryset=Cultivation.objects.none(),
+        label="Uprawa",
+        help_text="Wybierz uprawę prowadzoną na jednym ze swoich pól.",
+        error_messages={
+            "required": "Wybierz uprawę.",
+            "invalid_choice": "Wybrana uprawa jest niedostępna.",
+        },
+    )
+
+    class Meta:
+        model = Spraying
+        fields = (
+            "cultivation",
+            "spraying_date",
+            "product_name",
+            "quantity",
+            "unit",
+            "cost",
+            "description",
+        )
+        labels = {
+            "spraying_date": "Data oprysku",
+            "product_name": "Nazwa preparatu",
+            "quantity": "Ilość",
+            "unit": "Jednostka",
+            "cost": "Koszt",
+            "description": "Opis",
+        }
+        help_texts = {
+            "spraying_date": "Podaj datę wykonania oprysku.",
+            "product_name": "Nazwa zastosowanego preparatu, maksymalnie 150 znaków.",
+            "quantity": "Ilość musi być większa od zera.",
+            "cost": "Koszt nie może być ujemny.",
+            "description": "Opcjonalny opis oprysku.",
+        }
+        error_messages = {
+            "spraying_date": {
+                "required": "Data oprysku jest wymagana.",
+                "invalid": "Podaj poprawną datę oprysku.",
+            },
+            "product_name": {
+                "required": "Nazwa preparatu jest wymagana.",
+                "max_length": "Nazwa preparatu może mieć najwyżej 150 znaków.",
+            },
+            "quantity": {
+                "required": "Ilość preparatu jest wymagana.",
+                "invalid": "Podaj poprawną ilość preparatu.",
+            },
+            "unit": {"required": "Wybierz jednostkę."},
+            "cost": {
+                "required": "Koszt jest wymagany.",
+                "invalid": "Podaj poprawny koszt.",
+            },
+        }
+        widgets = {
+            "spraying_date": forms.DateInput(
+                attrs={"type": "date"}, format="%Y-%m-%d"
+            )
+        }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["cultivation"].queryset = (
+            Cultivation.objects.filter(field__owner=user)
+            .select_related("field", "crop")
+            .order_by("-season_year", "field__name", "crop__name")
+            if user is not None
+            else Cultivation.objects.none()
+        )
+        self.fields["spraying_date"].input_formats = ["%Y-%m-%d"]
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data["quantity"]
+        if quantity <= 0:
+            raise ValidationError("Ilość preparatu musi być większa od zera.")
+        return quantity
 
     def clean_cost(self):
         cost = self.cleaned_data["cost"]

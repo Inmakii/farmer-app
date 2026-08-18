@@ -16,8 +16,14 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .forms import CultivationForm, FieldForm, FieldWorkForm, RegistrationForm
-from .models import Crop, Cultivation, Field, FieldWork
+from .forms import (
+    CultivationForm,
+    FieldForm,
+    FieldWorkForm,
+    RegistrationForm,
+    SprayingForm,
+)
+from .models import Crop, Cultivation, Field, FieldWork, Spraying
 
 
 def parse_filter_date(value):
@@ -241,6 +247,9 @@ class CultivationDetailView(CultivationOwnerQuerysetMixin, DetailView):
                 "spraying_count": self.object.sprayings.count(),
                 "harvest_count": self.object.harvests.count(),
                 "works": self.object.works.order_by("-work_date", "-id"),
+                "sprayings": self.object.sprayings.order_by(
+                    "-spraying_date", "-id"
+                ),
             }
         )
         return context
@@ -437,4 +446,147 @@ class FieldWorkDeleteView(FieldWorkOwnerQuerysetMixin, DeleteView):
 
     def form_valid(self, form):
         messages.success(self.request, "Praca została usunięta.")
+        return super().form_valid(form)
+
+
+class SprayingOwnerQuerysetMixin(LoginRequiredMixin):
+    model = Spraying
+
+    def get_queryset(self):
+        return Spraying.objects.filter(
+            cultivation__field__owner=self.request.user
+        ).select_related("cultivation", "cultivation__field", "cultivation__crop")
+
+
+class SprayingFormUserMixin:
+    form_class = SprayingForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["has_cultivations"] = Cultivation.objects.filter(
+            field__owner=self.request.user
+        ).exists()
+        return context
+
+
+class SprayingListView(SprayingOwnerQuerysetMixin, ListView):
+    template_name = "core/spraying_list.html"
+    context_object_name = "sprayings"
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by("-spraying_date", "-id")
+        query = self.request.GET.get("q", "").strip()
+        cultivation_id = self.request.GET.get("cultivation", "")
+        field_id = self.request.GET.get("field", "")
+        unit = self.request.GET.get("unit", "")
+        date_from = parse_filter_date(self.request.GET.get("date_from", ""))
+        date_to = parse_filter_date(self.request.GET.get("date_to", ""))
+
+        if query:
+            queryset = queryset.filter(
+                Q(product_name__icontains=query)
+                | Q(description__icontains=query)
+                | Q(cultivation__field__name__icontains=query)
+                | Q(cultivation__crop__name__icontains=query)
+            )
+        if cultivation_id.isdigit():
+            queryset = queryset.filter(cultivation_id=cultivation_id)
+        if field_id.isdigit():
+            queryset = queryset.filter(cultivation__field_id=field_id)
+        if unit:
+            queryset = queryset.filter(unit=unit)
+        if date_from:
+            queryset = queryset.filter(spraying_date__gte=date_from)
+        if date_to:
+            queryset = queryset.filter(spraying_date__lte=date_to)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query_parameters = self.request.GET.copy()
+        query_parameters.pop("page", None)
+        context.update(
+            {
+                "user_fields": Field.objects.filter(owner=self.request.user).order_by("name"),
+                "user_cultivations": Cultivation.objects.filter(
+                    field__owner=self.request.user
+                ).select_related("field", "crop").order_by(
+                    "-season_year", "field__name", "crop__name"
+                ),
+                "unit_choices": Spraying.Unit.choices,
+                "selected_cultivation": self.request.GET.get("cultivation", ""),
+                "selected_field": self.request.GET.get("field", ""),
+                "selected_unit": self.request.GET.get("unit", ""),
+                "selected_date_from": self.request.GET.get("date_from", ""),
+                "selected_date_to": self.request.GET.get("date_to", ""),
+                "query": self.request.GET.get("q", ""),
+                "querystring": query_parameters.urlencode(),
+            }
+        )
+        return context
+
+
+class SprayingDetailView(SprayingOwnerQuerysetMixin, DetailView):
+    template_name = "core/spraying_detail.html"
+    context_object_name = "spraying"
+
+
+class SprayingCreateView(LoginRequiredMixin, SprayingFormUserMixin, CreateView):
+    model = Spraying
+    template_name = "core/spraying_form.html"
+
+    def get_initial(self):
+        initial = super().get_initial()
+        cultivation_id = self.request.GET.get("cultivation", "")
+        if cultivation_id.isdigit():
+            cultivation = Cultivation.objects.filter(
+                pk=cultivation_id, field__owner=self.request.user
+            ).select_related("field", "crop").first()
+            if cultivation:
+                initial["cultivation"] = cultivation
+        return initial
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Oprysk został utworzony.")
+        return response
+
+    def get_success_url(self):
+        return reverse("core:spraying_detail", kwargs={"pk": self.object.pk})
+
+
+class SprayingUpdateView(
+    SprayingOwnerQuerysetMixin, SprayingFormUserMixin, UpdateView
+):
+    template_name = "core/spraying_form.html"
+    context_object_name = "spraying"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Oprysk został zaktualizowany.")
+        return response
+
+    def get_success_url(self):
+        return reverse("core:spraying_detail", kwargs={"pk": self.object.pk})
+
+
+class SprayingDeleteView(SprayingOwnerQuerysetMixin, DeleteView):
+    template_name = "core/spraying_confirm_delete.html"
+    context_object_name = "spraying"
+    http_method_names = ["get", "post", "head", "options"]
+
+    def get_success_url(self):
+        return reverse(
+            "core:cultivation_detail",
+            kwargs={"pk": self.object.cultivation_id},
+        )
+
+    def form_valid(self, form):
+        messages.success(self.request, "Oprysk został usunięty.")
         return super().form_valid(form)

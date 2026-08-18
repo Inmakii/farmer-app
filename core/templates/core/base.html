@@ -14,6 +14,7 @@
                 <a href="{% url 'core:field_list' %}">Moje pola</a>
                 <a href="{% url 'core:cultivation_list' %}">Uprawy</a>
                 <a href="{% url 'core:fieldwork_list' %}">Prace</a>
+                <a href="{% url 'core:spraying_list' %}">Opryski</a>
                 <form method="post" action="{% url 'core:logout' %}">
                     {% csrf_token %}
                     <button type="submit">Wyloguj się</button>
