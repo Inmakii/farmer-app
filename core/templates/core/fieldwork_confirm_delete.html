@@ -1,0 +1,3 @@
+{% extends "core/base.html" %}
+{% block title %}Usuń pracę – Farmer App{% endblock %}
+{% block content %}<h1>Usuń pracę</h1><p>Czy usunąć pracę „{{ work.get_work_type_display }}” z dnia {{ work.work_date|date:"d.m.Y" }}?</p><form method="post">{% csrf_token %}<button type="submit">Tak, usuń</button> <a href="{% url 'core:fieldwork_detail' work.pk %}">Anuluj</a></form>{% endblock %}

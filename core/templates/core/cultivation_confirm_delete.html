@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+
+{% block title %}Usuwanie uprawy – Farmer App{% endblock %}
+
+{% block content %}
+    <h1>Usuń uprawę</h1>
+    <p>
+        Czy na pewno chcesz usunąć uprawę „{{ cultivation.crop.name }}”
+        z pola „{{ cultivation.field.name }}” w sezonie {{ cultivation.season_year }}?
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Tak, usuń uprawę</button>
+        <a href="{% url 'core:cultivation_detail' cultivation.pk %}">Anuluj</a>
+    </form>
+{% endblock %}

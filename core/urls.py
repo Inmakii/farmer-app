@@ -1,11 +1,21 @@
 from django.urls import path
 
 from .views import (
+    CultivationCreateView,
+    CultivationDeleteView,
+    CultivationDetailView,
+    CultivationListView,
+    CultivationUpdateView,
     FieldCreateView,
     FieldDeleteView,
     FieldDetailView,
     FieldListView,
     FieldUpdateView,
+    FieldWorkCreateView,
+    FieldWorkDeleteView,
+    FieldWorkDetailView,
+    FieldWorkListView,
+    FieldWorkUpdateView,
     LoginView,
     LogoutView,
     ProfileView,
@@ -24,4 +34,26 @@ urlpatterns = [
     path("fields/<int:pk>/", FieldDetailView.as_view(), name="field_detail"),
     path("fields/<int:pk>/edit/", FieldUpdateView.as_view(), name="field_update"),
     path("fields/<int:pk>/delete/", FieldDeleteView.as_view(), name="field_delete"),
+    path("cultivations/", CultivationListView.as_view(), name="cultivation_list"),
+    path("cultivations/add/", CultivationCreateView.as_view(), name="cultivation_create"),
+    path(
+        "cultivations/<int:pk>/",
+        CultivationDetailView.as_view(),
+        name="cultivation_detail",
+    ),
+    path(
+        "cultivations/<int:pk>/edit/",
+        CultivationUpdateView.as_view(),
+        name="cultivation_update",
+    ),
+    path(
+        "cultivations/<int:pk>/delete/",
+        CultivationDeleteView.as_view(),
+        name="cultivation_delete",
+    ),
+    path("works/", FieldWorkListView.as_view(), name="fieldwork_list"),
+    path("works/add/", FieldWorkCreateView.as_view(), name="fieldwork_create"),
+    path("works/<int:pk>/", FieldWorkDetailView.as_view(), name="fieldwork_detail"),
+    path("works/<int:pk>/edit/", FieldWorkUpdateView.as_view(), name="fieldwork_update"),
+    path("works/<int:pk>/delete/", FieldWorkDeleteView.as_view(), name="fieldwork_delete"),
 ]

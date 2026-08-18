@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ cultivation.crop.name }} – Farmer App{% endblock %}
+
+{% block content %}
+    <article>
+        <h1>{{ cultivation.crop.name }} – {{ cultivation.field.name }}</h1>
+        <dl>
+            <dt>Sezon</dt>
+            <dd>{{ cultivation.season_year }}</dd>
+            <dt>Status</dt>
+            <dd>{{ cultivation.get_status_display }}</dd>
+            <dt>Data siewu</dt>
+            <dd>{{ cultivation.sowing_date|date:"d.m.Y"|default:"—" }}</dd>
+            <dt>Planowana data zbioru</dt>
+            <dd>{{ cultivation.planned_harvest_date|date:"d.m.Y"|default:"—" }}</dd>
+            <dt>Notatki</dt>
+            <dd>{{ cultivation.notes|default:"—" }}</dd>
+            <dt>Liczba prac</dt>
+            <dd>{{ work_count }}</dd>
+            <dt>Liczba oprysków</dt>
+            <dd>{{ spraying_count }}</dd>
+            <dt>Liczba zbiorów</dt>
+            <dd>{{ harvest_count }}</dd>
+        </dl>
+        <p>
+            <a href="{% url 'core:cultivation_list' %}">Wróć do listy</a>
+            <a href="{% url 'core:field_detail' cultivation.field.pk %}">Zobacz pole</a>
+            <a href="{% url 'core:cultivation_update' cultivation.pk %}">Edytuj</a>
+            <a href="{% url 'core:cultivation_delete' cultivation.pk %}">Usuń</a>
+        </p>
+    </article>
+
+    <section>
+        <h2>Wykonane prace</h2>
+        <p>
+            <a href="{% url 'core:fieldwork_create' %}?cultivation={{ cultivation.pk }}">Dodaj pracę</a>
+        </p>
+        {% if works %}
+            <ul>
+                {% for work in works %}
+                    <li>
+                        {{ work.work_date|date:"d.m.Y" }} – {{ work.get_work_type_display }} –
+                        {{ work.cost }} zł
+                        <a href="{% url 'core:fieldwork_detail' work.pk %}">Szczegóły</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Dla tej uprawy nie zarejestrowano jeszcze prac.</p>
+        {% endif %}
+    </section>
+{% endblock %}

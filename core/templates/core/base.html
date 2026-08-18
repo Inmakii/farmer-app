@@ -12,6 +12,8 @@
             {% if user.is_authenticated %}
                 <a href="{% url 'core:profile' %}">Profil</a>
                 <a href="{% url 'core:field_list' %}">Moje pola</a>
+                <a href="{% url 'core:cultivation_list' %}">Uprawy</a>
+                <a href="{% url 'core:fieldwork_list' %}">Prace</a>
                 <form method="post" action="{% url 'core:logout' %}">
                     {% csrf_token %}
                     <button type="submit">Wyloguj się</button>

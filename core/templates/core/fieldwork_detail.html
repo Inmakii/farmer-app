@@ -1,0 +1,3 @@
+{% extends "core/base.html" %}
+{% block title %}Szczegóły pracy – Farmer App{% endblock %}
+{% block content %}<article><h1>{{ work.get_work_type_display }}</h1><dl><dt>Data</dt><dd>{{ work.work_date|date:"d.m.Y" }}</dd><dt>Pole</dt><dd>{{ work.cultivation.field.name }}</dd><dt>Uprawa</dt><dd>{{ work.cultivation.crop.name }}</dd><dt>Sezon</dt><dd>{{ work.cultivation.season_year }}</dd><dt>Koszt</dt><dd>{{ work.cost }} zł</dd><dt>Opis</dt><dd>{{ work.description|default:"—" }}</dd></dl><p><a href="{% url 'core:fieldwork_list' %}">Wróć</a> <a href="{% url 'core:fieldwork_update' work.pk %}">Edytuj</a> <a href="{% url 'core:fieldwork_delete' work.pk %}">Usuń</a></p></article>{% endblock %}

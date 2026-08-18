@@ -1,0 +1,82 @@
+{% extends "core/base.html" %}
+
+{% block title %}Uprawy – Farmer App{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Uprawy sezonowe</h1>
+        {% if has_fields %}
+            <a href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>
+        {% endif %}
+    </header>
+
+    {% if not has_fields %}
+        <p>Nie masz jeszcze żadnych pól. Najpierw utwórz pole, aby dodać uprawę.</p>
+        <p><a href="{% url 'core:field_create' %}">Utwórz pierwsze pole</a></p>
+    {% else %}
+        <form method="get" action="{% url 'core:cultivation_list' %}">
+            <p>
+                <label for="id_field_filter">Pole</label>
+                <select id="id_field_filter" name="field">
+                    <option value="">Wszystkie</option>
+                    {% for field in user_fields %}
+                        <option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <label for="id_crop_filter">Rodzaj uprawy</label>
+                <select id="id_crop_filter" name="crop">
+                    <option value="">Wszystkie</option>
+                    {% for crop in crops %}
+                        <option value="{{ crop.pk }}"{% if selected_crop == crop.pk|stringformat:"s" %} selected{% endif %}>{{ crop.name }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <label for="id_status_filter">Status</label>
+                <select id="id_status_filter" name="status">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}"{% if selected_status == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <label for="id_season_year_filter">Rok sezonu</label>
+                <input id="id_season_year_filter" type="number" name="season_year"
+                       min="2000" max="2100" value="{{ selected_season_year }}">
+            </p>
+            <button type="submit">Filtruj</button>
+            <a href="{% url 'core:cultivation_list' %}">Wyczyść filtry</a>
+        </form>
+    {% endif %}
+
+    {% if cultivations %}
+        <ul>
+            {% for cultivation in cultivations %}
+                <li>
+                    <strong>{{ cultivation.crop.name }}</strong> – {{ cultivation.field.name }},
+                    sezon {{ cultivation.season_year }}, {{ cultivation.get_status_display }}
+                    <a href="{% url 'core:cultivation_detail' cultivation.pk %}">Szczegóły</a>
+                    <a href="{% url 'core:cultivation_update' cultivation.pk %}">Edytuj</a>
+                    <a href="{% url 'core:cultivation_delete' cultivation.pk %}">Usuń</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if is_paginated %}
+            <nav aria-label="Paginacja upraw">
+                {% if page_obj.has_previous %}
+                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Poprzednia</a>
+                {% endif %}
+                <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Następna</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% elif has_fields %}
+        <p>Nie znaleziono upraw spełniających podane kryteria.</p>
+    {% endif %}
+{% endblock %}
