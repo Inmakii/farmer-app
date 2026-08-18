@@ -157,62 +157,104 @@ class CultivationForm(forms.ModelForm):
     class Meta:
         model = Cultivation
         fields = (
-            "field", "crop", "season_year", "status", "sowing_date",
-            "planned_harvest_date", "notes",
+            "field",
+            "crop",
+            "season_year",
+            "status",
+            "sowing_date",
+            "planned_harvest_date",
+            "notes",
         )
         labels = {
-            "field": "Pole", "crop": "Rodzaj uprawy", "season_year": "Rok sezonu",
-            "status": "Status", "sowing_date": "Data siewu",
-            "planned_harvest_date": "Planowana data zbioru", "notes": "Notatki",
+            "field": "Pole",
+            "crop": "Rodzaj uprawy",
+            "season_year": "Rok sezonu",
+            "status": "Status",
+            "sowing_date": "Data siewu",
+            "planned_harvest_date": "Planowana data zbioru",
+            "notes": "Notatki",
         }
         help_texts = {
             "field": "Możesz wybrać wyłącznie jedno ze swoich pól.",
             "season_year": "Dozwolony zakres lat: 2000–2100.",
+            "sowing_date": "Opcjonalna data rozpoczęcia siewu.",
             "planned_harvest_date": "Nie może być wcześniejsza od daty siewu.",
         }
+        error_messages = {
+            "field": {
+                "required": "Wybierz pole.",
+                "invalid_choice": "Wybrane pole jest niedostępne.",
+            },
+            "crop": {
+                "required": "Wybierz rodzaj uprawy.",
+                "invalid_choice": "Wybrany rodzaj uprawy jest niedostępny.",
+            },
+            "season_year": {
+                "required": "Rok sezonu jest wymagany.",
+                "invalid": "Podaj poprawny rok sezonu.",
+            },
+            "status": {"required": "Wybierz status uprawy."},
+            "sowing_date": {"invalid": "Podaj poprawną datę siewu."},
+            "planned_harvest_date": {
+                "invalid": "Podaj poprawną planowaną datę zbioru."
+            },
+        }
         widgets = {
-            "sowing_date": forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+            "sowing_date": forms.DateInput(
+                attrs={"type": "date"}, format="%Y-%m-%d"
+            ),
             "planned_harvest_date": forms.DateInput(
                 attrs={"type": "date"}, format="%Y-%m-%d"
             ),
         }
-        error_messages = {
-            "field": {"required": "Wybierz pole.", "invalid_choice": "Wybrane pole jest niedostępne."},
-            "crop": {"required": "Wybierz rodzaj uprawy."},
-            "season_year": {"required": "Rok sezonu jest wymagany."},
-            "status": {"required": "Wybierz status uprawy."},
-        }
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.user = user
         self.fields["field"].queryset = (
             Field.objects.filter(owner=user).order_by("name")
-            if user is not None else Field.objects.none()
+            if user is not None
+            else Field.objects.none()
         )
         self.fields["crop"].queryset = Crop.objects.order_by("name")
+        self.fields["sowing_date"].input_formats = ["%Y-%m-%d"]
+        self.fields["planned_harvest_date"].input_formats = ["%Y-%m-%d"]
+
+    def clean_season_year(self):
+        season_year = self.cleaned_data["season_year"]
+        if not 2000 <= season_year <= 2100:
+            raise ValidationError("Rok sezonu musi mieścić się w zakresie 2000–2100.")
+        return season_year
 
     def clean(self):
         cleaned_data = super().clean()
+        field = cleaned_data.get("field")
+        crop = cleaned_data.get("crop")
+        season_year = cleaned_data.get("season_year")
         sowing_date = cleaned_data.get("sowing_date")
-        harvest_date = cleaned_data.get("planned_harvest_date")
-        if sowing_date and harvest_date and harvest_date < sowing_date:
+        planned_harvest_date = cleaned_data.get("planned_harvest_date")
+
+        if (
+            sowing_date
+            and planned_harvest_date
+            and planned_harvest_date < sowing_date
+        ):
             self.add_error(
                 "planned_harvest_date",
                 "Planowana data zbioru nie może być wcześniejsza od daty siewu.",
             )
-        field = cleaned_data.get("field")
-        crop = cleaned_data.get("crop")
-        season_year = cleaned_data.get("season_year")
+
         if field and crop and season_year:
-            duplicate = Cultivation.objects.filter(
+            duplicates = Cultivation.objects.filter(
                 field=field, crop=crop, season_year=season_year
             )
             if self.instance.pk:
-                duplicate = duplicate.exclude(pk=self.instance.pk)
-            if duplicate.exists():
+                duplicates = duplicates.exclude(pk=self.instance.pk)
+            if duplicates.exists():
                 raise ValidationError(
                     "Taka uprawa jest już przypisana do tego pola i sezonu."
                 )
+
         return cleaned_data
 
 
@@ -270,7 +312,8 @@ class FieldWorkForm(forms.ModelForm):
             Cultivation.objects.filter(field__owner=user)
             .select_related("field", "crop")
             .order_by("-season_year", "field__name", "crop__name")
-            if user is not None else Cultivation.objects.none()
+            if user is not None
+            else Cultivation.objects.none()
         )
         self.fields["work_date"].input_formats = ["%Y-%m-%d"]
 

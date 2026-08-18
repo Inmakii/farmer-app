@@ -29,17 +29,24 @@
             <a href="{% url 'core:field_delete' field.pk %}">Usuń</a>
         </p>
     </article>
+
     <section>
         <h2>Uprawy na tym polu</h2>
-        <a href="{% url 'core:cultivation_create' %}?field={{ field.pk }}">Dodaj uprawę</a>
+        <p>
+            <a href="{% url 'core:cultivation_create' %}?field={{ field.pk }}">Dodaj uprawę</a>
+        </p>
         {% if field.cultivations.all %}
             <ul>
                 {% for cultivation in field.cultivations.all %}
-                    <li><a href="{% url 'core:cultivation_detail' cultivation.pk %}">{{ cultivation.crop.name }} – {{ cultivation.season_year }}</a></li>
+                    <li>
+                        {{ cultivation.crop.name }} – sezon {{ cultivation.season_year }},
+                        {{ cultivation.get_status_display }}
+                        <a href="{% url 'core:cultivation_detail' cultivation.pk %}">Szczegóły</a>
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Na tym polu nie ma jeszcze upraw.</p>
+            <p>Na tym polu nie zarejestrowano jeszcze żadnych upraw.</p>
         {% endif %}
     </section>
 {% endblock %}

@@ -165,9 +165,9 @@ class CultivationOwnerQuerysetMixin(LoginRequiredMixin):
     model = Cultivation
 
     def get_queryset(self):
-        return Cultivation.objects.filter(field__owner=self.request.user).select_related(
-            "field", "crop"
-        )
+        return Cultivation.objects.filter(
+            field__owner=self.request.user
+        ).select_related("field", "crop")
 
 
 class CultivationFormUserMixin:
@@ -178,6 +178,11 @@ class CultivationFormUserMixin:
         kwargs["user"] = self.request.user
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["has_fields"] = Field.objects.filter(owner=self.request.user).exists()
+        return context
+
 
 class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
     template_name = "core/cultivation_list.html"
@@ -185,13 +190,42 @@ class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return super().get_queryset().order_by(
+        queryset = super().get_queryset().order_by(
             "-season_year", "field__name", "crop__name"
         )
+        field_id = self.request.GET.get("field", "")
+        crop_id = self.request.GET.get("crop", "")
+        status = self.request.GET.get("status", "")
+        season_year = self.request.GET.get("season_year", "")
+
+        if field_id.isdigit():
+            queryset = queryset.filter(field_id=field_id)
+        if crop_id.isdigit():
+            queryset = queryset.filter(crop_id=crop_id)
+        if status:
+            queryset = queryset.filter(status=status)
+        if season_year.isdigit():
+            queryset = queryset.filter(season_year=season_year)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["has_fields"] = Field.objects.filter(owner=self.request.user).exists()
+        query_parameters = self.request.GET.copy()
+        query_parameters.pop("page", None)
+        user_fields = Field.objects.filter(owner=self.request.user).order_by("name")
+        context.update(
+            {
+                "user_fields": user_fields,
+                "has_fields": user_fields.exists(),
+                "crops": Crop.objects.order_by("name"),
+                "status_choices": Cultivation.Status.choices,
+                "selected_field": self.request.GET.get("field", ""),
+                "selected_crop": self.request.GET.get("crop", ""),
+                "selected_status": self.request.GET.get("status", ""),
+                "selected_season_year": self.request.GET.get("season_year", ""),
+                "querystring": query_parameters.urlencode(),
+            }
+        )
         return context
 
 
@@ -220,8 +254,10 @@ class CultivationCreateView(LoginRequiredMixin, CultivationFormUserMixin, Create
         initial = super().get_initial()
         field_id = self.request.GET.get("field", "")
         if field_id.isdigit():
-            field = Field.objects.filter(pk=field_id, owner=self.request.user).first()
-            if field:
+            field = Field.objects.filter(
+                pk=field_id, owner=self.request.user
+            ).first()
+            if field is not None:
                 initial["field"] = field
         return initial
 
