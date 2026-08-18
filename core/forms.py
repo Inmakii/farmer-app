@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
+from .models import Crop, Cultivation, ErrorReport, Field, FieldWork, Harvest, Spraying
 
 
 class RegistrationForm(UserCreationForm):
@@ -500,3 +500,29 @@ class HarvestForm(forms.ModelForm):
         if harvest_cost < 0:
             raise ValidationError("Koszt zbioru nie może być ujemny.")
         return harvest_cost
+
+
+class ErrorReportForm(forms.ModelForm):
+    class Meta:
+        model = ErrorReport
+        fields = ("category", "description")
+        labels = {
+            "category": "Kategoria zgłoszenia",
+            "description": "Opis problemu",
+        }
+        help_texts = {
+            "description": "Opisz problem w co najmniej 10 i nie więcej niż 5000 znakach.",
+        }
+        error_messages = {
+            "category": {"required": "Wybierz kategorię zgłoszenia."},
+            "description": {"required": "Opis problemu jest wymagany."},
+        }
+        widgets = {"description": forms.Textarea(attrs={"rows": 8})}
+
+    def clean_description(self):
+        description = self.cleaned_data["description"].strip()
+        if len(description) < 10:
+            raise ValidationError("Opis musi zawierać co najmniej 10 znaków.")
+        if len(description) > 5000:
+            raise ValidationError("Opis nie może zawierać więcej niż 5000 znaków.")
+        return description

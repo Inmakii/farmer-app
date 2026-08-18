@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+
+{% block title %}Zgłoszenie #{{ error_report.pk }} – Farmer App{% endblock %}
+
+{% block content %}
+<article>
+    <h1>Zgłoszenie #{{ error_report.pk }}</h1>
+    <dl>
+        <dt>Kategoria</dt>
+        <dd>{{ error_report.get_category_display }}</dd>
+        <dt>Status</dt>
+        <dd>{{ error_report.get_status_display }}</dd>
+        <dt>Data utworzenia</dt>
+        <dd>{{ error_report.created_at|date:"d.m.Y H:i" }}</dd>
+        <dt>Data aktualizacji</dt>
+        <dd>{{ error_report.updated_at|date:"d.m.Y H:i" }}</dd>
+        <dt>Opis</dt>
+        <dd>{{ error_report.description|linebreaksbr }}</dd>
+    </dl>
+    <p>Status zgłoszenia jest zmieniany przez administratora.</p>
+    <p><a href="{% url 'core:error_report_list' %}">Wróć do moich zgłoszeń</a></p>
+</article>
+{% endblock %}

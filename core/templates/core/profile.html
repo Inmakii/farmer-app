@@ -15,5 +15,13 @@
             <dt>Adres e-mail</dt>
             <dd>{{ user.email }}</dd>
         </dl>
+        <section>
+            <h2>Zgłoszenia błędów</h2>
+            <p>Liczba Twoich zgłoszeń: {{ error_report_count }}</p>
+            <p>
+                <a href="{% url 'core:error_report_create' %}">Utwórz zgłoszenie</a>
+                <a href="{% url 'core:error_report_list' %}">Moje zgłoszenia</a>
+            </p>
+        </section>
     </article>
 {% endblock %}

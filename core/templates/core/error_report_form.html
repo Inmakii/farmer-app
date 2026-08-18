@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+
+{% block title %}Zgłoś błąd – Farmer App{% endblock %}
+
+{% block content %}
+<section>
+    <h1>Zgłoś błąd</h1>
+    <p>Po wysłaniu zgłoszenia jego status będzie zmieniany przez administratora.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+                {{ field.errors }}
+            </p>
+        {% endfor %}
+        <button type="submit">Wyślij zgłoszenie</button>
+    </form>
+    <p><a href="{% url 'core:error_report_list' %}">Moje zgłoszenia</a></p>
+</section>
+{% endblock %}

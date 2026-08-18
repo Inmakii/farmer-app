@@ -17,6 +17,7 @@
                 <a href="{% url 'core:spraying_list' %}">Opryski</a>
                 <a href="{% url 'core:harvest_list' %}">Zbiory</a>
                 <a href="{% url 'core:report_dashboard' %}">Raporty</a>
+                <a href="{% url 'core:error_report_create' %}">Zgłoś błąd</a>
                 <form method="post" action="{% url 'core:logout' %}">
                     {% csrf_token %}
                     <button type="submit">Wyloguj się</button>

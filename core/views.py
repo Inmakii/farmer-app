@@ -18,13 +18,14 @@ from django.views.generic import (
 
 from .forms import (
     CultivationForm,
+    ErrorReportForm,
     FieldForm,
     FieldWorkForm,
     HarvestForm,
     RegistrationForm,
     SprayingForm,
 )
-from .models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
+from .models import Crop, Cultivation, ErrorReport, Field, FieldWork, Harvest, Spraying
 from .services.reports import (
     calculate_totals,
     get_cultivation_report,
@@ -79,6 +80,11 @@ class LogoutView(DjangoLogoutView):
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = "core/profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["error_report_count"] = self.request.user.error_reports.count()
+        return context
 
 
 class FieldOwnerQuerysetMixin(LoginRequiredMixin):
@@ -835,3 +841,59 @@ class CultivationReportView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["report"] = get_cultivation_report(self.object)
         return context
+
+
+class ErrorReportOwnerQuerysetMixin(LoginRequiredMixin):
+    model = ErrorReport
+
+    def get_queryset(self):
+        return ErrorReport.objects.filter(user=self.request.user)
+
+
+class ErrorReportListView(ErrorReportOwnerQuerysetMixin, ListView):
+    template_name = "core/error_report_list.html"
+    context_object_name = "error_reports"
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by("-created_at")
+        category = self.request.GET.get("category", "")
+        status = self.request.GET.get("status", "")
+        if category in ErrorReport.Category.values:
+            queryset = queryset.filter(category=category)
+        if status in ErrorReport.Status.values:
+            queryset = queryset.filter(status=status)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "category_choices": ErrorReport.Category.choices,
+                "status_choices": ErrorReport.Status.choices,
+                "selected_category": self.request.GET.get("category", ""),
+                "selected_status": self.request.GET.get("status", ""),
+            }
+        )
+        return context
+
+
+class ErrorReportDetailView(ErrorReportOwnerQuerysetMixin, DetailView):
+    template_name = "core/error_report_detail.html"
+    context_object_name = "error_report"
+
+
+class ErrorReportCreateView(LoginRequiredMixin, CreateView):
+    model = ErrorReport
+    form_class = ErrorReportForm
+    template_name = "core/error_report_form.html"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.status = ErrorReport.Status.NEW
+        response = super().form_valid(form)
+        messages.success(self.request, "Zgłoszenie błędu zostało utworzone.")
+        return response
+
+    def get_success_url(self):
+        return reverse("core:error_report_detail", kwargs={"pk": self.object.pk})
