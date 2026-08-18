@@ -1,0 +1,7 @@
+{% extends "core/base.html" %}
+{% block title %}Uprawy – Farmer App{% endblock %}
+{% block content %}
+<h1>Uprawy</h1>
+{% if has_fields %}<a href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>{% else %}<p>Nie masz jeszcze pól. <a href="{% url 'core:field_create' %}">Utwórz pole</a>.</p>{% endif %}
+{% if cultivations %}<ul>{% for cultivation in cultivations %}<li><a href="{% url 'core:cultivation_detail' cultivation.pk %}">{{ cultivation.crop.name }} – {{ cultivation.field.name }} ({{ cultivation.season_year }})</a></li>{% endfor %}</ul>{% elif has_fields %}<p>Nie znaleziono upraw.</p>{% endif %}
+{% endblock %}

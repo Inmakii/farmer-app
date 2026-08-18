@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Field
+from .models import Crop, Cultivation, Field, FieldWork
 
 
 class RegistrationForm(UserCreationForm):
@@ -151,3 +151,131 @@ class FieldForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+class CultivationForm(forms.ModelForm):
+    class Meta:
+        model = Cultivation
+        fields = (
+            "field", "crop", "season_year", "status", "sowing_date",
+            "planned_harvest_date", "notes",
+        )
+        labels = {
+            "field": "Pole", "crop": "Rodzaj uprawy", "season_year": "Rok sezonu",
+            "status": "Status", "sowing_date": "Data siewu",
+            "planned_harvest_date": "Planowana data zbioru", "notes": "Notatki",
+        }
+        help_texts = {
+            "field": "Możesz wybrać wyłącznie jedno ze swoich pól.",
+            "season_year": "Dozwolony zakres lat: 2000–2100.",
+            "planned_harvest_date": "Nie może być wcześniejsza od daty siewu.",
+        }
+        widgets = {
+            "sowing_date": forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+            "planned_harvest_date": forms.DateInput(
+                attrs={"type": "date"}, format="%Y-%m-%d"
+            ),
+        }
+        error_messages = {
+            "field": {"required": "Wybierz pole.", "invalid_choice": "Wybrane pole jest niedostępne."},
+            "crop": {"required": "Wybierz rodzaj uprawy."},
+            "season_year": {"required": "Rok sezonu jest wymagany."},
+            "status": {"required": "Wybierz status uprawy."},
+        }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["field"].queryset = (
+            Field.objects.filter(owner=user).order_by("name")
+            if user is not None else Field.objects.none()
+        )
+        self.fields["crop"].queryset = Crop.objects.order_by("name")
+
+    def clean(self):
+        cleaned_data = super().clean()
+        sowing_date = cleaned_data.get("sowing_date")
+        harvest_date = cleaned_data.get("planned_harvest_date")
+        if sowing_date and harvest_date and harvest_date < sowing_date:
+            self.add_error(
+                "planned_harvest_date",
+                "Planowana data zbioru nie może być wcześniejsza od daty siewu.",
+            )
+        field = cleaned_data.get("field")
+        crop = cleaned_data.get("crop")
+        season_year = cleaned_data.get("season_year")
+        if field and crop and season_year:
+            duplicate = Cultivation.objects.filter(
+                field=field, crop=crop, season_year=season_year
+            )
+            if self.instance.pk:
+                duplicate = duplicate.exclude(pk=self.instance.pk)
+            if duplicate.exists():
+                raise ValidationError(
+                    "Taka uprawa jest już przypisana do tego pola i sezonu."
+                )
+        return cleaned_data
+
+
+class CultivationChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, cultivation):
+        return (
+            f"{cultivation.field.name} — {cultivation.crop.name} "
+            f"({cultivation.season_year})"
+        )
+
+
+class FieldWorkForm(forms.ModelForm):
+    cultivation = CultivationChoiceField(
+        queryset=Cultivation.objects.none(),
+        label="Uprawa",
+        help_text="Wybierz uprawę prowadzoną na jednym ze swoich pól.",
+        error_messages={
+            "required": "Wybierz uprawę.",
+            "invalid_choice": "Wybrana uprawa jest niedostępna.",
+        },
+    )
+
+    class Meta:
+        model = FieldWork
+        fields = ("cultivation", "work_type", "work_date", "cost", "description")
+        labels = {
+            "work_type": "Rodzaj pracy",
+            "work_date": "Data wykonania",
+            "cost": "Koszt",
+            "description": "Opis",
+        }
+        help_texts = {
+            "work_date": "Podaj datę wykonania pracy.",
+            "cost": "Koszt nie może być ujemny.",
+            "description": "Opcjonalny opis wykonanej pracy.",
+        }
+        error_messages = {
+            "work_type": {"required": "Wybierz rodzaj pracy."},
+            "work_date": {
+                "required": "Data wykonania jest wymagana.",
+                "invalid": "Podaj poprawną datę wykonania.",
+            },
+            "cost": {
+                "required": "Koszt jest wymagany.",
+                "invalid": "Podaj poprawny koszt.",
+            },
+        }
+        widgets = {
+            "work_date": forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d")
+        }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["cultivation"].queryset = (
+            Cultivation.objects.filter(field__owner=user)
+            .select_related("field", "crop")
+            .order_by("-season_year", "field__name", "crop__name")
+            if user is not None else Cultivation.objects.none()
+        )
+        self.fields["work_date"].input_formats = ["%Y-%m-%d"]
+
+    def clean_cost(self):
+        cost = self.cleaned_data["cost"]
+        if cost < 0:
+            raise ValidationError("Koszt nie może być ujemny.")
+        return cost

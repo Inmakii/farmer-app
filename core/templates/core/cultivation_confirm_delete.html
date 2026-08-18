@@ -1,0 +1,3 @@
+{% extends "core/base.html" %}
+{% block title %}Usuń uprawę – Farmer App{% endblock %}
+{% block content %}<h1>Usuń uprawę</h1><p>Czy usunąć uprawę {{ cultivation }}?</p><form method="post">{% csrf_token %}<button type="submit">Tak, usuń</button></form>{% endblock %}
