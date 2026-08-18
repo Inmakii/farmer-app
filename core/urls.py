@@ -6,6 +6,9 @@ from .views import (
     CultivationDetailView,
     CultivationListView,
     CultivationUpdateView,
+    ErrorReportCreateView,
+    ErrorReportDetailView,
+    ErrorReportListView,
     FieldCreateView,
     FieldDeleteView,
     FieldDetailView,
@@ -85,5 +88,16 @@ urlpatterns = [
         "reports/cultivations/<int:pk>/",
         CultivationReportView.as_view(),
         name="cultivation_report",
+    ),
+    path("error-reports/", ErrorReportListView.as_view(), name="error_report_list"),
+    path(
+        "error-reports/add/",
+        ErrorReportCreateView.as_view(),
+        name="error_report_create",
+    ),
+    path(
+        "error-reports/<int:pk>/",
+        ErrorReportDetailView.as_view(),
+        name="error_report_detail",
     ),
 ]

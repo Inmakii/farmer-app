@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+
+{% block title %}Moje zgłoszenia błędów – Farmer App{% endblock %}
+
+{% block content %}
+<section>
+    <h1>Moje zgłoszenia błędów</h1>
+    <p><a href="{% url 'core:error_report_create' %}">Utwórz nowe zgłoszenie</a></p>
+    <p>Status zgłoszenia jest zmieniany przez administratora.</p>
+
+    <form method="get">
+        <label for="category">Kategoria</label>
+        <select name="category" id="category">
+            <option value="">Wszystkie</option>
+            {% for value, label in category_choices %}
+                <option value="{{ value }}"{% if selected_category == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <label for="status">Status</label>
+        <select name="status" id="status">
+            <option value="">Wszystkie</option>
+            {% for value, label in status_choices %}
+                <option value="{{ value }}"{% if selected_status == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filtruj</button>
+        <a href="{% url 'core:error_report_list' %}">Wyczyść filtry</a>
+    </form>
+
+    {% if error_reports %}
+        <ul>
+            {% for report in error_reports %}
+                <li>
+                    <a href="{% url 'core:error_report_detail' report.pk %}">Zgłoszenie #{{ report.pk }}</a>
+                    – {{ report.get_category_display }}, {{ report.get_status_display }},
+                    {{ report.created_at|date:"d.m.Y H:i" }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nie znaleziono zgłoszeń spełniających wybrane kryteria.</p>
+    {% endif %}
+
+    {% if is_paginated %}
+        <nav aria-label="Paginacja zgłoszeń">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}">Poprzednia</a>
+            {% endif %}
+            <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}">Następna</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}

@@ -51,6 +51,7 @@ class HarvestAdmin(admin.ModelAdmin):
 
 @admin.register(ErrorReport)
 class ErrorReportAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "category", "status", "created_at", "updated_at")
-    search_fields = ("user__username", "description")
+    list_display = ("user", "category", "status", "created_at", "updated_at")
+    search_fields = ("user__username", "user__email", "description")
     list_filter = ("category", "status", "created_at")
+    list_editable = ("status",)
