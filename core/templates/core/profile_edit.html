@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+
+{% block title %}Edycja profilu – Farmer App{% endblock %}
+
+{% block content %}
+<section>
+    <h1>Edytuj profil</h1>
+    <p>Nazwa użytkownika: <strong>{{ user.username }}</strong></p>
+    <p>Nazwy użytkownika nie można zmienić.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            </p>
+        {% endfor %}
+        <button type="submit">Zapisz zmiany</button>
+    </form>
+    <p><a href="{% url 'core:profile' %}">Wróć do profilu</a></p>
+</section>
+{% endblock %}

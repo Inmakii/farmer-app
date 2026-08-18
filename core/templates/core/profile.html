@@ -15,6 +15,10 @@
             <dt>Adres e-mail</dt>
             <dd>{{ user.email }}</dd>
         </dl>
+        <p>
+            <a href="{% url 'core:profile_edit' %}">Edytuj profil</a>
+            <a href="{% url 'core:password_change' %}">Zmień hasło</a>
+        </p>
         <section>
             <h2>Zgłoszenia błędów</h2>
             <p>Liczba Twoich zgłoszeń: {{ error_report_count }}</p>

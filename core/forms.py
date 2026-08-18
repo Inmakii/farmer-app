@@ -60,6 +60,36 @@ class RegistrationForm(UserCreationForm):
         return email
 
 
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ("first_name", "last_name", "email")
+        labels = {
+            "first_name": "Imię",
+            "last_name": "Nazwisko",
+            "email": "Adres e-mail",
+        }
+        error_messages = {
+            "email": {
+                "required": "Adres e-mail jest wymagany.",
+                "invalid": "Podaj poprawny adres e-mail.",
+            }
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"].required = True
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip()
+        users = get_user_model()._default_manager.filter(email__iexact=email)
+        if self.instance.pk:
+            users = users.exclude(pk=self.instance.pk)
+        if users.exists():
+            raise ValidationError("Użytkownik z tym adresem e-mail już istnieje.")
+        return email
+
+
 class FieldForm(forms.ModelForm):
     class Meta:
         model = Field
