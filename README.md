@@ -173,6 +173,7 @@ Przed scaleniem uruchom pełne testy, `git diff --check` i sprawdź konflikty. `
 
 ## Autorzy
 
-- Imię i nazwisko / numer albumu: _do uzupełnienia_;
-- Imię i nazwisko / numer albumu: _do uzupełnienia_;
-- Prowadzący: _do uzupełnienia_.
+- Daniil Stavytskyi / numer albumu: 102342;
+- Tsimafei Zelianeuski / numer albumu: 102338;
+- Dzmitry Marchuk / numer albumu: 102340;
+- Prowadzący: Fabian Bogusławski.
