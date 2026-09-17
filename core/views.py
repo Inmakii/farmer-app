@@ -38,6 +38,12 @@ from .services.reports import (
 )
 
 
+def home(request):
+    if request.user.is_authenticated:
+        return redirect("core:field_list")
+    return redirect("core:login")
+
+
 def parse_filter_date(value):
     try:
         return parse_date(value)
