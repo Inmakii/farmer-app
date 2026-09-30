@@ -257,6 +257,7 @@ CREATE TABLE `core_harvest` (
   `harvest_date` date NOT NULL,
   `quantity` decimal(12,2) NOT NULL,
   `unit` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `disposition` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'SOLD',
   `revenue` decimal(12,2) NOT NULL,
   `harvest_cost` decimal(12,2) NOT NULL,
   `notes` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -267,7 +268,8 @@ CREATE TABLE `core_harvest` (
   CONSTRAINT `core_harvest_cultivation_id_42eae7a0_fk_core_cultivation_id` FOREIGN KEY (`cultivation_id`) REFERENCES `core_cultivation` (`id`),
   CONSTRAINT `core_harvest_cost_gte_zero` CHECK ((`harvest_cost` >= 0)),
   CONSTRAINT `core_harvest_quantity_gt_zero` CHECK ((`quantity` > 0)),
-  CONSTRAINT `core_harvest_revenue_gte_zero` CHECK ((`revenue` >= 0))
+  CONSTRAINT `core_harvest_revenue_gte_zero` CHECK ((`revenue` >= 0)),
+  CONSTRAINT `core_harvest_unsold_revenue_zero` CHECK (((`disposition` = _utf8mb4'SOLD') OR (`revenue` = 0)))
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

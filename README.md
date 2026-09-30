@@ -8,7 +8,8 @@ Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządz
 - profil użytkownika, edycja danych i zmiana hasła z zachowaniem sesji;
 - CRUD własnych pól, upraw sezonowych, prac, oprysków i zbiorów;
 - wyszukiwanie, filtry oraz paginacja list;
-- raport gospodarstwa, pola i uprawy z kosztami, przychodami i zyskiem;
+- raport gospodarstwa, pola i uprawy z ilością zbiorów, stratami, kosztami, przychodami i zyskiem;
+- rozróżnienie zbiorów sprzedanych, magazynowanych oraz zutylizowanych;
 - zgłaszanie błędów i podgląd własnych zgłoszeń;
 - administracja rodzajami upraw i statusami zgłoszeń;
 - idempotentna komenda przygotowująca dane demonstracyjne;

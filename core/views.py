@@ -693,6 +693,7 @@ class HarvestListView(HarvestOwnerQuerysetMixin, ListView):
         cultivation_id = self.request.GET.get("cultivation", "")
         field_id = self.request.GET.get("field", "")
         unit = self.request.GET.get("unit", "")
+        disposition = self.request.GET.get("disposition", "")
         date_from = parse_filter_date(self.request.GET.get("date_from", ""))
         date_to = parse_filter_date(self.request.GET.get("date_to", ""))
 
@@ -708,6 +709,8 @@ class HarvestListView(HarvestOwnerQuerysetMixin, ListView):
             queryset = queryset.filter(cultivation__field_id=field_id)
         if unit:
             queryset = queryset.filter(unit=unit)
+        if disposition in Harvest.Disposition.values:
+            queryset = queryset.filter(disposition=disposition)
         if date_from:
             queryset = queryset.filter(harvest_date__gte=date_from)
         if date_to:
@@ -727,9 +730,11 @@ class HarvestListView(HarvestOwnerQuerysetMixin, ListView):
                     "-season_year", "field__name", "crop__name"
                 ),
                 "unit_choices": Harvest.Unit.choices,
+                "disposition_choices": Harvest.Disposition.choices,
                 "selected_cultivation": self.request.GET.get("cultivation", ""),
                 "selected_field": self.request.GET.get("field", ""),
                 "selected_unit": self.request.GET.get("unit", ""),
+                "selected_disposition": self.request.GET.get("disposition", ""),
                 "selected_date_from": self.request.GET.get("date_from", ""),
                 "selected_date_to": self.request.GET.get("date_to", ""),
                 "query": self.request.GET.get("q", ""),

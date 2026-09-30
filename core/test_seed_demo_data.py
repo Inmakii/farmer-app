@@ -37,6 +37,9 @@ class SeedDemoDataCommandTests(TestCase):
         self.assertEqual(wheat.status, Cultivation.Status.ACTIVE)
         self.assertEqual(wheat.sowing_date, date(2026, 3, 20))
         self.assertEqual(wheat.planned_harvest_date, date(2026, 8, 10))
+        self.assertFalse(
+            Harvest.objects.exclude(disposition=Harvest.Disposition.SOLD).exists()
+        )
         self.assertIn("Dane demonstracyjne zostały przygotowane.", output)
 
     def test_running_command_twice_does_not_duplicate_data(self):

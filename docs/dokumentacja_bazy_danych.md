@@ -153,12 +153,13 @@ Ewidencja zbiorów, przychodów i kosztów zbioru.
 | `harvest_date` | DATE | Tak | — | Data zbioru. |
 | `quantity` | DECIMAL(12,2) | Tak | CHECK `quantity > 0` | Zebrana ilość. |
 | `unit` | VARCHAR(2) | Tak | wybór Django | Jednostka: `KG` albo `T`. |
+| `disposition` | VARCHAR(10) | Tak | domyślnie `SOLD`; wybór Django | Przeznaczenie zbioru: sprzedaż (`SOLD`), magazyn (`STORED`) albo strata/utylizacja (`DISCARDED`). |
 | `revenue` | DECIMAL(12,2) | Tak | domyślnie 0; CHECK `revenue >= 0` | Przychód ze zbioru. |
 | `harvest_cost` | DECIMAL(12,2) | Tak | domyślnie 0; CHECK `harvest_cost >= 0` | Koszt przeprowadzenia zbioru. |
 | `notes` | LONGTEXT | Nie | pusty ciąg dozwolony | Notatki dotyczące zbioru. |
 | `created_at` | DATETIME(6) | Tak | `auto_now_add` | Data i czas utworzenia. |
 
-Constrainty bazodanowe: `core_harvest_quantity_gt_zero`, `core_harvest_revenue_gte_zero` oraz `core_harvest_cost_gte_zero`. Właściwość modelu `profit` oblicza `revenue - harvest_cost`; nie jest osobną kolumną. Domyślne sortowanie: od najnowszej daty zbioru i utworzenia.
+Constrainty bazodanowe: `core_harvest_quantity_gt_zero`, `core_harvest_revenue_gte_zero`, `core_harvest_cost_gte_zero` oraz `core_harvest_unsold_revenue_zero`. Ostatni z nich wymusza zerowy przychód dla zbioru pozostawionego w magazynie albo zutylizowanego. Właściwość modelu `profit` oblicza `revenue - harvest_cost`; nie jest osobną kolumną. Domyślne sortowanie: od najnowszej daty zbioru i utworzenia.
 
 ### 4.8. Tabela `core_errorreport`
 
@@ -200,6 +201,7 @@ Zastosowane reguły:
 - `Field.area_ha` ma walidator minimum `0.01` oraz bazodanowy CHECK `area_ha > 0`;
 - koszty `FieldWork.cost`, `Spraying.cost`, `Harvest.harvest_cost` i przychód `Harvest.revenue` mają walidatory minimum `0` oraz odpowiednie constrainty `>= 0`;
 - ilości `Spraying.quantity` i `Harvest.quantity` mają walidatory minimum `0.01` oraz constrainty `> 0`;
+- `Harvest.revenue` musi wynosić `0`, gdy przeznaczeniem zbioru jest magazyn albo strata/utylizacja;
 - `latitude` ma walidatory od −90 do 90, a `longitude` od −180 do 180; migracja nie definiuje dla nich osobnych constraintów CHECK, dlatego jest to walidacja warstwy Django;
 - para (`owner`, `name`) w `Field` jest unikalna dzięki `core_field_unique_owner_name`;
 - trójka (`field`, `crop`, `season_year`) w `Cultivation` jest unikalna dzięki `core_cultivation_unique_field_crop_season`;
@@ -350,7 +352,7 @@ Koszty całkowite = koszty prac + koszty oprysków + koszty zbiorów
 Zysk = przychody ze zbiorów - koszty całkowite
 ```
 
-Właściwość `Harvest.profit` oblicza wyłącznie wynik pojedynczego zbioru jako `revenue - harvest_cost`. Raport gospodarstwa, pola lub uprawy uwzględnia koszty prac i oprysków. Każda kategoria jest agregowana osobnym zapytaniem, co zapobiega zwielokrotnianiu sum przez złączenia 1:N. Ilości w różnych jednostkach (`KG`, `T`, `L` itd.) nie są ze sobą sumowane.
+Właściwość `Harvest.profit` oblicza wyłącznie wynik pojedynczego zbioru jako `revenue - harvest_cost`. Raport gospodarstwa, pola lub uprawy uwzględnia koszty prac i oprysków. Każda kategoria jest agregowana osobnym zapytaniem, co zapobiega zwielokrotnianiu sum przez złączenia 1:N. Ilości zbiorów są normalizowane do kilogramów (`1 t = 1000 kg`) i raportowane łącznie oraz osobno jako sprzedane, przechowywane i zutylizowane. Ilości oprysków w różnych jednostkach nie są ze sobą sumowane.
 
 ## 15. Skalowalność
 

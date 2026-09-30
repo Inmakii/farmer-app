@@ -40,7 +40,7 @@ class FinancialReportsTests(TestCase):
 
     def test_empty_events_return_zero_values(self):
         totals = self.totals()
-        for key in ("work_costs", "spraying_costs", "harvest_costs", "total_costs", "total_revenue", "profit"):
+        for key in ("work_costs", "spraying_costs", "harvest_costs", "total_costs", "total_revenue", "total_quantity_kg", "sold_quantity_kg", "stored_quantity_kg", "discarded_quantity_kg", "profit"):
             self.assertEqual(totals[key], Decimal("0.00"))
 
     def test_work_cost_sum(self):
@@ -58,6 +58,36 @@ class FinancialReportsTests(TestCase):
     def test_revenue_sum(self):
         self.add_events()
         self.assertEqual(self.totals()["total_revenue"], Decimal("150.00"))
+
+    def test_harvest_quantities_are_normalized_to_kilograms(self):
+        self.add_events()
+        totals = self.totals()
+        self.assertEqual(totals["total_quantity_kg"], Decimal("1100.00"))
+        self.assertEqual(totals["sold_quantity_kg"], Decimal("1100.00"))
+
+    def test_harvest_quantities_are_split_by_disposition(self):
+        self.add_events()
+        Harvest.objects.create(
+            cultivation=self.cultivation,
+            harvest_date=date(2026, 8, 3),
+            quantity=Decimal("250"),
+            unit=Harvest.Unit.KG,
+            disposition=Harvest.Disposition.STORED,
+            revenue=Decimal("0"),
+        )
+        Harvest.objects.create(
+            cultivation=self.cultivation,
+            harvest_date=date(2026, 8, 4),
+            quantity=Decimal("0.5"),
+            unit=Harvest.Unit.T,
+            disposition=Harvest.Disposition.DISCARDED,
+            revenue=Decimal("0"),
+        )
+        totals = self.totals()
+        self.assertEqual(totals["total_quantity_kg"], Decimal("1850.00"))
+        self.assertEqual(totals["sold_quantity_kg"], Decimal("1100.00"))
+        self.assertEqual(totals["stored_quantity_kg"], Decimal("250.00"))
+        self.assertEqual(totals["discarded_quantity_kg"], Decimal("500.00"))
 
     def test_total_costs(self):
         self.add_events()
@@ -84,7 +114,7 @@ class FinancialReportsTests(TestCase):
 
     def test_financial_values_are_decimal(self):
         totals = self.totals()
-        for key in ("work_costs", "spraying_costs", "harvest_costs", "total_costs", "total_revenue", "profit"):
+        for key in ("work_costs", "spraying_costs", "harvest_costs", "total_costs", "total_revenue", "total_quantity_kg", "sold_quantity_kg", "stored_quantity_kg", "discarded_quantity_kg", "profit"):
             self.assertIsInstance(totals[key], Decimal)
 
     def test_anonymous_user_redirected(self):

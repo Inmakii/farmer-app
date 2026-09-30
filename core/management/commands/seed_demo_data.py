@@ -129,6 +129,7 @@ class Command(BaseCommand):
                 defaults={
                     "quantity": quantity,
                     "unit": unit,
+                    "disposition": Harvest.Disposition.SOLD,
                     "revenue": revenue,
                     "harvest_cost": harvest_cost,
                     "notes": "Zbiór demonstracyjny.",

@@ -209,6 +209,11 @@ class Harvest(models.Model):
         KG = "KG", "kg"
         T = "T", "t"
 
+    class Disposition(models.TextChoices):
+        SOLD = "SOLD", "Sprzedany"
+        STORED = "STORED", "Pozostawiony w magazynie"
+        DISCARDED = "DISCARDED", "Strata / zutylizowany"
+
     cultivation = models.ForeignKey(
         Cultivation, on_delete=models.CASCADE, related_name="harvests", verbose_name="uprawa"
     )
@@ -218,6 +223,12 @@ class Harvest(models.Model):
         validators=[MinValueValidator(Decimal("0.01"))],
     )
     unit = models.CharField("jednostka", max_length=2, choices=Unit.choices)
+    disposition = models.CharField(
+        "przeznaczenie zbioru",
+        max_length=10,
+        choices=Disposition.choices,
+        default=Disposition.SOLD,
+    )
     revenue = models.DecimalField(
         "przychód", max_digits=12, decimal_places=2, default=0,
         validators=[MinValueValidator(Decimal("0"))],
@@ -243,7 +254,23 @@ class Harvest(models.Model):
             models.CheckConstraint(
                 condition=Q(harvest_cost__gte=0), name="core_harvest_cost_gte_zero"
             ),
+            models.CheckConstraint(
+                condition=Q(disposition="SOLD") | Q(revenue=0),
+                name="core_harvest_unsold_revenue_zero",
+            ),
         ]
+
+    def clean(self):
+        super().clean()
+        if (
+            self.disposition != self.Disposition.SOLD
+            and self.revenue != Decimal("0")
+        ):
+            raise ValidationError({
+                "revenue": (
+                    "Przychód musi wynosić 0, jeśli zbiór nie został sprzedany."
+                )
+            })
 
     @property
     def profit(self):

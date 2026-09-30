@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.db.models import Count, DecimalField, Sum
+from django.db.models import Case, Count, DecimalField, F, Q, Sum, Value, When
 from django.db.models.functions import Coalesce
 
 from core.models import Cultivation, Field, FieldWork, Harvest, Spraying
@@ -10,8 +10,43 @@ ZERO = Decimal("0.00")
 MONEY_FIELD = DecimalField(max_digits=20, decimal_places=2)
 
 
-def _sum(expression):
-    return Coalesce(Sum(expression), ZERO, output_field=MONEY_FIELD)
+def _sum(expression, *, filter_condition=None):
+    return Coalesce(
+        Sum(expression, filter=filter_condition), ZERO, output_field=MONEY_FIELD
+    )
+
+
+def _quantity_in_kg():
+    return Case(
+        When(
+            unit=Harvest.Unit.T,
+            then=F("quantity") * Value(Decimal("1000")),
+        ),
+        default=F("quantity"),
+        output_field=MONEY_FIELD,
+    )
+
+
+def _harvest_aggregates():
+    quantity_in_kg = _quantity_in_kg()
+    return {
+        "harvest_costs": _sum("harvest_cost"),
+        "total_revenue": _sum("revenue"),
+        "harvest_count": Count("id"),
+        "total_quantity_kg": _sum(quantity_in_kg),
+        "sold_quantity_kg": _sum(
+            quantity_in_kg,
+            filter_condition=Q(disposition=Harvest.Disposition.SOLD),
+        ),
+        "stored_quantity_kg": _sum(
+            quantity_in_kg,
+            filter_condition=Q(disposition=Harvest.Disposition.STORED),
+        ),
+        "discarded_quantity_kg": _sum(
+            quantity_in_kg,
+            filter_condition=Q(disposition=Harvest.Disposition.DISCARDED),
+        ),
+    }
 
 
 def calculate_totals(cultivations_queryset):
@@ -24,11 +59,7 @@ def calculate_totals(cultivations_queryset):
     ).aggregate(spraying_costs=_sum("cost"), spraying_count=Count("id"))
     harvests = Harvest.objects.filter(
         cultivation__in=cultivations_queryset
-    ).aggregate(
-        harvest_costs=_sum("harvest_cost"),
-        total_revenue=_sum("revenue"),
-        harvest_count=Count("id"),
-    )
+    ).aggregate(**_harvest_aggregates())
     cultivation_counts = cultivations_queryset.aggregate(
         cultivation_count=Count("id"), field_count=Count("field_id", distinct=True)
     )
@@ -43,6 +74,10 @@ def calculate_totals(cultivations_queryset):
         "harvest_costs": harvests["harvest_costs"],
         "total_costs": total_costs,
         "total_revenue": harvests["total_revenue"],
+        "total_quantity_kg": harvests["total_quantity_kg"],
+        "sold_quantity_kg": harvests["sold_quantity_kg"],
+        "stored_quantity_kg": harvests["stored_quantity_kg"],
+        "discarded_quantity_kg": harvests["discarded_quantity_kg"],
         "profit": harvests["total_revenue"] - total_costs,
         "field_count": cultivation_counts["field_count"],
         "cultivation_count": cultivation_counts["cultivation_count"],
@@ -76,11 +111,7 @@ def get_cultivation_reports(cultivations_queryset):
         row["cultivation_id"]: row
         for row in Harvest.objects.filter(cultivation_id__in=ids)
         .values("cultivation_id")
-        .annotate(
-            harvest_costs=_sum("harvest_cost"),
-            total_revenue=_sum("revenue"),
-            harvest_count=Count("id"),
-        )
+        .annotate(**_harvest_aggregates())
     }
     reports = []
     for cultivation in cultivations:
@@ -100,6 +131,12 @@ def get_cultivation_reports(cultivations_queryset):
                 "harvest_costs": harvest_costs,
                 "total_costs": total_costs,
                 "total_revenue": revenue,
+                "total_quantity_kg": harvest.get("total_quantity_kg", ZERO),
+                "sold_quantity_kg": harvest.get("sold_quantity_kg", ZERO),
+                "stored_quantity_kg": harvest.get("stored_quantity_kg", ZERO),
+                "discarded_quantity_kg": harvest.get(
+                    "discarded_quantity_kg", ZERO
+                ),
                 "profit": revenue - total_costs,
                 "work_count": work.get("work_count", 0),
                 "spraying_count": spraying.get("spraying_count", 0),

@@ -297,6 +297,17 @@ class CultivationChoiceField(forms.ModelChoiceField):
 
 
 class FieldWorkForm(forms.ModelForm):
+    season_year = forms.TypedChoiceField(
+        label="Rok sezonu",
+        choices=(),
+        coerce=int,
+        empty_value=None,
+        help_text="Wybierz sezon zgodny z wybraną uprawą.",
+        error_messages={
+            "required": "Wybierz rok sezonu.",
+            "invalid_choice": "Wybrany sezon jest niedostępny.",
+        },
+    )
     cultivation = CultivationChoiceField(
         queryset=Cultivation.objects.none(),
         label="Uprawa",
@@ -309,7 +320,14 @@ class FieldWorkForm(forms.ModelForm):
 
     class Meta:
         model = FieldWork
-        fields = ("cultivation", "work_type", "work_date", "cost", "description")
+        fields = (
+            "season_year",
+            "cultivation",
+            "work_type",
+            "work_date",
+            "cost",
+            "description",
+        )
         labels = {
             "work_type": "Rodzaj pracy",
             "work_date": "Data wykonania",
@@ -338,14 +356,41 @@ class FieldWorkForm(forms.ModelForm):
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["cultivation"].queryset = (
+        cultivations = (
             Cultivation.objects.filter(field__owner=user)
             .select_related("field", "crop")
             .order_by("-season_year", "field__name", "crop__name")
             if user is not None
             else Cultivation.objects.none()
         )
+        self.fields["cultivation"].queryset = cultivations
+        years = cultivations.order_by("-season_year").values_list(
+            "season_year", flat=True
+        ).distinct()
+        self.fields["season_year"].choices = [(year, year) for year in years]
+        initial_cultivation = self.initial.get("cultivation")
+        if self.instance.pk:
+            self.initial.setdefault(
+                "season_year", self.instance.cultivation.season_year
+            )
+        elif isinstance(initial_cultivation, Cultivation):
+            self.initial.setdefault("season_year", initial_cultivation.season_year)
         self.fields["work_date"].input_formats = ["%Y-%m-%d"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cultivation = cleaned_data.get("cultivation")
+        season_year = cleaned_data.get("season_year")
+        if (
+            cultivation is not None
+            and season_year is not None
+            and cultivation.season_year != season_year
+        ):
+            self.add_error(
+                "season_year",
+                "Wybrany sezon nie jest zgodny z sezonem wybranej uprawy.",
+            )
+        return cleaned_data
 
     def clean_cost(self):
         cost = self.cleaned_data["cost"]
@@ -458,6 +503,7 @@ class HarvestForm(forms.ModelForm):
             "harvest_date",
             "quantity",
             "unit",
+            "disposition",
             "revenue",
             "harvest_cost",
             "notes",
@@ -466,6 +512,7 @@ class HarvestForm(forms.ModelForm):
             "harvest_date": "Data zbioru",
             "quantity": "Ilość",
             "unit": "Jednostka",
+            "disposition": "Przeznaczenie zbioru",
             "revenue": "Przychód",
             "harvest_cost": "Koszt zbioru",
             "notes": "Notatki",
@@ -473,6 +520,10 @@ class HarvestForm(forms.ModelForm):
         help_texts = {
             "harvest_date": "Podaj datę przeprowadzenia zbioru.",
             "quantity": "Ilość musi być większa od zera.",
+            "disposition": (
+                "Określ, czy zbiór został sprzedany, trafił do magazynu, "
+                "czy został zutylizowany jako strata."
+            ),
             "revenue": "Przychód nie może być ujemny.",
             "harvest_cost": "Koszt zbioru nie może być ujemny.",
             "notes": "Opcjonalne informacje o zbiorze.",
@@ -487,6 +538,7 @@ class HarvestForm(forms.ModelForm):
                 "invalid": "Podaj poprawną ilość zbioru.",
             },
             "unit": {"required": "Wybierz jednostkę."},
+            "disposition": {"required": "Wybierz przeznaczenie zbioru."},
             "revenue": {
                 "required": "Przychód jest wymagany.",
                 "invalid": "Podaj poprawny przychód.",
@@ -530,6 +582,21 @@ class HarvestForm(forms.ModelForm):
         if harvest_cost < 0:
             raise ValidationError("Koszt zbioru nie może być ujemny.")
         return harvest_cost
+
+    def clean(self):
+        cleaned_data = super().clean()
+        disposition = cleaned_data.get("disposition")
+        revenue = cleaned_data.get("revenue")
+        if (
+            disposition
+            and disposition != Harvest.Disposition.SOLD
+            and revenue not in (None, 0)
+        ):
+            self.add_error(
+                "revenue",
+                "Przychód musi wynosić 0, jeśli zbiór nie został sprzedany.",
+            )
+        return cleaned_data
 
 
 class ErrorReportForm(forms.ModelForm):

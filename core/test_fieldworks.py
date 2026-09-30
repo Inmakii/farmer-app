@@ -24,7 +24,7 @@ class FieldWorkCrudTests(TestCase):
         self.other_work = FieldWork.objects.create(cultivation=self.other_cultivation, work_type=FieldWork.WorkType.SOWING, work_date=date(2026, 4, 10), cost=Decimal("200.00"), description="Cudzy siew")
 
     def data(self, **overrides):
-        values = {"cultivation": str(self.cultivation.pk), "work_type": FieldWork.WorkType.SOWING, "work_date": "2026-04-01", "cost": "50.00", "description": "Nowa praca"}
+        values = {"season_year": "2026", "cultivation": str(self.cultivation.pk), "work_type": FieldWork.WorkType.SOWING, "work_date": "2026-04-01", "cost": "50.00", "description": "Nowa praca"}
         values.update(overrides)
         return values
 
@@ -73,6 +73,18 @@ class FieldWorkCrudTests(TestCase):
         form = FieldWorkForm(user=self.owner)
         self.assertQuerySetEqual(form.fields["cultivation"].queryset, [self.cultivation])
         self.assertIn(self.field.name, form.fields["cultivation"].label_from_instance(self.cultivation))
+        self.assertEqual(form.fields["season_year"].choices, [(2026, 2026)])
+
+    def test_form_rejects_season_not_matching_cultivation(self):
+        Cultivation.objects.create(
+            field=self.field,
+            crop=self.other_crop,
+            season_year=2027,
+            status=Cultivation.Status.PLANNED,
+        )
+        form = FieldWorkForm(data=self.data(season_year="2027"), user=self.owner)
+        self.assertFalse(form.is_valid())
+        self.assertIn("season_year", form.errors)
 
     def test_form_rejects_other_cultivation(self):
         form = FieldWorkForm(data=self.data(cultivation=str(self.other_cultivation.pk)), user=self.owner)
@@ -147,6 +159,7 @@ class FieldWorkCrudTests(TestCase):
         self.client.force_login(self.owner)
         response = self.client.get(reverse("core:fieldwork_create"), {"cultivation": self.cultivation.pk})
         self.assertEqual(response.context["form"].initial["cultivation"], self.cultivation)
+        self.assertEqual(response.context["form"].initial["season_year"], 2026)
 
     def test_get_cultivation_does_not_set_other_initial(self):
         self.client.force_login(self.owner)

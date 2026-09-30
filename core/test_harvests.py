@@ -24,7 +24,7 @@ class HarvestCrudTests(TestCase):
         self.other_harvest = Harvest.objects.create(cultivation=self.other_cultivation, harvest_date=date(2026, 9, 10), quantity=Decimal("15.00"), unit=Harvest.Unit.T, revenue=Decimal("15000.00"), harvest_cost=Decimal("2500.00"), notes="Tajny cudzy zbiór")
 
     def data(self, **overrides):
-        values = {"cultivation": str(self.cultivation.pk), "harvest_date": "2026-08-20", "quantity": "5.50", "unit": Harvest.Unit.T, "revenue": "6000.00", "harvest_cost": "1000.00", "notes": "Nowy zbiór"}
+        values = {"cultivation": str(self.cultivation.pk), "harvest_date": "2026-08-20", "quantity": "5.50", "unit": Harvest.Unit.T, "disposition": Harvest.Disposition.SOLD, "revenue": "6000.00", "harvest_cost": "1000.00", "notes": "Nowy zbiór"}
         values.update(overrides)
         return values
 
@@ -56,6 +56,14 @@ class HarvestCrudTests(TestCase):
     def test_filter_unit(self):
         self.client.force_login(self.owner)
         response = self.client.get(reverse("core:harvest_list"), {"unit": Harvest.Unit.T})
+        self.assertQuerySetEqual(response.context["harvests"], [self.harvest])
+
+    def test_filter_disposition(self):
+        self.client.force_login(self.owner)
+        response = self.client.get(
+            reverse("core:harvest_list"),
+            {"disposition": Harvest.Disposition.SOLD},
+        )
         self.assertQuerySetEqual(response.context["harvests"], [self.harvest])
 
     def test_filter_dates(self):
@@ -109,6 +117,25 @@ class HarvestCrudTests(TestCase):
         form = HarvestForm(data=self.data(revenue="0"), user=self.owner)
         self.assertTrue(form.is_valid(), form.errors)
 
+    def test_discarded_harvest_with_zero_revenue_is_accepted(self):
+        form = HarvestForm(
+            data=self.data(
+                disposition=Harvest.Disposition.DISCARDED,
+                revenue="0",
+                notes="Zgniłe jabłka",
+            ),
+            user=self.owner,
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_unsold_harvest_with_revenue_is_rejected(self):
+        form = HarvestForm(
+            data=self.data(disposition=Harvest.Disposition.STORED),
+            user=self.owner,
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("revenue", form.errors)
+
     def test_negative_harvest_cost_rejected(self):
         form = HarvestForm(data=self.data(harvest_cost="-0.01"), user=self.owner)
         self.assertFalse(form.is_valid())
@@ -128,6 +155,7 @@ class HarvestCrudTests(TestCase):
         self.assertEqual(response.context["harvest"], self.harvest)
         self.assertEqual(response.context["harvest"].profit, Decimal("10000.00"))
         self.assertContains(response, "Wynik zbioru")
+        self.assertContains(response, self.harvest.get_disposition_display())
 
     def test_other_gets_404_detail(self):
         self.client.force_login(self.other)

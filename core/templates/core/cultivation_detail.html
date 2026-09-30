@@ -83,7 +83,8 @@
                 {% for harvest in harvests %}
                     <li>
                         {{ harvest.harvest_date|date:"d.m.Y" }} – {{ harvest.quantity }}
-                        {{ harvest.get_unit_display }} – przychód {{ harvest.revenue }} zł –
+                        {{ harvest.get_unit_display }} – {{ harvest.get_disposition_display }} –
+                        przychód {{ harvest.revenue }} zł –
                         koszt {{ harvest.harvest_cost }} zł – wynik {{ harvest.profit }} zł
                         <a href="{% url 'core:harvest_detail' harvest.pk %}">Szczegóły</a>
                     </li>

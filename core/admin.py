@@ -43,10 +43,11 @@ class SprayingAdmin(admin.ModelAdmin):
 @admin.register(Harvest)
 class HarvestAdmin(admin.ModelAdmin):
     list_display = (
-        "cultivation", "harvest_date", "quantity", "unit", "revenue", "harvest_cost"
+        "cultivation", "harvest_date", "quantity", "unit", "disposition",
+        "revenue", "harvest_cost"
     )
     search_fields = ("cultivation__field__name", "cultivation__crop__name", "notes")
-    list_filter = ("unit", "harvest_date")
+    list_filter = ("disposition", "unit", "harvest_date")
 
 
 @admin.register(ErrorReport)
@@ -55,3 +56,10 @@ class ErrorReportAdmin(admin.ModelAdmin):
     search_fields = ("user__username", "user__email", "description")
     list_filter = ("category", "status", "created_at")
     list_editable = ("status",)
+    readonly_fields = ("created_at", "updated_at")
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = list(super().get_readonly_fields(request, obj))
+        if obj is not None:
+            readonly_fields.append("user")
+        return readonly_fields

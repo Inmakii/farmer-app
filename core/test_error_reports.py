@@ -136,3 +136,5 @@ class ErrorReportTests(TestCase):
         self.assertEqual(model_admin.list_filter, ("category", "status", "created_at"))
         self.assertEqual(model_admin.search_fields, ("user__username", "user__email", "description"))
         self.assertIn("status", model_admin.list_editable)
+        self.assertNotIn("user", model_admin.get_readonly_fields(None, None))
+        self.assertIn("user", model_admin.get_readonly_fields(None, self.report))
