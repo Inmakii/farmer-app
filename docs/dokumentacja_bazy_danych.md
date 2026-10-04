@@ -318,6 +318,10 @@ Komenda korzysta z `get_or_create` i `update_or_create`, dlatego ponowne uruchom
 
 Zestaw testów obejmuje modele i constrainty, rejestrację i uwierzytelnianie, profil i zmianę hasła, CRUD pól, upraw, prac, oprysków i zbiorów, raporty finansowe, zgłoszenia błędów oraz komendę demonstracyjną. Testy bezpieczeństwa sprawdzają wymaganie logowania, CSRF, odpowiedzi 404 dla cudzych danych, ograniczenie relacji przesyłanych przez POST, brak usuwania przez GET oraz izolację pełnego scenariusza gospodarstwa pomiędzy dwoma użytkownikami.
 
+Testy są zebrane w osobnym pakiecie `core/tests/`. Obejmują również wydawanie,
+odświeżanie i weryfikację tokenów JWT oraz dostęp do chronionego endpointu
+`/api/auth/me/` za pomocą nagłówka `Authorization: Bearer <access>`.
+
 Testy `seed_demo_data` sprawdzają poprawne wartości i liczby rekordów, brak duplikatów po dwukrotnym uruchomieniu oraz błąd dla nieistniejącego użytkownika.
 
 Aby uruchomić testy na SQLite bez modyfikowania `.env` i bez dotykania danych MySQL, w bieżącej sesji PowerShell należy jawnie nadpisać silnik:

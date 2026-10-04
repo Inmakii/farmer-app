@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.test import TestCase
 from django.urls import reverse
 
@@ -7,6 +8,8 @@ class AuthenticationViewsTests(TestCase):
     password = "StrongPass!2026"
 
     def setUp(self):
+        cache.clear()
+        self.addCleanup(cache.clear)
         self.user = get_user_model().objects.create_user(
             username="existing_user",
             first_name="Jan",
@@ -153,3 +156,39 @@ class AuthenticationViewsTests(TestCase):
 
         self.assertRedirects(login_response, reverse("core:profile"))
         self.assertRedirects(register_response, reverse("core:profile"))
+
+    def test_login_is_locked_after_repeated_failures(self):
+        url = reverse("core:login")
+        for _ in range(5):
+            self.client.post(
+                url, {"username": self.user.username, "password": "wrong-password"}
+            )
+
+        response = self.client.post(
+            url, {"username": self.user.username, "password": self.password}
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Zbyt wiele nieudanych prób logowania")
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_lockout_is_per_username_and_cleared_by_success(self):
+        url = reverse("core:login")
+        for _ in range(4):
+            self.client.post(
+                url, {"username": self.user.username, "password": "wrong-password"}
+            )
+        self.client.post(
+            url, {"username": self.user.username, "password": self.password}
+        )
+        self.client.post(reverse("core:logout"))
+        for _ in range(4):
+            self.client.post(
+                url, {"username": self.user.username, "password": "wrong-password"}
+            )
+
+        response = self.client.post(
+            url, {"username": self.user.username, "password": self.password}
+        )
+
+        self.assertRedirects(response, reverse("core:profile"))

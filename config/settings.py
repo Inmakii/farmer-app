@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+import sys
+from datetime import timedelta
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
@@ -32,7 +34,7 @@ if not SECRET_KEY:
     )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes', 'on')
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes', 'on')
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -47,6 +49,7 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -147,7 +150,29 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Przyspiesza testy: szybki hasher haseł tylko podczas `manage.py test`.
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
+
 # Authentication redirects
 LOGIN_URL = 'core:login'
 LOGIN_REDIRECT_URL = 'core:profile'
 LOGOUT_REDIRECT_URL = 'core:login'
+
+# JWT authentication for API clients. Browser pages continue to use Django sessions.
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    # Limity dla endpointów tokenów (ScopedRateThrottle), chroniące przed zgadywaniem haseł.
+    "DEFAULT_THROTTLE_RATES": {
+        "auth_token": "10/min",
+        "auth_refresh": "30/min",
+    },
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}

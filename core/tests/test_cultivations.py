@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from .forms import CultivationForm
-from .models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
+from ..forms import CultivationForm
+from ..models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
 
 
 class CultivationCrudTests(TestCase):
@@ -365,3 +365,13 @@ class CultivationCrudTests(TestCase):
         self.assertEqual(response.context["work_count"], 1)
         self.assertEqual(response.context["spraying_count"], 1)
         self.assertEqual(response.context["harvest_count"], 1)
+
+    def test_invalid_status_filter_is_ignored(self):
+        self.client.force_login(self.owner)
+
+        response = self.client.get(
+            reverse("core:cultivation_list"), {"status": "NOT_A_STATUS"}
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.own_cultivation, response.context["cultivations"])

@@ -1,9 +1,13 @@
+import hashlib
+
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import LogoutView as DjangoLogoutView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core.cache import cache
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
@@ -78,9 +82,48 @@ class RegisterView(FormView):
         return super().form_valid(form)
 
 
+LOGIN_MAX_FAILURES = 5
+LOGIN_LOCKOUT_SECONDS = 15 * 60
+
+
 class LoginView(DjangoLoginView):
+    """Logowanie z blokadą po serii nieudanych prób (per adres IP i nazwa użytkownika)."""
+
     template_name = "core/login.html"
     redirect_authenticated_user = True
+
+    def _failure_cache_key(self):
+        username = self.request.POST.get("username", "").strip().lower()
+        identity = f"{self.request.META.get('REMOTE_ADDR', '')}|{username}"
+        digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()
+        return f"login-failures:{digest}"
+
+    def post(self, request, *args, **kwargs):
+        self._locked_out = (
+            cache.get(self._failure_cache_key(), 0) >= LOGIN_MAX_FAILURES
+        )
+        if self._locked_out:
+            form = self.get_form()
+            form.add_error(
+                None,
+                "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za kilka minut.",
+            )
+            return self.form_invalid(form)
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        cache.delete(self._failure_cache_key())
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        if not self._locked_out:
+            key = self._failure_cache_key()
+            cache.add(key, 0, LOGIN_LOCKOUT_SECONDS)
+            try:
+                cache.incr(key)
+            except ValueError:
+                cache.set(key, 1, LOGIN_LOCKOUT_SECONDS)
+        return super().form_invalid(form)
 
 
 class LogoutView(DjangoLogoutView):
@@ -272,7 +315,7 @@ class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
             queryset = queryset.filter(field_id=field_id)
         if crop_id.isdigit():
             queryset = queryset.filter(crop_id=crop_id)
-        if status:
+        if status in Cultivation.Status.values:
             queryset = queryset.filter(status=status)
         if season_year.isdigit():
             queryset = queryset.filter(season_year=season_year)
@@ -370,18 +413,16 @@ class CultivationDeleteView(CultivationOwnerQuerysetMixin, DeleteView):
         return super().form_valid(form)
 
 
-class FieldWorkOwnerQuerysetMixin(LoginRequiredMixin):
-    model = FieldWork
+class CultivationEventOwnerMixin(LoginRequiredMixin):
+    """Ogranicza zdarzenia uprawy (prace, opryski, zbiory) do pól zalogowanego właściciela."""
 
     def get_queryset(self):
-        return FieldWork.objects.filter(
+        return self.model.objects.filter(
             cultivation__field__owner=self.request.user
         ).select_related("cultivation", "cultivation__field", "cultivation__crop")
 
 
-class FieldWorkFormUserMixin:
-    form_class = FieldWorkForm
-
+class CultivationEventFormMixin:
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
@@ -395,216 +436,82 @@ class FieldWorkFormUserMixin:
         return context
 
 
-class FieldWorkListView(FieldWorkOwnerQuerysetMixin, ListView):
-    template_name = "core/fieldwork_list.html"
-    context_object_name = "works"
+class CultivationEventListView(CultivationEventOwnerMixin, ListView):
+    """Lista z wyszukiwaniem i filtrami wspólnymi dla prac, oprysków i zbiorów.
+
+    Podklasy ustawiają ``date_field``, ``search_fields`` (dodatkowe pola tekstowe)
+    oraz ``choice_filters`` jako krotki ``(parametr, nazwa_wyborów_w_kontekście, enum)``.
+    """
+
     paginate_by = 10
+    date_field = None
+    search_fields = ()
+    choice_filters = ()
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by("-work_date", "-id")
-        query = self.request.GET.get("q", "").strip()
-        cultivation_id = self.request.GET.get("cultivation", "")
-        field_id = self.request.GET.get("field", "")
-        work_type = self.request.GET.get("work_type", "")
-        date_from = parse_filter_date(self.request.GET.get("date_from", ""))
-        date_to = parse_filter_date(self.request.GET.get("date_to", ""))
+        queryset = super().get_queryset().order_by(f"-{self.date_field}", "-id")
+        params = self.request.GET
+        query = params.get("q", "").strip()
+        cultivation_id = params.get("cultivation", "")
+        field_id = params.get("field", "")
+        date_from = parse_filter_date(params.get("date_from", ""))
+        date_to = parse_filter_date(params.get("date_to", ""))
 
         if query:
-            queryset = queryset.filter(
-                Q(description__icontains=query)
-                | Q(cultivation__field__name__icontains=query)
+            condition = (
+                Q(cultivation__field__name__icontains=query)
                 | Q(cultivation__crop__name__icontains=query)
             )
+            for name in self.search_fields:
+                condition |= Q(**{f"{name}__icontains": query})
+            queryset = queryset.filter(condition)
         if cultivation_id.isdigit():
             queryset = queryset.filter(cultivation_id=cultivation_id)
         if field_id.isdigit():
             queryset = queryset.filter(cultivation__field_id=field_id)
-        if work_type:
-            queryset = queryset.filter(work_type=work_type)
+        for param, _context_name, choices in self.choice_filters:
+            value = params.get(param, "")
+            if value in choices.values:
+                queryset = queryset.filter(**{param: value})
         if date_from:
-            queryset = queryset.filter(work_date__gte=date_from)
+            queryset = queryset.filter(**{f"{self.date_field}__gte": date_from})
         if date_to:
-            queryset = queryset.filter(work_date__lte=date_to)
+            queryset = queryset.filter(**{f"{self.date_field}__lte": date_to})
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        query_parameters = self.request.GET.copy()
+        params = self.request.GET
+        query_parameters = params.copy()
         query_parameters.pop("page", None)
         context.update(
             {
-                "user_fields": Field.objects.filter(owner=self.request.user).order_by("name"),
+                "user_fields": Field.objects.filter(
+                    owner=self.request.user
+                ).order_by("name"),
                 "user_cultivations": Cultivation.objects.filter(
                     field__owner=self.request.user
                 ).select_related("field", "crop").order_by(
                     "-season_year", "field__name", "crop__name"
                 ),
-                "work_type_choices": FieldWork.WorkType.choices,
-                "selected_cultivation": self.request.GET.get("cultivation", ""),
-                "selected_field": self.request.GET.get("field", ""),
-                "selected_work_type": self.request.GET.get("work_type", ""),
-                "selected_date_from": self.request.GET.get("date_from", ""),
-                "selected_date_to": self.request.GET.get("date_to", ""),
-                "query": self.request.GET.get("q", ""),
+                "selected_cultivation": params.get("cultivation", ""),
+                "selected_field": params.get("field", ""),
+                "selected_date_from": params.get("date_from", ""),
+                "selected_date_to": params.get("date_to", ""),
+                "query": params.get("q", ""),
                 "querystring": query_parameters.urlencode(),
             }
         )
+        for param, context_name, choices in self.choice_filters:
+            context[context_name] = choices.choices
+            context[f"selected_{param}"] = params.get(param, "")
         return context
 
 
-class FieldWorkDetailView(FieldWorkOwnerQuerysetMixin, DetailView):
-    template_name = "core/fieldwork_detail.html"
-    context_object_name = "work"
-
-
-class FieldWorkCreateView(LoginRequiredMixin, FieldWorkFormUserMixin, CreateView):
-    model = FieldWork
-    template_name = "core/fieldwork_form.html"
-
-    def get_initial(self):
-        initial = super().get_initial()
-        cultivation_id = self.request.GET.get("cultivation", "")
-        if cultivation_id.isdigit():
-            cultivation = Cultivation.objects.filter(
-                pk=cultivation_id, field__owner=self.request.user
-            ).select_related("field", "crop").first()
-            if cultivation:
-                initial["cultivation"] = cultivation
-        return initial
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Praca została utworzona.")
-        return response
-
-    def get_success_url(self):
-        return reverse("core:fieldwork_detail", kwargs={"pk": self.object.pk})
-
-
-class FieldWorkUpdateView(
-    FieldWorkOwnerQuerysetMixin, FieldWorkFormUserMixin, UpdateView
+class CultivationEventCreateView(
+    LoginRequiredMixin, CultivationEventFormMixin, SuccessMessageMixin, CreateView
 ):
-    template_name = "core/fieldwork_form.html"
-    context_object_name = "work"
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Praca została zaktualizowana.")
-        return response
-
-    def get_success_url(self):
-        return reverse("core:fieldwork_detail", kwargs={"pk": self.object.pk})
-
-
-class FieldWorkDeleteView(FieldWorkOwnerQuerysetMixin, DeleteView):
-    template_name = "core/fieldwork_confirm_delete.html"
-    context_object_name = "work"
-    http_method_names = ["get", "post", "head", "options"]
-
-    def get_success_url(self):
-        cultivation_id = self.object.cultivation_id
-        if Cultivation.objects.filter(
-            pk=cultivation_id, field__owner=self.request.user
-        ).exists():
-            return reverse("core:cultivation_detail", kwargs={"pk": cultivation_id})
-        return reverse("core:fieldwork_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Praca została usunięta.")
-        return super().form_valid(form)
-
-
-class SprayingOwnerQuerysetMixin(LoginRequiredMixin):
-    model = Spraying
-
-    def get_queryset(self):
-        return Spraying.objects.filter(
-            cultivation__field__owner=self.request.user
-        ).select_related("cultivation", "cultivation__field", "cultivation__crop")
-
-
-class SprayingFormUserMixin:
-    form_class = SprayingForm
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["has_cultivations"] = Cultivation.objects.filter(
-            field__owner=self.request.user
-        ).exists()
-        return context
-
-
-class SprayingListView(SprayingOwnerQuerysetMixin, ListView):
-    template_name = "core/spraying_list.html"
-    context_object_name = "sprayings"
-    paginate_by = 10
-
-    def get_queryset(self):
-        queryset = super().get_queryset().order_by("-spraying_date", "-id")
-        query = self.request.GET.get("q", "").strip()
-        cultivation_id = self.request.GET.get("cultivation", "")
-        field_id = self.request.GET.get("field", "")
-        unit = self.request.GET.get("unit", "")
-        date_from = parse_filter_date(self.request.GET.get("date_from", ""))
-        date_to = parse_filter_date(self.request.GET.get("date_to", ""))
-
-        if query:
-            queryset = queryset.filter(
-                Q(product_name__icontains=query)
-                | Q(description__icontains=query)
-                | Q(cultivation__field__name__icontains=query)
-                | Q(cultivation__crop__name__icontains=query)
-            )
-        if cultivation_id.isdigit():
-            queryset = queryset.filter(cultivation_id=cultivation_id)
-        if field_id.isdigit():
-            queryset = queryset.filter(cultivation__field_id=field_id)
-        if unit:
-            queryset = queryset.filter(unit=unit)
-        if date_from:
-            queryset = queryset.filter(spraying_date__gte=date_from)
-        if date_to:
-            queryset = queryset.filter(spraying_date__lte=date_to)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        query_parameters = self.request.GET.copy()
-        query_parameters.pop("page", None)
-        context.update(
-            {
-                "user_fields": Field.objects.filter(owner=self.request.user).order_by("name"),
-                "user_cultivations": Cultivation.objects.filter(
-                    field__owner=self.request.user
-                ).select_related("field", "crop").order_by(
-                    "-season_year", "field__name", "crop__name"
-                ),
-                "unit_choices": Spraying.Unit.choices,
-                "selected_cultivation": self.request.GET.get("cultivation", ""),
-                "selected_field": self.request.GET.get("field", ""),
-                "selected_unit": self.request.GET.get("unit", ""),
-                "selected_date_from": self.request.GET.get("date_from", ""),
-                "selected_date_to": self.request.GET.get("date_to", ""),
-                "query": self.request.GET.get("q", ""),
-                "querystring": query_parameters.urlencode(),
-            }
-        )
-        return context
-
-
-class SprayingDetailView(SprayingOwnerQuerysetMixin, DetailView):
-    template_name = "core/spraying_detail.html"
-    context_object_name = "spraying"
-
-
-class SprayingCreateView(LoginRequiredMixin, SprayingFormUserMixin, CreateView):
-    model = Spraying
-    template_name = "core/spraying_form.html"
+    detail_url_name = None
 
     def get_initial(self):
         initial = super().get_initial()
@@ -617,178 +524,25 @@ class SprayingCreateView(LoginRequiredMixin, SprayingFormUserMixin, CreateView):
                 initial["cultivation"] = cultivation
         return initial
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Oprysk został utworzony.")
-        return response
-
     def get_success_url(self):
-        return reverse("core:spraying_detail", kwargs={"pk": self.object.pk})
+        return reverse(self.detail_url_name, kwargs={"pk": self.object.pk})
 
 
-class SprayingUpdateView(
-    SprayingOwnerQuerysetMixin, SprayingFormUserMixin, UpdateView
+class CultivationEventUpdateView(
+    CultivationEventOwnerMixin,
+    CultivationEventFormMixin,
+    SuccessMessageMixin,
+    UpdateView,
 ):
-    template_name = "core/spraying_form.html"
-    context_object_name = "spraying"
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Oprysk został zaktualizowany.")
-        return response
+    detail_url_name = None
 
     def get_success_url(self):
-        return reverse("core:spraying_detail", kwargs={"pk": self.object.pk})
+        return reverse(self.detail_url_name, kwargs={"pk": self.object.pk})
 
 
-class SprayingDeleteView(SprayingOwnerQuerysetMixin, DeleteView):
-    template_name = "core/spraying_confirm_delete.html"
-    context_object_name = "spraying"
-    http_method_names = ["get", "post", "head", "options"]
-
-    def get_success_url(self):
-        return reverse(
-            "core:cultivation_detail",
-            kwargs={"pk": self.object.cultivation_id},
-        )
-
-    def form_valid(self, form):
-        messages.success(self.request, "Oprysk został usunięty.")
-        return super().form_valid(form)
-
-
-class HarvestOwnerQuerysetMixin(LoginRequiredMixin):
-    model = Harvest
-
-    def get_queryset(self):
-        return Harvest.objects.filter(
-            cultivation__field__owner=self.request.user
-        ).select_related("cultivation", "cultivation__field", "cultivation__crop")
-
-
-class HarvestFormUserMixin:
-    form_class = HarvestForm
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["has_cultivations"] = Cultivation.objects.filter(
-            field__owner=self.request.user
-        ).exists()
-        return context
-
-
-class HarvestListView(HarvestOwnerQuerysetMixin, ListView):
-    template_name = "core/harvest_list.html"
-    context_object_name = "harvests"
-    paginate_by = 10
-
-    def get_queryset(self):
-        queryset = super().get_queryset().order_by("-harvest_date", "-id")
-        query = self.request.GET.get("q", "").strip()
-        cultivation_id = self.request.GET.get("cultivation", "")
-        field_id = self.request.GET.get("field", "")
-        unit = self.request.GET.get("unit", "")
-        disposition = self.request.GET.get("disposition", "")
-        date_from = parse_filter_date(self.request.GET.get("date_from", ""))
-        date_to = parse_filter_date(self.request.GET.get("date_to", ""))
-
-        if query:
-            queryset = queryset.filter(
-                Q(notes__icontains=query)
-                | Q(cultivation__field__name__icontains=query)
-                | Q(cultivation__crop__name__icontains=query)
-            )
-        if cultivation_id.isdigit():
-            queryset = queryset.filter(cultivation_id=cultivation_id)
-        if field_id.isdigit():
-            queryset = queryset.filter(cultivation__field_id=field_id)
-        if unit:
-            queryset = queryset.filter(unit=unit)
-        if disposition in Harvest.Disposition.values:
-            queryset = queryset.filter(disposition=disposition)
-        if date_from:
-            queryset = queryset.filter(harvest_date__gte=date_from)
-        if date_to:
-            queryset = queryset.filter(harvest_date__lte=date_to)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        query_parameters = self.request.GET.copy()
-        query_parameters.pop("page", None)
-        context.update(
-            {
-                "user_fields": Field.objects.filter(owner=self.request.user).order_by("name"),
-                "user_cultivations": Cultivation.objects.filter(
-                    field__owner=self.request.user
-                ).select_related("field", "crop").order_by(
-                    "-season_year", "field__name", "crop__name"
-                ),
-                "unit_choices": Harvest.Unit.choices,
-                "disposition_choices": Harvest.Disposition.choices,
-                "selected_cultivation": self.request.GET.get("cultivation", ""),
-                "selected_field": self.request.GET.get("field", ""),
-                "selected_unit": self.request.GET.get("unit", ""),
-                "selected_disposition": self.request.GET.get("disposition", ""),
-                "selected_date_from": self.request.GET.get("date_from", ""),
-                "selected_date_to": self.request.GET.get("date_to", ""),
-                "query": self.request.GET.get("q", ""),
-                "querystring": query_parameters.urlencode(),
-            }
-        )
-        return context
-
-
-class HarvestDetailView(HarvestOwnerQuerysetMixin, DetailView):
-    template_name = "core/harvest_detail.html"
-    context_object_name = "harvest"
-
-
-class HarvestCreateView(LoginRequiredMixin, HarvestFormUserMixin, CreateView):
-    model = Harvest
-    template_name = "core/harvest_form.html"
-
-    def get_initial(self):
-        initial = super().get_initial()
-        cultivation_id = self.request.GET.get("cultivation", "")
-        if cultivation_id.isdigit():
-            cultivation = Cultivation.objects.filter(
-                pk=cultivation_id, field__owner=self.request.user
-            ).select_related("field", "crop").first()
-            if cultivation:
-                initial["cultivation"] = cultivation
-        return initial
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Zbiór został utworzony.")
-        return response
-
-    def get_success_url(self):
-        return reverse("core:harvest_detail", kwargs={"pk": self.object.pk})
-
-
-class HarvestUpdateView(HarvestOwnerQuerysetMixin, HarvestFormUserMixin, UpdateView):
-    template_name = "core/harvest_form.html"
-    context_object_name = "harvest"
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Zbiór został zaktualizowany.")
-        return response
-
-    def get_success_url(self):
-        return reverse("core:harvest_detail", kwargs={"pk": self.object.pk})
-
-
-class HarvestDeleteView(HarvestOwnerQuerysetMixin, DeleteView):
-    template_name = "core/harvest_confirm_delete.html"
-    context_object_name = "harvest"
+class CultivationEventDeleteView(
+    CultivationEventOwnerMixin, SuccessMessageMixin, DeleteView
+):
     http_method_names = ["get", "post", "head", "options"]
 
     def get_success_url(self):
@@ -796,9 +550,125 @@ class HarvestDeleteView(HarvestOwnerQuerysetMixin, DeleteView):
             "core:cultivation_detail", kwargs={"pk": self.object.cultivation_id}
         )
 
-    def form_valid(self, form):
-        messages.success(self.request, "Zbiór został usunięty.")
-        return super().form_valid(form)
+
+class FieldWorkListView(CultivationEventListView):
+    model = FieldWork
+    template_name = "core/fieldwork_list.html"
+    context_object_name = "works"
+    date_field = "work_date"
+    search_fields = ("description",)
+    choice_filters = (("work_type", "work_type_choices", FieldWork.WorkType),)
+
+
+class FieldWorkDetailView(CultivationEventOwnerMixin, DetailView):
+    model = FieldWork
+    template_name = "core/fieldwork_detail.html"
+    context_object_name = "work"
+
+
+class FieldWorkCreateView(CultivationEventCreateView):
+    model = FieldWork
+    form_class = FieldWorkForm
+    template_name = "core/fieldwork_form.html"
+    detail_url_name = "core:fieldwork_detail"
+    success_message = "Praca została utworzona."
+
+
+class FieldWorkUpdateView(CultivationEventUpdateView):
+    model = FieldWork
+    form_class = FieldWorkForm
+    template_name = "core/fieldwork_form.html"
+    context_object_name = "work"
+    detail_url_name = "core:fieldwork_detail"
+    success_message = "Praca została zaktualizowana."
+
+
+class FieldWorkDeleteView(CultivationEventDeleteView):
+    model = FieldWork
+    template_name = "core/fieldwork_confirm_delete.html"
+    context_object_name = "work"
+    success_message = "Praca została usunięta."
+
+
+class SprayingListView(CultivationEventListView):
+    model = Spraying
+    template_name = "core/spraying_list.html"
+    context_object_name = "sprayings"
+    date_field = "spraying_date"
+    search_fields = ("product_name", "description")
+    choice_filters = (("unit", "unit_choices", Spraying.Unit),)
+
+
+class SprayingDetailView(CultivationEventOwnerMixin, DetailView):
+    model = Spraying
+    template_name = "core/spraying_detail.html"
+    context_object_name = "spraying"
+
+
+class SprayingCreateView(CultivationEventCreateView):
+    model = Spraying
+    form_class = SprayingForm
+    template_name = "core/spraying_form.html"
+    detail_url_name = "core:spraying_detail"
+    success_message = "Oprysk został utworzony."
+
+
+class SprayingUpdateView(CultivationEventUpdateView):
+    model = Spraying
+    form_class = SprayingForm
+    template_name = "core/spraying_form.html"
+    context_object_name = "spraying"
+    detail_url_name = "core:spraying_detail"
+    success_message = "Oprysk został zaktualizowany."
+
+
+class SprayingDeleteView(CultivationEventDeleteView):
+    model = Spraying
+    template_name = "core/spraying_confirm_delete.html"
+    context_object_name = "spraying"
+    success_message = "Oprysk został usunięty."
+
+
+class HarvestListView(CultivationEventListView):
+    model = Harvest
+    template_name = "core/harvest_list.html"
+    context_object_name = "harvests"
+    date_field = "harvest_date"
+    search_fields = ("notes",)
+    choice_filters = (
+        ("unit", "unit_choices", Harvest.Unit),
+        ("disposition", "disposition_choices", Harvest.Disposition),
+    )
+
+
+class HarvestDetailView(CultivationEventOwnerMixin, DetailView):
+    model = Harvest
+    template_name = "core/harvest_detail.html"
+    context_object_name = "harvest"
+
+
+class HarvestCreateView(CultivationEventCreateView):
+    model = Harvest
+    form_class = HarvestForm
+    template_name = "core/harvest_form.html"
+    detail_url_name = "core:harvest_detail"
+    success_message = "Zbiór został utworzony."
+
+
+class HarvestUpdateView(CultivationEventUpdateView):
+    model = Harvest
+    form_class = HarvestForm
+    template_name = "core/harvest_form.html"
+    context_object_name = "harvest"
+    detail_url_name = "core:harvest_detail"
+    success_message = "Zbiór został zaktualizowany."
+
+
+class HarvestDeleteView(CultivationEventDeleteView):
+    model = Harvest
+    template_name = "core/harvest_confirm_delete.html"
+    context_object_name = "harvest"
+    success_message = "Zbiór został usunięty."
 
 
 class ReportDashboardView(LoginRequiredMixin, TemplateView):

@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from .forms import SprayingForm
-from .models import Crop, Cultivation, Field, Spraying
+from ..forms import SprayingForm
+from ..models import Crop, Cultivation, Field, Spraying
 
 
 class SprayingCrudTests(TestCase):

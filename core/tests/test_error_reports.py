@@ -3,9 +3,9 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import NoReverseMatch, reverse
 
-from .admin import ErrorReportAdmin
-from .forms import ErrorReportForm
-from .models import ErrorReport
+from ..admin import ErrorReportAdmin
+from ..forms import ErrorReportForm
+from ..models import ErrorReport
 
 
 class ErrorReportTests(TestCase):

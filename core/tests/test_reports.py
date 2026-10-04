@@ -7,8 +7,8 @@ from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
-from .models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
-from .services.reports import calculate_totals, get_cultivation_report
+from ..models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
+from ..services.reports import calculate_totals, get_cultivation_report
 
 
 class FinancialReportsTests(TestCase):
