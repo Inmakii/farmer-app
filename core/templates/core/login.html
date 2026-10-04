@@ -3,19 +3,24 @@
 {% block title %}Logowanie – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Logowanie</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-            <p>
-                {{ field.label_tag }}
-                {{ field }}
-                {{ field.errors }}
-            </p>
-        {% endfor %}
-        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-        <button type="submit">Zaloguj się</button>
-    </form>
-    <p>Nie masz konta? <a href="{% url 'core:register' %}">Zarejestruj się</a>.</p>
+<div class="auth-layout">
+    <div class="auth-card">
+        <h1>Logowanie</h1>
+        <p class="auth-lead">Zaloguj się, aby wrócić do swoich pól, upraw i raportów.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                <p>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </p>
+            {% endfor %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+            <button class="button-block" type="submit">Zaloguj się</button>
+        </form>
+        <p class="auth-switch">Nie masz konta? <a href="{% url 'core:register' %}">Zarejestruj się</a>.</p>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,62 @@
+{% extends "core/base.html" %}
+
+{% block title %}Farmer App – ewidencja gospodarstwa rolnego{% endblock %}
+
+{% block content %}
+<div class="landing">
+    <section class="hero">
+        <p class="eyebrow">Aplikacja dla rolników</p>
+        <h1>Cała ewidencja gospodarstwa w jednym miejscu</h1>
+        <p class="hero-lead">
+            Farmer App pomaga prowadzić pola, uprawy, prace, opryski i zbiory,
+            a potem sam liczy koszty, przychody i zysk. Bez arkuszy i notatników.
+        </p>
+        <div class="hero-actions">
+            <a class="button button-large" href="{% url 'core:register' %}">Załóż darmowe konto</a>
+            <a class="button button-outline button-large" href="{% url 'core:login' %}">Mam już konto</a>
+        </div>
+    </section>
+
+    <section class="landing-section">
+        <h2>Co zrobisz w aplikacji?</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <span class="feature-icon" aria-hidden="true">🌾</span>
+                <h3>Pola i uprawy</h3>
+                <p>Zapisz swoje pola z powierzchnią i rodzajem gleby, a na nich sezonowe uprawy.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon" aria-hidden="true">🚜</span>
+                <h3>Prace i opryski</h3>
+                <p>Notuj orkę, siew, nawożenie i opryski razem z kosztami każdego zabiegu.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon" aria-hidden="true">📦</span>
+                <h3>Zbiory</h3>
+                <p>Rejestruj ilość plonów i oznaczaj, co sprzedałeś, co leży w magazynie, a co przepadło.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon" aria-hidden="true">📊</span>
+                <h3>Raporty finansowe</h3>
+                <p>Zobacz koszty, przychód i zysk dla całego gospodarstwa, pola albo pojedynczej uprawy.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="landing-section">
+        <h2>Jak zacząć? To cztery proste kroki</h2>
+        <ol class="steps">
+            <li><strong>Załóż konto</strong><span>Wystarczy imię, e-mail i hasło.</span></li>
+            <li><strong>Dodaj pole</strong><span>Podaj nazwę, powierzchnię i lokalizację.</span></li>
+            <li><strong>Dodaj uprawę</strong><span>Wybierz roślinę i rok sezonu.</span></li>
+            <li><strong>Zapisuj i sprawdzaj wynik</strong><span>Dodawaj prace, opryski i zbiory, a raport policzy zysk.</span></li>
+        </ol>
+    </section>
+
+    <section class="cta-band">
+        <h2>Gotowy, żeby uporządkować gospodarstwo?</h2>
+        <p>Twoje dane są prywatne – każdy użytkownik widzi wyłącznie własne pola i zapisy.</p>
+        <a class="button button-light button-large" href="{% url 'core:register' %}">Zacznij teraz</a>
+    </section>
+</div>
+{% endblock %}

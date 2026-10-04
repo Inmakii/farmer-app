@@ -102,7 +102,7 @@ class AuthenticationViewsTests(TestCase):
             {"username": self.user.username, "password": self.password},
         )
 
-        self.assertRedirects(response, reverse("core:profile"))
+        self.assertRedirects(response, reverse("core:home"))
         self.assertEqual(int(self.client.session["_auth_user_id"]), self.user.pk)
 
     def test_invalid_login_does_not_authenticate(self):
@@ -154,8 +154,8 @@ class AuthenticationViewsTests(TestCase):
         login_response = self.client.get(reverse("core:login"))
         register_response = self.client.get(reverse("core:register"))
 
-        self.assertRedirects(login_response, reverse("core:profile"))
-        self.assertRedirects(register_response, reverse("core:profile"))
+        self.assertRedirects(login_response, reverse("core:home"))
+        self.assertRedirects(register_response, reverse("core:home"))
 
     def test_login_is_locked_after_repeated_failures(self):
         url = reverse("core:login")
@@ -191,4 +191,4 @@ class AuthenticationViewsTests(TestCase):
             url, {"username": self.user.username, "password": self.password}
         )
 
-        self.assertRedirects(response, reverse("core:profile"))
+        self.assertRedirects(response, reverse("core:home"))

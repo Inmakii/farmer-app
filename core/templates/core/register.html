@@ -3,19 +3,24 @@
 {% block title %}Rejestracja – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Utwórz konto</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-            <p>
-                {{ field.label_tag }}
-                {{ field }}
-                {% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}
-                {{ field.errors }}
-            </p>
-        {% endfor %}
-        <button type="submit">Zarejestruj się</button>
-    </form>
-    <p>Masz już konto? <a href="{% url 'core:login' %}">Zaloguj się</a>.</p>
+<div class="auth-layout">
+    <div class="auth-card">
+        <h1>Utwórz konto</h1>
+        <p class="auth-lead">Po założeniu konta zalogujesz się i od razu dostaniesz podpowiedź, od czego zacząć.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                <p>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}
+                    {{ field.errors }}
+                </p>
+            {% endfor %}
+            <button class="button-block" type="submit">Zarejestruj się</button>
+        </form>
+        <p class="auth-switch">Masz już konto? <a href="{% url 'core:login' %}">Zaloguj się</a>.</p>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,97 @@
+{% extends "core/base.html" %}
+
+{% block title %}Pulpit – Farmer App{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-head">
+        <h1>Cześć, {{ user.first_name|default:user.username }}!</h1>
+        <p class="lead">To jest Twój pulpit. Stąd przejdziesz do wszystkiego, co potrzebne w gospodarstwie.</p>
+    </div>
+
+    {% if next_step %}
+    <div class="next-step">
+        <div>
+            <span class="eyebrow">Następny krok</span>
+            <h2>{{ next_step.title }}</h2>
+            <p>{{ next_step.text }}</p>
+        </div>
+        <a class="button button-large" href="{{ next_step.url }}">{{ next_step.button }}</a>
+    </div>
+    {% endif %}
+
+    {% if no_crops %}
+    <div class="notice">
+        W słowniku nie ma jeszcze rodzajów upraw, więc nie da się dodać uprawy.
+        Poproś administratora o uzupełnienie listy w panelu administracyjnym.
+    </div>
+    {% endif %}
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <span class="stat-label">Pola</span>
+            <strong class="stat-value">{{ totals.field_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Uprawy</span>
+            <strong class="stat-value">{{ totals.cultivation_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Przychód</span>
+            <strong class="stat-value">{{ totals.total_revenue|floatformat:2 }} zł</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Koszty</span>
+            <strong class="stat-value">{{ totals.total_costs|floatformat:2 }} zł</strong>
+        </div>
+        <div class="stat-card {% if totals.profit < 0 %}stat-negative{% else %}stat-positive{% endif %}">
+            <span class="stat-label">Zysk / strata</span>
+            <strong class="stat-value">{{ totals.profit|floatformat:2 }} zł</strong>
+        </div>
+    </div>
+
+    <h2 class="section-title">Co chcesz zrobić?</h2>
+    <div class="action-grid">
+        <a class="action-card" href="{% url 'core:field_create' %}">
+            <span class="feature-icon" aria-hidden="true">🌾</span>
+            <strong>Dodaj pole</strong>
+            <span>Zapisz nowe pole z powierzchnią i lokalizacją.</span>
+        </a>
+        <a class="action-card" href="{% url 'core:cultivation_create' %}">
+            <span class="feature-icon" aria-hidden="true">🌱</span>
+            <strong>Dodaj uprawę</strong>
+            <span>Przypisz roślinę i sezon do swojego pola.</span>
+        </a>
+        <a class="action-card" href="{% url 'core:fieldwork_create' %}">
+            <span class="feature-icon" aria-hidden="true">🚜</span>
+            <strong>Zapisz pracę</strong>
+            <span>Orka, siew, nawożenie – razem z kosztem.</span>
+        </a>
+        <a class="action-card" href="{% url 'core:spraying_create' %}">
+            <span class="feature-icon" aria-hidden="true">💧</span>
+            <strong>Zapisz oprysk</strong>
+            <span>Środek, ilość i koszt zabiegu.</span>
+        </a>
+        <a class="action-card" href="{% url 'core:harvest_create' %}">
+            <span class="feature-icon" aria-hidden="true">📦</span>
+            <strong>Zapisz zbiór</strong>
+            <span>Ilość plonu i przychód ze sprzedaży.</span>
+        </a>
+        <a class="action-card" href="{% url 'core:report_dashboard' %}">
+            <span class="feature-icon" aria-hidden="true">📊</span>
+            <strong>Zobacz raport</strong>
+            <span>Koszty, przychody i zysk gospodarstwa.</span>
+        </a>
+    </div>
+
+    <h2 class="section-title">Moje dane</h2>
+    <div class="link-row">
+        <a class="button button-outline" href="{% url 'core:field_list' %}">Moje pola</a>
+        <a class="button button-outline" href="{% url 'core:cultivation_list' %}">Uprawy</a>
+        <a class="button button-outline" href="{% url 'core:fieldwork_list' %}">Prace</a>
+        <a class="button button-outline" href="{% url 'core:spraying_list' %}">Opryski</a>
+        <a class="button button-outline" href="{% url 'core:harvest_list' %}">Zbiory</a>
+        <a class="button button-outline" href="{% url 'core:profile' %}">Profil</a>
+    </div>
+</div>
+{% endblock %}

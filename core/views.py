@@ -9,7 +9,7 @@ from django.contrib.auth.views import LogoutView as DjangoLogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.cache import cache
 from django.db.models import Q
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.dateparse import parse_date
 from django.views.generic import (
@@ -43,9 +43,45 @@ from .services.reports import (
 
 
 def home(request):
-    if request.user.is_authenticated:
-        return redirect("core:field_list")
-    return redirect("core:login")
+    """Strona główna: opis aplikacji dla gościa, pulpit z podpowiedzią kroku po zalogowaniu."""
+    if not request.user.is_authenticated:
+        return render(request, "core/home.html")
+
+    totals = get_user_report(request.user)["totals"]
+    no_crops = not Crop.objects.exists()
+    if totals["field_count"] == 0:
+        next_step = {
+            "title": "Dodaj swoje pierwsze pole",
+            "text": "Pole to podstawa: na nim zapiszesz uprawy, prace, opryski i zbiory.",
+            "button": "Dodaj pole",
+            "url": reverse("core:field_create"),
+        }
+    elif totals["cultivation_count"] == 0:
+        next_step = {
+            "title": "Dodaj uprawę na swoim polu",
+            "text": "Wybierz roślinę i rok sezonu, aby zacząć zapisywać zabiegi i zbiory.",
+            "button": "Dodaj uprawę",
+            "url": reverse("core:cultivation_create"),
+        }
+    elif totals["work_count"] + totals["spraying_count"] + totals["harvest_count"] == 0:
+        next_step = {
+            "title": "Zapisz pierwszą pracę lub zbiór",
+            "text": "Dodaj wykonaną pracę, oprysk albo zbiór, a raport policzy koszty i zysk.",
+            "button": "Zapisz pracę",
+            "url": reverse("core:fieldwork_create"),
+        }
+    else:
+        next_step = {
+            "title": "Sprawdź wyniki gospodarstwa",
+            "text": "Raport pokazuje koszty, przychody i zysk dla pól oraz upraw.",
+            "button": "Zobacz raport",
+            "url": reverse("core:report_dashboard"),
+        }
+    return render(
+        request,
+        "core/dashboard.html",
+        {"totals": totals, "next_step": next_step, "no_crops": no_crops},
+    )
 
 
 def parse_filter_date(value):
@@ -70,7 +106,7 @@ class RegisterView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("core:profile")
+            return redirect("core:home")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):

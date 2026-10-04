@@ -18,14 +18,14 @@
             </a>
             <nav class="main-nav" aria-label="Główna nawigacja">
             {% if user.is_authenticated %}
-                <a href="{% url 'core:profile' %}">Profil</a>
+                <a href="{% url 'core:home' %}">Pulpit</a>
                 <a href="{% url 'core:field_list' %}">Moje pola</a>
                 <a href="{% url 'core:cultivation_list' %}">Uprawy</a>
                 <a href="{% url 'core:fieldwork_list' %}">Prace</a>
                 <a href="{% url 'core:spraying_list' %}">Opryski</a>
                 <a href="{% url 'core:harvest_list' %}">Zbiory</a>
                 <a href="{% url 'core:report_dashboard' %}">Raporty</a>
-                <a href="{% url 'core:error_report_create' %}">Zgłoś błąd</a>
+                <a href="{% url 'core:profile' %}">Profil</a>
                 <form class="logout-form" method="post" action="{% url 'core:logout' %}">
                     {% csrf_token %}
                     <button class="button button-ghost" type="submit">Wyloguj się</button>
@@ -54,7 +54,13 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p>Farmer App <span aria-hidden="true">·</span> Zarządzaj gospodarstwem w jednym miejscu</p>
+            <p>
+                Farmer App <span aria-hidden="true">·</span> Zarządzaj gospodarstwem w jednym miejscu
+                {% if user.is_authenticated %}
+                    <span aria-hidden="true">·</span>
+                    <a href="{% url 'core:error_report_create' %}">Zgłoś błąd</a>
+                {% endif %}
+            </p>
         </div>
     </footer>
 </body>

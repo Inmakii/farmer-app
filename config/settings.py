@@ -156,7 +156,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'test':
 
 # Authentication redirects
 LOGIN_URL = 'core:login'
-LOGIN_REDIRECT_URL = 'core:profile'
+LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_REDIRECT_URL = 'core:login'
 
 # JWT authentication for API clients. Browser pages continue to use Django sessions.
