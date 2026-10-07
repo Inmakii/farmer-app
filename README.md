@@ -1,17 +1,20 @@
 # Farmer App
 
-Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządzających gospodarstwami rolnymi. Pozwala prowadzić ewidencję pól i sezonowych upraw, zapisywać wykonane zabiegi oraz zbiory, a następnie obliczać koszty, przychody i wynik finansowy. Administrator obsługuje słownik upraw i statusy zgłoszeń przez panel Django Admin.
+Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządzających gospodarstwami rolnymi. Pozwala prowadzić ewidencję pól i sezonowych upraw, zapisywać wykonane zabiegi oraz zbiory, a następnie obliczać koszty, przychody i wynik finansowy. Wspólny katalog rodzajów upraw może uzupełniać każdy zalogowany użytkownik, a administrator edytuje i usuwa jego pozycje oraz obsługuje statusy zgłoszeń przez panel Django Admin.
 
 ## Funkcje
 
 - rejestracja, logowanie i bezpieczne wylogowanie przez POST;
 - profil użytkownika, edycja danych i zmiana hasła z zachowaniem sesji;
 - CRUD własnych pól, upraw sezonowych, prac, oprysków i zbiorów;
+- wspólny katalog „Rodzaje upraw” z możliwością dodawania nowych pozycji przez zalogowanych użytkowników;
+- sezony upraw z zakresu lat 1980–2100;
 - wyszukiwanie, filtry oraz paginacja list;
 - raport gospodarstwa, pola i uprawy z ilością zbiorów, stratami, kosztami, przychodami i zyskiem;
 - rozróżnienie zbiorów sprzedanych, magazynowanych oraz zutylizowanych;
 - zgłaszanie błędów i podgląd własnych zgłoszeń;
-- administracja rodzajami upraw i statusami zgłoszeń;
+- edycja i usuwanie rodzajów upraw oraz obsługa statusów zgłoszeń w Django Admin;
+- jasny i ciemny motyw z przełącznikiem w nagłówku;
 - idempotentna komenda przygotowująca dane demonstracyjne;
 - izolacja danych każdego właściciela oraz testy bezpieczeństwa.
 
@@ -45,6 +48,7 @@ farmer-app-main/
 │   ├── management/commands/      # seed_demo_data
 │   ├── migrations/               # migracje aplikacji
 │   ├── services/                 # agregacje raportów finansowych
+│   ├── static/core/              # style CSS i skrypty motywu
 │   ├── templates/core/           # proste szablony Django
 │   ├── forms.py, views.py        # formularze i widoki
 │   └── test_*.py                 # testy funkcjonalne i bezpieczeństwa
@@ -65,6 +69,34 @@ farmer-app-main/
 - [Eksport schematu SQL](docs/database/farmer_db_schema.sql)
 
 ![Diagram ERD](docs/diagrams/erd_farmer_app.png)
+
+## Sezony upraw
+
+- rok sezonu musi mieścić się w zakresie 1980–2100 (walidacja w modelu i formularzu);
+- rok daty siewu musi odpowiadać rokowi sezonu;
+- planowana data zbioru nie może być wcześniejsza od daty siewu, ale może przypadać na następny rok (np. uprawy ozime);
+- filtry roku sezonu na listach i w raportach bezpiecznie obsługują nieprawidłowe wartości — nie powodują błędu serwera; lista upraw pomija taki filtr, a raporty wyświetlają komunikat o nieprawidłowym filtrze.
+
+## Rodzaje upraw
+
+| Ścieżka | Nazwa trasy | Opis |
+| --- | --- | --- |
+| `/crops/` | `core:crop_list` | lista rodzajów upraw, dostępna po zalogowaniu |
+| `/crops/add/` | `core:crop_create` | dodawanie nowego rodzaju uprawy |
+
+- katalog jest wspólny dla wszystkich użytkowników i nie należy do konkretnego właściciela;
+- zwykły użytkownik może dodawać pozycje, ale nie może ich edytować ani usuwać;
+- edycja i usuwanie rodzajów upraw pozostają w panelu Django Admin;
+- duplikaty nazw są wykrywane bez uwzględniania wielkości liter, również dla polskich znaków (np. „Łubin” i „łubin”).
+
+## Jasny i ciemny motyw
+
+- przełącznik motywu znajduje się w nagłówku i działa na wszystkich stronach aplikacji korzystających z `base.html`, również bez logowania;
+- przy pierwszej wizycie motyw jest zgodny z ustawieniem systemowym `prefers-color-scheme`;
+- ręczny wybór jest zapisywany w `localStorage`; gdy pamięć przeglądarki jest niedostępna, używany jest motyw systemowy;
+- motyw jest ustawiany przed załadowaniem arkusza stylów, co zapobiega mignięciu niewłaściwych kolorów;
+- uwzględniono dostępność: etykiety przycisku i komunikat dla czytników ekranu, kontrast kolorów w obu motywach, widoczny focus klawiatury (`:focus-visible`) oraz ograniczenie animacji przy `prefers-reduced-motion`;
+- wygląd panelu Django Admin nie jest zmieniany.
 
 ## Instalacja na Windows PowerShell
 
@@ -139,6 +171,12 @@ python manage.py showmigrations
 python manage.py sqlmigrate core 0001
 ```
 
+Aplikacja `core` ma obecnie trzy migracje:
+
+- `0001_initial` — początkowa struktura tabel;
+- `0002_harvest_disposition_and_more` — pole przeznaczenia zbioru (`disposition`) oraz ograniczenie zerowego przychodu dla zbiorów niesprzedanych;
+- `0003_alter_cultivation_season_year` — aktualizacja walidatorów roku sezonu do zakresu 1980–2100; zmienia jedynie walidację na poziomie Django, a nie strukturę tabel.
+
 ## Dane demonstracyjne
 
 Komenda wymaga istniejącego użytkownika i nie tworzy konta ani hasła:
@@ -159,7 +197,7 @@ python manage.py test
 Remove-Item Env:DB_ENGINE
 ```
 
-Django tworzy oddzielną bazę testową. Przy testach bezpośrednio na MySQL konto bazy musi zwykle mieć uprawnienie `CREATE`, ponieważ Django tworzy tymczasową bazę z prefiksem `test_`. Zalecanym wariantem lokalnym pozostaje SQLite.
+Pakiet zawiera obecnie 298 testów; wszystkie przechodzą na tymczasowej bazie SQLite. Django tworzy oddzielną bazę testową i usuwa ją po zakończeniu testów. Przy testach bezpośrednio na MySQL konto bazy musi zwykle mieć uprawnienie `CREATE`, ponieważ Django tworzy tymczasową bazę z prefiksem `test_`. Zalecanym wariantem lokalnym pozostaje SQLite.
 
 ## Workflow Git
 
