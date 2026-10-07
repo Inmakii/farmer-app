@@ -1,3 +1,5 @@
+import re
+
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -44,6 +46,9 @@ def home(request):
     return redirect("core:login")
 
 
+SEASON_YEAR_PATTERN = re.compile(r"[0-9]{4}")
+
+
 def parse_filter_date(value):
     try:
         return parse_date(value)
@@ -54,7 +59,7 @@ def parse_filter_date(value):
 def parse_season_year(value):
     if not value:
         return None, True
-    if value.isdigit() and 2000 <= int(value) <= 2100:
+    if SEASON_YEAR_PATTERN.fullmatch(value) and 2000 <= int(value) <= 2100:
         return int(value), True
     return None, False
 
@@ -266,7 +271,7 @@ class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
         field_id = self.request.GET.get("field", "")
         crop_id = self.request.GET.get("crop", "")
         status = self.request.GET.get("status", "")
-        season_year = self.request.GET.get("season_year", "")
+        season_year, _ = parse_season_year(self.request.GET.get("season_year", ""))
 
         if field_id.isdigit():
             queryset = queryset.filter(field_id=field_id)
@@ -274,7 +279,7 @@ class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
             queryset = queryset.filter(crop_id=crop_id)
         if status:
             queryset = queryset.filter(status=status)
-        if season_year.isdigit():
+        if season_year is not None:
             queryset = queryset.filter(season_year=season_year)
         return queryset
 

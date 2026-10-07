@@ -26,6 +26,16 @@ Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządz
 
 Dokładne wersje zależności są zapisane w [`requirements.txt`](requirements.txt).
 
+## Dlaczego MySQL i SQLite
+
+Projekt nie korzysta z obu baz jednocześnie. W danym uruchomieniu aktywny jest zawsze tylko jeden silnik:
+
+- **MySQL** jest docelową bazą aplikacji i środowiska wdrożeniowego;
+- **SQLite** służy do lokalnego uruchamiania oraz izolowanych testów automatycznych;
+- aktywny silnik wybiera zmienna `DB_ENGINE` (`mysql` lub `sqlite`; brak wartości oznacza SQLite);
+- oba silniki korzystają z tych samych modeli i migracji Django;
+- dane nie są zapisywane równocześnie do obu baz ani między nimi synchronizowane.
+
 ## Struktura repozytorium
 
 ```text

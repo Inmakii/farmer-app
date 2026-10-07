@@ -119,12 +119,17 @@ class Cultivation(models.Model):
 
     def clean(self):
         super().clean()
+        errors = {}
+        if (self.sowing_date and self.season_year
+                and self.sowing_date.year != self.season_year):
+            errors["sowing_date"] = "Rok daty siewu musi być zgodny z rokiem sezonu."
         if (self.sowing_date and self.planned_harvest_date
                 and self.planned_harvest_date < self.sowing_date):
-            raise ValidationError({
-                "planned_harvest_date":
-                    "Planowana data zbioru nie może być wcześniejsza od daty siewu."
-            })
+            errors["planned_harvest_date"] = (
+                "Planowana data zbioru nie może być wcześniejsza od daty siewu."
+            )
+        if errors:
+            raise ValidationError(errors)
 
     def __str__(self):
         return f"{self.crop} na polu {self.field.name} ({self.season_year})"
@@ -158,6 +163,15 @@ class FieldWork(models.Model):
         constraints = [models.CheckConstraint(
             condition=Q(cost__gte=0), name="core_fieldwork_cost_gte_zero"
         )]
+
+    def clean(self):
+        super().clean()
+        if (self.work_type == self.WorkType.SOWING and self.work_date
+                and self.cultivation_id
+                and self.work_date.year != self.cultivation.season_year):
+            raise ValidationError({
+                "work_date": "Rok daty siewu musi być zgodny z rokiem sezonu uprawy."
+            })
 
     def __str__(self):
         return f"{self.get_work_type_display()} — {self.cultivation} ({self.work_date})"

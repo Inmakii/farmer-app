@@ -270,6 +270,8 @@ class CultivationCrudTests(TestCase):
                 crop=str(self.wheat.pk),
                 season_year="2026",
                 status=Cultivation.Status.COMPLETED,
+                sowing_date="2026-04-10",
+                planned_harvest_date="2026-09-15",
             ),
         )
 

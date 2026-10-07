@@ -6,6 +6,24 @@ from django.core.exceptions import ValidationError
 from .models import Crop, Cultivation, ErrorReport, Field, FieldWork, Harvest, Spraying
 
 
+class SkipDuplicateModelErrorsMixin:
+    """Pomija błędy z Model.clean(), które formularz zgłosił już dla tego pola."""
+
+    def _update_errors(self, errors):
+        if hasattr(errors, "error_dict"):
+            error_dict = {}
+            for field, field_errors in errors.error_dict.items():
+                new_errors = [
+                    error
+                    for error in field_errors
+                    if next(iter(error)) not in self._errors.get(field, [])
+                ]
+                if new_errors:
+                    error_dict[field] = new_errors
+            errors = ValidationError(error_dict)
+        super()._update_errors(errors)
+
+
 class RegistrationForm(UserCreationForm):
     error_messages = {
         "password_mismatch": "Podane hasła nie są takie same.",
@@ -183,7 +201,7 @@ class FieldForm(forms.ModelForm):
         return cleaned_data
 
 
-class CultivationForm(forms.ModelForm):
+class CultivationForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
     class Meta:
         model = Cultivation
         fields = (
@@ -264,6 +282,11 @@ class CultivationForm(forms.ModelForm):
         sowing_date = cleaned_data.get("sowing_date")
         planned_harvest_date = cleaned_data.get("planned_harvest_date")
 
+        if sowing_date and season_year and sowing_date.year != season_year:
+            self.add_error(
+                "sowing_date", "Rok daty siewu musi być zgodny z rokiem sezonu."
+            )
+
         if (
             sowing_date
             and planned_harvest_date
@@ -296,7 +319,7 @@ class CultivationChoiceField(forms.ModelChoiceField):
         )
 
 
-class FieldWorkForm(forms.ModelForm):
+class FieldWorkForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
     season_year = forms.TypedChoiceField(
         label="Rok sezonu",
         choices=(),
@@ -389,6 +412,18 @@ class FieldWorkForm(forms.ModelForm):
             self.add_error(
                 "season_year",
                 "Wybrany sezon nie jest zgodny z sezonem wybranej uprawy.",
+            )
+        work_type = cleaned_data.get("work_type")
+        work_date = cleaned_data.get("work_date")
+        if (
+            cultivation is not None
+            and work_type == FieldWork.WorkType.SOWING
+            and work_date is not None
+            and work_date.year != cultivation.season_year
+        ):
+            self.add_error(
+                "work_date",
+                "Rok daty siewu musi być zgodny z rokiem sezonu uprawy.",
             )
         return cleaned_data
 
