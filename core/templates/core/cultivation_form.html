@@ -8,6 +8,12 @@
         <p>Nie masz jeszcze żadnych pól. Utwórz pole przed dodaniem uprawy.</p>
         <p><a href="{% url 'core:field_create' %}">Utwórz pierwsze pole</a></p>
     {% else %}
+        {% if not has_crops %}
+            <p>Katalog rodzajów upraw jest pusty. Dodaj rodzaj uprawy, aby móc utworzyć uprawę.</p>
+            <p><a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a></p>
+        {% else %}
+            <p>Nie widzisz potrzebnego rodzaju uprawy? <a href="{% url 'core:crop_create' %}">Dodaj brakujący rodzaj uprawy</a></p>
+        {% endif %}
         <form method="post">
             {% csrf_token %}
             {{ form.non_field_errors }}

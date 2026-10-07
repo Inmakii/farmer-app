@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+
+{% block title %}Rodzaje upraw – Farmer App{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Rodzaje upraw</h1>
+        <a class="button" href="{% url 'core:crop_create' %}">Dodaj rodzaj uprawy</a>
+    </header>
+
+    <p>Katalog rodzajów upraw jest wspólny dla wszystkich użytkowników. Jeżeli brakuje potrzebnego rodzaju, możesz go dodać.</p>
+
+    {% if crops %}
+        <ul>
+            {% for crop in crops %}
+                <li>
+                    <strong>{{ crop.name }}</strong>{% if crop.description %} – {{ crop.description }}{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Katalog rodzajów upraw jest pusty.</p>
+        <p><a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a></p>
+    {% endif %}
+{% endblock %}

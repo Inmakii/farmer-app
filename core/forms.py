@@ -664,6 +664,51 @@ class HarvestForm(forms.ModelForm):
         return cleaned_data
 
 
+class CropForm(forms.ModelForm):
+    DESCRIPTION_MAX_LENGTH = 1000
+
+    class Meta:
+        model = Crop
+        fields = ("name", "description")
+        labels = {
+            "name": "Nazwa rodzaju uprawy",
+            "description": "Opis",
+        }
+        help_texts = {
+            "name": (
+                "Rodzaj uprawy jest wspólny dla wszystkich użytkowników. "
+                "Nazwa nie może się powtarzać."
+            ),
+            "description": "Opcjonalny krótki opis (maksymalnie 1000 znaków).",
+        }
+        error_messages = {
+            "name": {
+                "required": "Nazwa rodzaju uprawy jest wymagana.",
+                "max_length": "Nazwa może mieć maksymalnie 100 znaków.",
+                "unique": "Rodzaj uprawy o tej nazwie już istnieje.",
+            },
+        }
+        widgets = {"description": forms.Textarea(attrs={"rows": 4})}
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not name:
+            raise ValidationError("Nazwa rodzaju uprawy jest wymagana.")
+        # SQLite compares case-insensitively only for ASCII, so Polish letters
+        # (e.g. "Łubin" / "łubin") are compared in Python with casefold().
+        normalized = name.casefold()
+        existing_names = Crop.objects.values_list("name", flat=True)
+        if any(existing.casefold() == normalized for existing in existing_names):
+            raise ValidationError("Rodzaj uprawy o tej nazwie już istnieje.")
+        return name
+
+    def clean_description(self):
+        description = self.cleaned_data.get("description", "").strip()
+        if len(description) > self.DESCRIPTION_MAX_LENGTH:
+            raise ValidationError("Opis może mieć maksymalnie 1000 znaków.")
+        return description
+
+
 class ErrorReportForm(forms.ModelForm):
     class Meta:
         model = ErrorReport

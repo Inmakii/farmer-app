@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+
+{% block title %}Dodawanie rodzaju uprawy – Farmer App{% endblock %}
+
+{% block content %}
+    <h1>Dodaj rodzaj uprawy</h1>
+    <p>Dodany rodzaj uprawy będzie widoczny dla wszystkich użytkowników aplikacji.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for form_field in form %}
+            <p>
+                {{ form_field.label_tag }}
+                {{ form_field }}
+                {% if form_field.help_text %}<small>{{ form_field.help_text }}</small>{% endif %}
+                {{ form_field.errors }}
+            </p>
+        {% endfor %}
+        <button type="submit">Zapisz</button>
+        <a href="{% url 'core:crop_list' %}">Anuluj</a>
+    </form>
+{% endblock %}
