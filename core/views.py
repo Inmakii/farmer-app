@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import LogoutView as DjangoLogoutView
 from django.db.models import Q
+from django.db.models.functions import Lower
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.dateparse import parse_date
@@ -21,6 +22,7 @@ from django.views.generic import (
 )
 
 from .forms import (
+    CropForm,
     CultivationForm,
     ErrorReportForm,
     FieldForm,
@@ -266,7 +268,32 @@ class CultivationFormUserMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["has_fields"] = Field.objects.filter(owner=self.request.user).exists()
+        context["has_crops"] = Crop.objects.exists()
         return context
+
+
+class CropListView(LoginRequiredMixin, ListView):
+    template_name = "core/crop_list.html"
+    context_object_name = "crops"
+    http_method_names = ["get", "head", "options"]
+
+    def get_queryset(self):
+        return Crop.objects.order_by(Lower("name"), "name")
+
+
+class CropCreateView(LoginRequiredMixin, CreateView):
+    model = Crop
+    form_class = CropForm
+    template_name = "core/crop_form.html"
+    success_url = reverse_lazy("core:crop_list")
+    http_method_names = ["get", "post", "head", "options"]
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(
+            self.request, f"Rodzaj uprawy „{self.object.name}” został dodany."
+        )
+        return response
 
 
 class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
