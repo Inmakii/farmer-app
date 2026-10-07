@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .views import (
+    CropCreateView,
+    CropListView,
     CultivationCreateView,
     CultivationDeleteView,
     CultivationDetailView,
@@ -60,6 +62,8 @@ urlpatterns = [
     path("fields/<int:pk>/", FieldDetailView.as_view(), name="field_detail"),
     path("fields/<int:pk>/edit/", FieldUpdateView.as_view(), name="field_update"),
     path("fields/<int:pk>/delete/", FieldDeleteView.as_view(), name="field_delete"),
+    path("crops/", CropListView.as_view(), name="crop_list"),
+    path("crops/add/", CropCreateView.as_view(), name="crop_create"),
     path("cultivations/", CultivationListView.as_view(), name="cultivation_list"),
     path("cultivations/add/", CultivationCreateView.as_view(), name="cultivation_create"),
     path(

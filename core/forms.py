@@ -3,7 +3,35 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Crop, Cultivation, ErrorReport, Field, FieldWork, Harvest, Spraying
+from .models import (
+    SEASON_YEAR_MAX,
+    SEASON_YEAR_MIN,
+    Crop,
+    Cultivation,
+    ErrorReport,
+    Field,
+    FieldWork,
+    Harvest,
+    Spraying,
+)
+
+
+class SkipDuplicateModelErrorsMixin:
+    """Pomija błędy z Model.clean(), które formularz zgłosił już dla tego pola."""
+
+    def _update_errors(self, errors):
+        if hasattr(errors, "error_dict"):
+            error_dict = {}
+            for field, field_errors in errors.error_dict.items():
+                new_errors = [
+                    error
+                    for error in field_errors
+                    if next(iter(error)) not in self._errors.get(field, [])
+                ]
+                if new_errors:
+                    error_dict[field] = new_errors
+            errors = ValidationError(error_dict)
+        super()._update_errors(errors)
 
 
 class RegistrationForm(UserCreationForm):
@@ -183,7 +211,12 @@ class FieldForm(forms.ModelForm):
         return cleaned_data
 
 
-class CultivationForm(forms.ModelForm):
+SEASON_YEAR_RANGE_ERROR = (
+    f"Rok sezonu musi mieścić się w zakresie {SEASON_YEAR_MIN}–{SEASON_YEAR_MAX}."
+)
+
+
+class CultivationForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
     class Meta:
         model = Cultivation
         fields = (
@@ -206,7 +239,7 @@ class CultivationForm(forms.ModelForm):
         }
         help_texts = {
             "field": "Możesz wybrać wyłącznie jedno ze swoich pól.",
-            "season_year": "Dozwolony zakres lat: 2000–2100.",
+            "season_year": f"Dozwolony zakres lat: {SEASON_YEAR_MIN}–{SEASON_YEAR_MAX}.",
             "sowing_date": "Opcjonalna data rozpoczęcia siewu.",
             "planned_harvest_date": "Nie może być wcześniejsza od daty siewu.",
         }
@@ -222,6 +255,8 @@ class CultivationForm(forms.ModelForm):
             "season_year": {
                 "required": "Rok sezonu jest wymagany.",
                 "invalid": "Podaj poprawny rok sezonu.",
+                "min_value": SEASON_YEAR_RANGE_ERROR,
+                "max_value": SEASON_YEAR_RANGE_ERROR,
             },
             "status": {"required": "Wybierz status uprawy."},
             "sowing_date": {"invalid": "Podaj poprawną datę siewu."},
@@ -231,10 +266,20 @@ class CultivationForm(forms.ModelForm):
         }
         widgets = {
             "sowing_date": forms.DateInput(
-                attrs={"type": "date"}, format="%Y-%m-%d"
+                attrs={
+                    "type": "date",
+                    "min": f"{SEASON_YEAR_MIN}-01-01",
+                    "max": f"{SEASON_YEAR_MAX}-12-31",
+                },
+                format="%Y-%m-%d",
             ),
             "planned_harvest_date": forms.DateInput(
-                attrs={"type": "date"}, format="%Y-%m-%d"
+                attrs={
+                    "type": "date",
+                    "min": f"{SEASON_YEAR_MIN}-01-01",
+                    "max": f"{SEASON_YEAR_MAX + 1}-12-31",
+                },
+                format="%Y-%m-%d",
             ),
         }
 
@@ -247,13 +292,16 @@ class CultivationForm(forms.ModelForm):
             else Field.objects.none()
         )
         self.fields["crop"].queryset = Crop.objects.order_by("name")
+        self.fields["season_year"].widget.attrs.update(
+            {"min": SEASON_YEAR_MIN, "max": SEASON_YEAR_MAX}
+        )
         self.fields["sowing_date"].input_formats = ["%Y-%m-%d"]
         self.fields["planned_harvest_date"].input_formats = ["%Y-%m-%d"]
 
     def clean_season_year(self):
         season_year = self.cleaned_data["season_year"]
-        if not 2000 <= season_year <= 2100:
-            raise ValidationError("Rok sezonu musi mieścić się w zakresie 2000–2100.")
+        if not SEASON_YEAR_MIN <= season_year <= SEASON_YEAR_MAX:
+            raise ValidationError(SEASON_YEAR_RANGE_ERROR)
         return season_year
 
     def clean(self):
@@ -263,6 +311,11 @@ class CultivationForm(forms.ModelForm):
         season_year = cleaned_data.get("season_year")
         sowing_date = cleaned_data.get("sowing_date")
         planned_harvest_date = cleaned_data.get("planned_harvest_date")
+
+        if sowing_date and season_year and sowing_date.year != season_year:
+            self.add_error(
+                "sowing_date", "Rok daty siewu musi być zgodny z rokiem sezonu."
+            )
 
         if (
             sowing_date
@@ -296,7 +349,7 @@ class CultivationChoiceField(forms.ModelChoiceField):
         )
 
 
-class FieldWorkForm(forms.ModelForm):
+class FieldWorkForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
     season_year = forms.TypedChoiceField(
         label="Rok sezonu",
         choices=(),
@@ -389,6 +442,18 @@ class FieldWorkForm(forms.ModelForm):
             self.add_error(
                 "season_year",
                 "Wybrany sezon nie jest zgodny z sezonem wybranej uprawy.",
+            )
+        work_type = cleaned_data.get("work_type")
+        work_date = cleaned_data.get("work_date")
+        if (
+            cultivation is not None
+            and work_type == FieldWork.WorkType.SOWING
+            and work_date is not None
+            and work_date.year != cultivation.season_year
+        ):
+            self.add_error(
+                "work_date",
+                "Rok daty siewu musi być zgodny z rokiem sezonu uprawy.",
             )
         return cleaned_data
 
@@ -597,6 +662,51 @@ class HarvestForm(forms.ModelForm):
                 "Przychód musi wynosić 0, jeśli zbiór nie został sprzedany.",
             )
         return cleaned_data
+
+
+class CropForm(forms.ModelForm):
+    DESCRIPTION_MAX_LENGTH = 1000
+
+    class Meta:
+        model = Crop
+        fields = ("name", "description")
+        labels = {
+            "name": "Nazwa rodzaju uprawy",
+            "description": "Opis",
+        }
+        help_texts = {
+            "name": (
+                "Rodzaj uprawy jest wspólny dla wszystkich użytkowników. "
+                "Nazwa nie może się powtarzać."
+            ),
+            "description": "Opcjonalny krótki opis (maksymalnie 1000 znaków).",
+        }
+        error_messages = {
+            "name": {
+                "required": "Nazwa rodzaju uprawy jest wymagana.",
+                "max_length": "Nazwa może mieć maksymalnie 100 znaków.",
+                "unique": "Rodzaj uprawy o tej nazwie już istnieje.",
+            },
+        }
+        widgets = {"description": forms.Textarea(attrs={"rows": 4})}
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not name:
+            raise ValidationError("Nazwa rodzaju uprawy jest wymagana.")
+        # SQLite compares case-insensitively only for ASCII, so Polish letters
+        # (e.g. "Łubin" / "łubin") are compared in Python with casefold().
+        normalized = name.casefold()
+        existing_names = Crop.objects.values_list("name", flat=True)
+        if any(existing.casefold() == normalized for existing in existing_names):
+            raise ValidationError("Rodzaj uprawy o tej nazwie już istnieje.")
+        return name
+
+    def clean_description(self):
+        description = self.cleaned_data.get("description", "").strip()
+        if len(description) > self.DESCRIPTION_MAX_LENGTH:
+            raise ValidationError("Opis może mieć maksymalnie 1000 znaków.")
+        return description
 
 
 class ErrorReportForm(forms.ModelForm):

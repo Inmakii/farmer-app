@@ -99,7 +99,7 @@ Uprawa konkretnego rodzaju prowadzona na konkretnym polu w danym sezonie.
 | `id` | BIGINT, auto increment | Tak | PK | Identyfikator uprawy sezonowej. |
 | `field_id` | BIGINT | Tak | FK → `core_field.id`, CASCADE; część UNIQUE | Pole, na którym prowadzona jest uprawa. |
 | `crop_id` | BIGINT | Tak | FK → `core_crop.id`, PROTECT; część UNIQUE | Rodzaj uprawy. |
-| `season_year` | SMALLINT UNSIGNED | Tak | walidatory 2000…2100; część UNIQUE | Rok sezonu. |
+| `season_year` | SMALLINT UNSIGNED | Tak | walidatory 1980…2100; część UNIQUE | Rok sezonu. |
 | `status` | VARCHAR(10) | Tak | wybór Django | `PLANNED`, `ACTIVE` albo `COMPLETED`. |
 | `sowing_date` | DATE | Nie | NULL | Data siewu. |
 | `planned_harvest_date` | DATE | Nie | NULL; walidacja względem `sowing_date` | Planowana data zbioru. |
@@ -205,7 +205,7 @@ Zastosowane reguły:
 - `latitude` ma walidatory od −90 do 90, a `longitude` od −180 do 180; migracja nie definiuje dla nich osobnych constraintów CHECK, dlatego jest to walidacja warstwy Django;
 - para (`owner`, `name`) w `Field` jest unikalna dzięki `core_field_unique_owner_name`;
 - trójka (`field`, `crop`, `season_year`) w `Cultivation` jest unikalna dzięki `core_cultivation_unique_field_crop_season`;
-- rok sezonu ma walidatory od 2000 do 2100;
+- rok sezonu ma walidatory od 1980 do 2100;
 - `Cultivation.clean()` odrzuca planowaną datę zbioru wcześniejszą od daty siewu; migracja nie zawiera constraintu dat, więc zapis omijający walidację Django nie jest przez bazę chroniony przed taką kolejnością;
 - wartości `TextChoices` są sprawdzane przez Django, ale w migracji nie ma dla nich osobnych constraintów CHECK;
 - `Crop` używany przez `Cultivation` jest chroniony przez `on_delete=PROTECT`.

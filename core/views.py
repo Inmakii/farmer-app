@@ -1,4 +1,5 @@
 import hashlib
+import re
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -9,6 +10,7 @@ from django.contrib.auth.views import LogoutView as DjangoLogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.cache import cache
 from django.db.models import Q
+from django.db.models.functions import Lower
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.dateparse import parse_date
@@ -23,6 +25,7 @@ from django.views.generic import (
 )
 
 from .forms import (
+    CropForm,
     CultivationForm,
     ErrorReportForm,
     FieldForm,
@@ -32,7 +35,17 @@ from .forms import (
     RegistrationForm,
     SprayingForm,
 )
-from .models import Crop, Cultivation, ErrorReport, Field, FieldWork, Harvest, Spraying
+from .models import (
+    SEASON_YEAR_MAX,
+    SEASON_YEAR_MIN,
+    Crop,
+    Cultivation,
+    ErrorReport,
+    Field,
+    FieldWork,
+    Harvest,
+    Spraying,
+)
 from .services.reports import (
     calculate_totals,
     get_cultivation_report,
@@ -84,6 +97,9 @@ def home(request):
     )
 
 
+SEASON_YEAR_PATTERN = re.compile(r"[0-9]{4}")
+
+
 def parse_filter_date(value):
     try:
         return parse_date(value)
@@ -94,7 +110,7 @@ def parse_filter_date(value):
 def parse_season_year(value):
     if not value:
         return None, True
-    if value.isdigit() and 2000 <= int(value) <= 2100:
+    if SEASON_YEAR_PATTERN.fullmatch(value) and SEASON_YEAR_MIN <= int(value) <= SEASON_YEAR_MAX:
         return int(value), True
     return None, False
 
@@ -330,7 +346,32 @@ class CultivationFormUserMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["has_fields"] = Field.objects.filter(owner=self.request.user).exists()
+        context["has_crops"] = Crop.objects.exists()
         return context
+
+
+class CropListView(LoginRequiredMixin, ListView):
+    template_name = "core/crop_list.html"
+    context_object_name = "crops"
+    http_method_names = ["get", "head", "options"]
+
+    def get_queryset(self):
+        return Crop.objects.order_by(Lower("name"), "name")
+
+
+class CropCreateView(LoginRequiredMixin, CreateView):
+    model = Crop
+    form_class = CropForm
+    template_name = "core/crop_form.html"
+    success_url = reverse_lazy("core:crop_list")
+    http_method_names = ["get", "post", "head", "options"]
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(
+            self.request, f"Rodzaj uprawy „{self.object.name}” został dodany."
+        )
+        return response
 
 
 class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
@@ -345,7 +386,7 @@ class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
         field_id = self.request.GET.get("field", "")
         crop_id = self.request.GET.get("crop", "")
         status = self.request.GET.get("status", "")
-        season_year = self.request.GET.get("season_year", "")
+        season_year, _ = parse_season_year(self.request.GET.get("season_year", ""))
 
         if field_id.isdigit():
             queryset = queryset.filter(field_id=field_id)
@@ -353,7 +394,7 @@ class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
             queryset = queryset.filter(crop_id=crop_id)
         if status in Cultivation.Status.values:
             queryset = queryset.filter(status=status)
-        if season_year.isdigit():
+        if season_year is not None:
             queryset = queryset.filter(season_year=season_year)
         return queryset
 
