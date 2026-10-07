@@ -173,9 +173,9 @@ class CultivationCrudTests(TestCase):
         self.assertEqual(cultivation.field, self.own_field)
         self.assertEqual(cultivation.crop, self.corn)
 
-    def test_year_below_2000_is_rejected(self):
+    def test_year_below_1980_is_rejected(self):
         form = CultivationForm(
-            data=self.valid_data(season_year="1999"), user=self.owner
+            data=self.valid_data(season_year="1979"), user=self.owner
         )
 
         self.assertFalse(form.is_valid())

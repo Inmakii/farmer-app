@@ -6,6 +6,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Q
 
+SEASON_YEAR_MIN = 1980
+SEASON_YEAR_MAX = 2100
+
 
 class Crop(models.Model):
     name = models.CharField("nazwa", max_length=100, unique=True)
@@ -98,7 +101,10 @@ class Cultivation(models.Model):
         verbose_name="rodzaj uprawy",
     )
     season_year = models.PositiveSmallIntegerField(
-        "rok sezonu", validators=[MinValueValidator(2000), MaxValueValidator(2100)]
+        "rok sezonu", validators=[
+            MinValueValidator(SEASON_YEAR_MIN),
+            MaxValueValidator(SEASON_YEAR_MAX),
+        ],
     )
     status = models.CharField("status", max_length=10, choices=Status.choices)
     sowing_date = models.DateField("data siewu", null=True, blank=True)

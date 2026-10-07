@@ -6,7 +6,7 @@
     <h1>Raporty finansowe</h1>
     <form method="get" action="{% url 'core:report_dashboard' %}">
         <p><label for="id_field">Pole</label> <select id="id_field" name="field"><option value="">Wszystkie pola</option>{% for field in user_fields %}<option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>{% endfor %}</select></p>
-        <p><label for="id_season_year">Rok sezonu</label> <input id="id_season_year" type="number" min="2000" max="2100" name="season_year" value="{{ selected_season_year }}"></p>
+        <p><label for="id_season_year">Rok sezonu</label> <input id="id_season_year" type="number" min="1980" max="2100" name="season_year" value="{{ selected_season_year }}"></p>
         <button type="submit">Filtruj</button> <a href="{% url 'core:report_dashboard' %}">Wyczyść filtry</a>
     </form>
     {% if invalid_filters %}<p>Podane filtry są nieprawidłowe lub niedostępne.</p>{% endif %}

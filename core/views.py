@@ -30,7 +30,17 @@ from .forms import (
     RegistrationForm,
     SprayingForm,
 )
-from .models import Crop, Cultivation, ErrorReport, Field, FieldWork, Harvest, Spraying
+from .models import (
+    SEASON_YEAR_MAX,
+    SEASON_YEAR_MIN,
+    Crop,
+    Cultivation,
+    ErrorReport,
+    Field,
+    FieldWork,
+    Harvest,
+    Spraying,
+)
 from .services.reports import (
     calculate_totals,
     get_cultivation_report,
@@ -59,7 +69,7 @@ def parse_filter_date(value):
 def parse_season_year(value):
     if not value:
         return None, True
-    if SEASON_YEAR_PATTERN.fullmatch(value) and 2000 <= int(value) <= 2100:
+    if SEASON_YEAR_PATTERN.fullmatch(value) and SEASON_YEAR_MIN <= int(value) <= SEASON_YEAR_MAX:
         return int(value), True
     return None, False
 
