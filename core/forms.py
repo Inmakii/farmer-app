@@ -3,7 +3,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Crop, Cultivation, ErrorReport, Field, FieldWork, Harvest, Spraying
+from .models import (
+    SEASON_YEAR_MAX,
+    SEASON_YEAR_MIN,
+    Crop,
+    Cultivation,
+    ErrorReport,
+    Field,
+    FieldWork,
+    Harvest,
+    Spraying,
+)
 
 
 class SkipDuplicateModelErrorsMixin:
@@ -201,6 +211,11 @@ class FieldForm(forms.ModelForm):
         return cleaned_data
 
 
+SEASON_YEAR_RANGE_ERROR = (
+    f"Rok sezonu musi mieścić się w zakresie {SEASON_YEAR_MIN}–{SEASON_YEAR_MAX}."
+)
+
+
 class CultivationForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
     class Meta:
         model = Cultivation
@@ -224,7 +239,7 @@ class CultivationForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
         }
         help_texts = {
             "field": "Możesz wybrać wyłącznie jedno ze swoich pól.",
-            "season_year": "Dozwolony zakres lat: 2000–2100.",
+            "season_year": f"Dozwolony zakres lat: {SEASON_YEAR_MIN}–{SEASON_YEAR_MAX}.",
             "sowing_date": "Opcjonalna data rozpoczęcia siewu.",
             "planned_harvest_date": "Nie może być wcześniejsza od daty siewu.",
         }
@@ -240,6 +255,8 @@ class CultivationForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
             "season_year": {
                 "required": "Rok sezonu jest wymagany.",
                 "invalid": "Podaj poprawny rok sezonu.",
+                "min_value": SEASON_YEAR_RANGE_ERROR,
+                "max_value": SEASON_YEAR_RANGE_ERROR,
             },
             "status": {"required": "Wybierz status uprawy."},
             "sowing_date": {"invalid": "Podaj poprawną datę siewu."},
@@ -249,10 +266,20 @@ class CultivationForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
         }
         widgets = {
             "sowing_date": forms.DateInput(
-                attrs={"type": "date"}, format="%Y-%m-%d"
+                attrs={
+                    "type": "date",
+                    "min": f"{SEASON_YEAR_MIN}-01-01",
+                    "max": f"{SEASON_YEAR_MAX}-12-31",
+                },
+                format="%Y-%m-%d",
             ),
             "planned_harvest_date": forms.DateInput(
-                attrs={"type": "date"}, format="%Y-%m-%d"
+                attrs={
+                    "type": "date",
+                    "min": f"{SEASON_YEAR_MIN}-01-01",
+                    "max": f"{SEASON_YEAR_MAX + 1}-12-31",
+                },
+                format="%Y-%m-%d",
             ),
         }
 
@@ -265,13 +292,16 @@ class CultivationForm(SkipDuplicateModelErrorsMixin, forms.ModelForm):
             else Field.objects.none()
         )
         self.fields["crop"].queryset = Crop.objects.order_by("name")
+        self.fields["season_year"].widget.attrs.update(
+            {"min": SEASON_YEAR_MIN, "max": SEASON_YEAR_MAX}
+        )
         self.fields["sowing_date"].input_formats = ["%Y-%m-%d"]
         self.fields["planned_harvest_date"].input_formats = ["%Y-%m-%d"]
 
     def clean_season_year(self):
         season_year = self.cleaned_data["season_year"]
-        if not 2000 <= season_year <= 2100:
-            raise ValidationError("Rok sezonu musi mieścić się w zakresie 2000–2100.")
+        if not SEASON_YEAR_MIN <= season_year <= SEASON_YEAR_MAX:
+            raise ValidationError(SEASON_YEAR_RANGE_ERROR)
         return season_year
 
     def clean(self):
