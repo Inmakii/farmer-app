@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import NoReverseMatch, reverse
@@ -177,12 +179,15 @@ class CropCreateTests(CropTestData):
         self.assertEqual(list(CropForm().fields), ["name", "description"])
 
         response = self.client.get(self.create_url)
+        main = response.content.decode().split('id="main-content"')[1]
+        field_names = set(re.findall(r'\bname="([^"]+)"', main))
 
-        self.assertContains(response, 'name="name"')
-        self.assertContains(response, 'name="description"')
-        for unsafe in ["owner", "user", "status", "created_at", 'name="id"', "is_staff"]:
+        self.assertEqual(
+            field_names, {"csrfmiddlewaretoken", "name", "description"}
+        )
+        for unsafe in ["owner", "user", "status", "created_at", "id", "is_staff"]:
             with self.subTest(unsafe=unsafe):
-                self.assertNotContains(response, unsafe)
+                self.assertNotIn(unsafe, field_names)
 
     def test_extra_posted_fields_are_ignored(self):
         self.client.post(
