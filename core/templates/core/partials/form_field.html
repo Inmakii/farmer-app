@@ -1,10 +1,11 @@
 {# One form field: label, control, hint and errors below the field. #}
+{% load i18n %}
 <div class="field{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
     {% if field.field.widget.input_type == "password" %}
         <div class="password-wrap">
             {{ field }}
-            <button class="password-toggle" type="button" data-password-toggle aria-controls="{{ field.id_for_label }}" aria-pressed="false">Pokaż</button>
+            <button class="password-toggle" type="button" data-password-toggle aria-controls="{{ field.id_for_label }}" aria-pressed="false" data-show-label="{% translate "Show" %}" data-hide-label="{% translate "Hide" %}">{% translate "Show" %}</button>
         </div>
     {% else %}
         {{ field }}

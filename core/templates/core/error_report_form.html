@@ -1,14 +1,15 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Zgłoś błąd – Farmer App{% endblock %}
+{% block title %}{% translate "Report a bug" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <a class="back-link" href="{% url 'core:error_report_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Moje zgłoszenia</a>
+    <a class="back-link" href="{% url 'core:error_report_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "My reports" %}</a>
     <header class="page-head">
         <div>
-            <p class="kicker">Pomoc</p>
-            <h1>Zgłoś błąd</h1>
-            <p class="page-head-lead">{% if source_page %}Adres strony, na której był problem, jest już wpisany w opisie. Dopisz, co się stało i co powinno było się wydarzyć.{% else %}Opisz, co się stało i na której stronie.{% endif %} Po wysłaniu zgłoszenia jego status będzie zmieniany przez administratora.</p>
+            <p class="kicker">{% translate "Help" %}</p>
+            <h1>{% translate "Report a bug" %}</h1>
+            <p class="page-head-lead">{% if source_page %}{% translate "The address of the page with the problem is already in the description. Add what happened and what should have happened." %}{% else %}{% translate "Describe what happened and on which page." %}{% endif %} {% translate "After you send the report, its status will be changed by an administrator." %}</p>
         </div>
     </header>
 
@@ -17,8 +18,8 @@
             {% csrf_token %}
             {% include "core/partials/form_body.html" %}
             <div class="form-actions">
-                <button class="button" type="submit" data-busy-label="Wysyłanie…">Wyślij zgłoszenie</button>
-                <a class="button button-text" href="{% if source_page %}{{ source_page }}{% else %}{% url 'core:error_report_list' %}{% endif %}">Anuluj</a>
+                <button class="button" type="submit" data-busy-label="{% translate "Sending…" %}">{% translate "Send report" %}</button>
+                <a class="button button-text" href="{% if source_page %}{{ source_page }}{% else %}{% url 'core:error_report_list' %}{% endif %}">{% translate "Cancel" %}</a>
             </div>
         </form>
     </div>

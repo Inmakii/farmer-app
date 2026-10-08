@@ -12,7 +12,9 @@
             button.addEventListener("click", function () {
                 var show = input.type === "password";
                 input.type = show ? "text" : "password";
-                button.textContent = show ? "Ukryj" : "Pokaż";
+                button.textContent = show
+                    ? button.getAttribute("data-hide-label") || "Hide"
+                    : button.getAttribute("data-show-label") || "Show";
                 button.setAttribute("aria-pressed", show ? "true" : "false");
             });
         });

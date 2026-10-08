@@ -640,7 +640,7 @@ tbody tr:hover {
 }
 
 /* Narrower screen: logo and buttons in the first row, sections in a scrollable strip below. */
-@media (max-width: 1140px) {
+@media (max-width: 1360px) {
     .site-header.is-app .nav-shell {
         position: relative;
         min-height: 0;
@@ -3160,5 +3160,111 @@ body:has(.report-fab) .site-footer {
 @media (prefers-reduced-motion: no-preference) {
     .report-fab {
         animation: tag-in 400ms var(--ease-out) 600ms backwards;
+    }
+}
+
+/* Language menu in the header: a small dropdown that works without JavaScript. */
+
+.lang-menu {
+    position: relative;
+}
+
+.lang-menu summary {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    border: 1px solid var(--header-control-border);
+    border-radius: 9px;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
+    list-style: none;
+    cursor: pointer;
+}
+
+.lang-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.lang-menu summary:hover,
+.lang-menu[open] summary {
+    border-color: var(--ink);
+    background: var(--rule);
+}
+
+.lang-menu summary .icon {
+    width: 18px;
+    height: 18px;
+}
+
+.lang-list {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 40;
+    min-width: 170px;
+    display: grid;
+    margin: 0;
+    padding: 6px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 9px;
+    background: var(--sheet);
+    box-shadow: 0 12px 30px rgba(20, 30, 20, 0.16);
+}
+
+.lang-list button {
+    min-height: 40px;
+    justify-content: flex-start;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.lang-list button:hover {
+    border: 0;
+    background: var(--rule);
+    color: var(--ink);
+}
+
+.lang-list button[aria-current="true"] {
+    font-weight: 800;
+}
+
+.lang-list button[aria-current="true"]::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    margin-left: auto;
+    border-radius: 50%;
+    background: var(--wheat);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .lang-menu[open] .lang-list {
+        animation: tag-in 160ms var(--ease-out);
+    }
+}
+
+/* Ukrainian: the main fonts have no Cyrillic, so close matches fill in. */
+:root:lang(uk) {
+    --font-display: "Fraunces", "Literata", Georgia, "Times New Roman", serif;
+    --font-sans: "Atkinson Hyperlegible Next", "Golos Text", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@media (max-width: 420px) {
+    .lang-menu summary {
+        width: 40px;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .lang-menu summary span {
+        display: none;
     }
 }

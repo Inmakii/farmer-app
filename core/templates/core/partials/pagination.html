@@ -1,15 +1,16 @@
-{# List pagination. Expects page_obj, querystring (without page) and label, e.g. "Paginacja pól". #}
+{# List pagination. Expects page_obj, querystring (without page) and a translated label. #}
+{% load i18n %}
 {% if is_paginated %}
 <nav class="pager" aria-label="{{ label }}">
     {% if page_obj.has_previous %}
         <a class="pager-link" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" rel="prev">
-            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-left"/></svg>Poprzednia
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-left"/></svg>{% translate "Previous" %}
         </a>
     {% else %}<span class="pager-spacer"></span>{% endif %}
-    <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+    <span>{% blocktranslate with number=page_obj.number total=page_obj.paginator.num_pages %}Page {{ number }} of {{ total }}{% endblocktranslate %}</span>
     {% if page_obj.has_next %}
         <a class="pager-link" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}" rel="next">
-            Następna<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-right"/></svg>
+            {% translate "Next" %}<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-right"/></svg>
         </a>
     {% else %}<span class="pager-spacer"></span>{% endif %}
 </nav>

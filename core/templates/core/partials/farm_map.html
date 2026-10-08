@@ -1,7 +1,8 @@
 {# Top-down view of fields, shared by the home and login pages. #}
+{% load i18n %}
 <div class="farm-map-frame">
     <svg viewBox="0 0 560 460" role="img" aria-labelledby="map-title" focusable="false">
-        <title id="map-title">Widok pól z góry: pszenica, rzepak, kukurydza, łąka i ugór</title>
+        <title id="map-title">{% translate "Fields seen from above: wheat, rapeseed, maize, meadow and fallow land" %}</title>
         <defs>
             <pattern id="rows-a" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(-4)"><path class="map-row" d="M0 6h12"/></pattern>
             <pattern id="rows-b" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(10)"><path class="map-row" d="M0 5h10"/></pattern>

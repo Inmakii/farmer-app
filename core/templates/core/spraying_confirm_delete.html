@@ -1,18 +1,19 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Usuń oprysk – Farmer App{% endblock %}
+{% block title %}{% translate "Delete spraying" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <a class="back-link" href="{% url 'core:spraying_detail' spraying.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć</a>
+    <a class="back-link" href="{% url 'core:spraying_detail' spraying.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Back" %}</a>
     <div class="sheet confirm">
         <span class="confirm-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg></span>
-        <h1>Usuń oprysk</h1>
-        <p class="confirm-text">Czy na pewno chcesz usunąć oprysk „{{ spraying.product_name }}” z dnia {{ spraying.spraying_date|date:"d.m.Y" }}?</p>
-        <p class="confirm-note">Koszt tego oprysku zniknie z raportów. Tego nie da się cofnąć.</p>
+        <h1>{% translate "Delete spraying" %}</h1>
+        <p class="confirm-text">{% blocktranslate with product=spraying.product_name date=spraying.spraying_date|date:"d.m.Y" %}Are you sure you want to delete the spraying “{{ product }}” from {{ date }}?{% endblocktranslate %}</p>
+        <p class="confirm-note">{% translate "The cost of this spraying will disappear from the reports. This cannot be undone." %}</p>
         <form method="post" class="form-actions" data-busy-form>
             {% csrf_token %}
-            <button class="button button-danger" type="submit" data-busy-label="Usuwanie…">Tak, usuń oprysk</button>
-            <a class="button button-text" href="{% url 'core:spraying_detail' spraying.pk %}">Anuluj</a>
+            <button class="button button-danger" type="submit" data-busy-label="{% translate "Deleting…" %}">{% translate "Yes, delete spraying" %}</button>
+            <a class="button button-text" href="{% url 'core:spraying_detail' spraying.pk %}">{% translate "Cancel" %}</a>
         </form>
     </div>
 {% endblock %}

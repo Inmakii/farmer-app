@@ -1,15 +1,16 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Rejestracja · Farmer App{% endblock %}
+{% block title %}{% translate "Sign up" context "page title" %} · Farmer App{% endblock %}
 {% block body_class %}page-auth{% endblock %}
 {% block main_class %}auth-main{% endblock %}
 
 {% block content %}
 <div class="wrap auth-grid">
     <section class="sheet auth-sheet" aria-labelledby="auth-title">
-        <p class="kicker">Rejestracja</p>
-        <h1 id="auth-title">Utwórz konto</h1>
-        <p class="auth-lead">Konto jest bezpłatne. Wypełnienie formularza zajmie chwilę.</p>
+        <p class="kicker">{% translate "Sign up" %}</p>
+        <h1 id="auth-title">{% translate "Create account" %}</h1>
+        <p class="auth-lead">{% translate "The account is free. Filling in the form takes a moment." %}</p>
 
         <form method="post" class="auth-form" data-busy-form novalidate>
             {% csrf_token %}
@@ -20,7 +21,7 @@
             {% endif %}
 
             <fieldset>
-                <legend>O&nbsp;Tobie</legend>
+                <legend>{% translate "About you" %}</legend>
                 <div class="field-row">
                     {% with field=form.first_name %}{% include "core/partials/form_field.html" %}{% endwith %}
                     {% with field=form.last_name %}{% include "core/partials/form_field.html" %}{% endwith %}
@@ -29,39 +30,39 @@
             </fieldset>
 
             <fieldset>
-                <legend>Dane do logowania</legend>
+                <legend>{% translate "Login details" %}</legend>
                 {% with field=form.username %}{% include "core/partials/form_field.html" %}{% endwith %}
                 {% with field=form.password1 %}{% include "core/partials/form_field.html" %}{% endwith %}
                 {% with field=form.password2 %}{% include "core/partials/form_field.html" %}{% endwith %}
             </fieldset>
 
-            <button class="button button-large button-block" type="submit" data-busy-label="Zakładanie konta…">Utwórz konto</button>
+            <button class="button button-large button-block" type="submit" data-busy-label="{% translate "Creating account…" %}">{% translate "Create account" %}</button>
         </form>
 
         <p class="auth-switch">
-            Masz już konto?
-            <a class="link-quiet" href="{% url 'core:login' %}">Zaloguj się</a>
+            {% translate "Already have an account?" %}
+            <a class="link-quiet" href="{% url 'core:login' %}">{% translate "Log in" %}</a>
         </p>
     </section>
 
     <aside class="auth-aside" aria-labelledby="next-title">
-        <p class="kicker">Co dalej</p>
-        <h2 id="next-title">Trzy kroki do pierwszego wyniku</h2>
+        <p class="kicker">{% translate "What comes next" %}</p>
+        <h2 id="next-title">{% translate "Three steps to your first result" %}</h2>
         <ol class="next-steps">
             <li>
-                <strong>Zalogujesz się</strong>
-                <span>Loginem i&nbsp;hasłem, które ustawisz w&nbsp;tym formularzu.</span>
+                <strong>{% translate "You log in" %}</strong>
+                <span>{% translate "With the username and password you set in this form." %}</span>
             </li>
             <li>
-                <strong>Dodasz pierwsze pole</strong>
-                <span>Na początek wystarczy nazwa i&nbsp;powierzchnia.</span>
+                <strong>{% translate "You add your first field" %}</strong>
+                <span>{% translate "To start, a name and an area are enough." %}</span>
             </li>
             <li>
-                <strong>Aplikacja podpowie resztę</strong>
-                <span>Na pulpicie zawsze widać następny krok.</span>
+                <strong>{% translate "The app suggests the rest" %}</strong>
+                <span>{% translate "The dashboard always shows the next step." %}</span>
             </li>
         </ol>
-        <p class="auth-note">Twoje pola i&nbsp;zapisy widzisz tylko Ty.</p>
+        <p class="auth-note">{% translate "Only you can see your fields and records." %}</p>
     </aside>
 </div>
 {% endblock %}

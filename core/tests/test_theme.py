@@ -31,6 +31,7 @@ class ThemeToggleMarkupTests(TestCase):
         self.assertIn('type="button"', button)
         self.assertIn(f'aria-label="{DARK_LABEL}"', button)
         self.assertIn(f'title="{DARK_LABEL}"', button)
+        self.assertIn(f'data-label-dark="{LIGHT_LABEL}"', button)
         self.assertIn('id="theme-status"', content)
         self.assertIn('aria-live="polite"', content)
 
@@ -197,12 +198,12 @@ class ThemeStaticFilesTests(SimpleTestCase):
             with self.subTest(path=path):
                 self.assertIsNotNone(finders.find(path), path)
 
-    def test_scripts_have_polish_labels_and_safe_storage_access(self):
+    def test_scripts_read_translated_labels_and_use_safe_storage_access(self):
         init_script = read_static("core/theme-init.js")
         toggle_script = read_static("core/theme.js")
 
-        self.assertIn(DARK_LABEL, toggle_script)
-        self.assertIn(LIGHT_LABEL, toggle_script)
+        self.assertIn('"data-label-" + theme', toggle_script)
+        self.assertIn('"data-announce-" + nextTheme', toggle_script)
         for script in [init_script, toggle_script]:
             with self.subTest(script=script[:40]):
                 self.assertIn('"farmer-theme"', script)

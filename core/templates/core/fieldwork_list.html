@@ -1,69 +1,70 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Prace – Farmer App{% endblock %}
+{% block title %}{% translate "Works" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
     <header class="page-head">
         <div>
-            <p class="kicker">Zapisy</p>
-            <h1>Wykonane prace</h1>
-            <p class="page-head-lead">Orka, siew, nawożenie i inne zabiegi razem z kosztami.</p>
+            <p class="kicker">{% translate "Records" %}</p>
+            <h1>{% translate "Completed works" %}</h1>
+            <p class="page-head-lead">{% translate "Plowing, sowing, fertilizing and other treatments with their costs." %}</p>
         </div>
         <div class="page-actions">
             <a class="button" href="{% url 'core:fieldwork_create' %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pracę
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Add work" %}
             </a>
         </div>
     </header>
 
-    <form class="filters" method="get" action="{% url 'core:fieldwork_list' %}" role="search" aria-label="Filtruj prace">
+    <form class="filters" method="get" action="{% url 'core:fieldwork_list' %}" role="search" aria-label="{% translate "Filter works" %}">
         <div class="filters-grid">
             <div class="filter filter-wide">
-                <label for="id_q">Szukaj</label>
+                <label for="id_q">{% translate "Search" %}</label>
                 <div class="search-input">
                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
-                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Opis, pole lub uprawa">
+                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="{% translate "Description, field or cultivation" %}">
                 </div>
             </div>
             <div class="filter">
-                <label for="id_field">Pole</label>
+                <label for="id_field">{% translate "Field" %}</label>
                 <select id="id_field" name="field">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for field in user_fields %}
                         <option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="id_cultivation">Uprawa</label>
+                <label for="id_cultivation">{% translate "Cultivation" %}</label>
                 <select id="id_cultivation" name="cultivation">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for cultivation in user_cultivations %}
                         <option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="id_work_type">Rodzaj pracy</label>
+                <label for="id_work_type">{% translate "Work type" %}</label>
                 <select id="id_work_type" name="work_type">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for value, label in work_type_choices %}
                         <option value="{{ value }}"{% if selected_work_type == value %} selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="id_date_from">Od</label>
+                <label for="id_date_from">{% translate "From" %}</label>
                 <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}">
             </div>
             <div class="filter">
-                <label for="id_date_to">Do</label>
+                <label for="id_date_to">{% translate "To" %}</label>
                 <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}">
             </div>
         </div>
         <div class="filters-actions">
-            <button class="button" type="submit">Filtruj</button>
-            <a class="button button-text" href="{% url 'core:fieldwork_list' %}">Wyczyść filtry</a>
+            <button class="button" type="submit">{% translate "Filter" %}</button>
+            <a class="button button-text" href="{% url 'core:fieldwork_list' %}">{% translate "Clear filters" %}</a>
         </div>
     </form>
 
@@ -83,13 +84,13 @@
                         <div class="record-side">
                             <span class="record-amount">{{ work.cost|floatformat:"2g" }} zł</span>
                             <span class="record-actions">
-                                <a class="icon-link" href="{% url 'core:fieldwork_update' work.pk %}" title="Edytuj">
+                                <a class="icon-link" href="{% url 'core:fieldwork_update' work.pk %}" title="{% translate "Edit" %}">
                                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>
-                                    <span class="visually-hidden">Edytuj pracę {{ work.get_work_type_display }} z dnia {{ work.work_date|date:"d.m.Y" }}</span>
+                                    <span class="visually-hidden">{% blocktranslate with type=work.get_work_type_display date=work.work_date|date:"d.m.Y" %}Edit work {{ type }} from {{ date }}{% endblocktranslate %}</span>
                                 </a>
-                                <a class="icon-link is-danger" href="{% url 'core:fieldwork_delete' work.pk %}" title="Usuń">
+                                <a class="icon-link is-danger" href="{% url 'core:fieldwork_delete' work.pk %}" title="{% translate "Delete" %}">
                                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>
-                                    <span class="visually-hidden">Usuń pracę {{ work.get_work_type_display }} z dnia {{ work.work_date|date:"d.m.Y" }}</span>
+                                    <span class="visually-hidden">{% blocktranslate with type=work.get_work_type_display date=work.work_date|date:"d.m.Y" %}Delete work {{ type }} from {{ date }}{% endblocktranslate %}</span>
                                 </a>
                             </span>
                         </div>
@@ -97,14 +98,14 @@
                 {% endfor %}
             </ul>
         </div>
-        {% include "core/partials/pagination.html" with label="Paginacja prac" %}
+        {% translate "Work pages" as pager_label %}{% include "core/partials/pagination.html" with label=pager_label %}
     {% else %}
         <div class="empty">
             <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shovel"/></svg></span>
-            <strong>Brak zapisanych prac</strong>
-            <p>Nie znaleziono prac spełniających podane kryteria.</p>
+            <strong>{% translate "No works recorded" %}</strong>
+            <p>{% translate "No works match the given criteria." %}</p>
             <a class="button" href="{% url 'core:fieldwork_create' %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pracę
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Add work" %}
             </a>
         </div>
     {% endif %}

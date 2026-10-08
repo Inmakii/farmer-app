@@ -1,38 +1,39 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Szczegóły oprysku – Farmer App{% endblock %}
+{% block title %}{% translate "Spraying details" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <a class="back-link" href="{% url 'core:spraying_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć do listy</a>
+    <a class="back-link" href="{% url 'core:spraying_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Back to the list" %}</a>
     <header class="page-head">
         <div>
-            <p class="kicker">Oprysk · {{ spraying.spraying_date|date:"d.m.Y" }}</p>
+            <p class="kicker">{% blocktranslate with date=spraying.spraying_date|date:"d.m.Y" %}Spraying · {{ date }}{% endblocktranslate %}</p>
             <h1>{{ spraying.product_name }}</h1>
-            <p class="page-head-lead">{{ spraying.cultivation.crop.name }} na polu {{ spraying.cultivation.field.name }}, sezon {{ spraying.cultivation.season_year }}</p>
+            <p class="page-head-lead">{% blocktranslate with crop=spraying.cultivation.crop.name field=spraying.cultivation.field.name year=spraying.cultivation.season_year %}{{ crop }} on the field {{ field }}, season {{ year }}{% endblocktranslate %}</p>
         </div>
         <div class="page-actions">
             <a class="button button-secondary" href="{% url 'core:spraying_update' spraying.pk %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>Edytuj
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>{% translate "Edit" %}
             </a>
             <a class="button button-text" href="{% url 'core:spraying_delete' spraying.pk %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>Usuń
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>{% translate "Delete" %}
             </a>
         </div>
     </header>
 
     <article class="sheet" aria-labelledby="spraying-data-title">
         <div class="sheet-title">
-            <h2 id="spraying-data-title">Dane oprysku</h2>
-            <a class="sheet-title-note" href="{% url 'core:cultivation_detail' spraying.cultivation.pk %}">Zobacz uprawę</a>
+            <h2 id="spraying-data-title">{% translate "Spraying details" %}</h2>
+            <a class="sheet-title-note" href="{% url 'core:cultivation_detail' spraying.cultivation.pk %}">{% translate "View cultivation" %}</a>
         </div>
         <dl class="facts">
-            <div class="fact-key"><dt>Koszt</dt><dd>{{ spraying.cost|floatformat:"2g" }} zł</dd></div>
-            <div class="fact-key"><dt>Ilość</dt><dd>{{ spraying.quantity|floatformat:"2g" }} {{ spraying.get_unit_display }}</dd></div>
-            <div><dt>Data oprysku</dt><dd>{{ spraying.spraying_date|date:"d.m.Y" }}</dd></div>
-            <div><dt>Pole</dt><dd>{{ spraying.cultivation.field.name }}</dd></div>
-            <div><dt>Uprawa</dt><dd>{{ spraying.cultivation.crop.name }}</dd></div>
-            <div><dt>Sezon</dt><dd>{{ spraying.cultivation.season_year }}</dd></div>
-            <div class="fact-wide"><dt>Opis</dt><dd>{{ spraying.description|default:"—"|linebreaksbr }}</dd></div>
+            <div class="fact-key"><dt>{% translate "Cost" %}</dt><dd>{{ spraying.cost|floatformat:"2g" }} zł</dd></div>
+            <div class="fact-key"><dt>{% translate "Quantity" %}</dt><dd>{{ spraying.quantity|floatformat:"2g" }} {{ spraying.get_unit_display }}</dd></div>
+            <div><dt>{% translate "Spraying date" %}</dt><dd>{{ spraying.spraying_date|date:"d.m.Y" }}</dd></div>
+            <div><dt>{% translate "Field" %}</dt><dd>{{ spraying.cultivation.field.name }}</dd></div>
+            <div><dt>{% translate "Cultivation" %}</dt><dd>{{ spraying.cultivation.crop.name }}</dd></div>
+            <div><dt>{% translate "Season" %}</dt><dd>{{ spraying.cultivation.season_year }}</dd></div>
+            <div class="fact-wide"><dt>{% translate "Description" %}</dt><dd>{{ spraying.description|default:"—"|linebreaksbr }}</dd></div>
         </dl>
     </article>
 {% endblock %}

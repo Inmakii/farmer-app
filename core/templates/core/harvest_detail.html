@@ -1,21 +1,22 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Szczegóły zbioru – Farmer App{% endblock %}
+{% block title %}{% translate "Harvest details" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <a class="back-link" href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć do listy</a>
+    <a class="back-link" href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Back to the list" %}</a>
     <header class="page-head">
         <div>
-            <p class="kicker">Zbiór · {{ harvest.harvest_date|date:"d.m.Y" }}</p>
-            <h1>Zbiór – {{ harvest.cultivation.crop.name }}</h1>
-            <p class="page-head-lead">{{ harvest.quantity|floatformat:"2g" }} {{ harvest.get_unit_display }} z pola {{ harvest.cultivation.field.name }}, sezon {{ harvest.cultivation.season_year }}</p>
+            <p class="kicker">{% blocktranslate with date=harvest.harvest_date|date:"d.m.Y" %}Harvest · {{ date }}{% endblocktranslate %}</p>
+            <h1>{% blocktranslate with crop=harvest.cultivation.crop.name %}Harvest – {{ crop }}{% endblocktranslate %}</h1>
+            <p class="page-head-lead">{% blocktranslate with quantity=harvest.quantity|floatformat:"2g" unit=harvest.get_unit_display field=harvest.cultivation.field.name year=harvest.cultivation.season_year %}{{ quantity }} {{ unit }} from the field {{ field }}, season {{ year }}{% endblocktranslate %}</p>
         </div>
         <div class="page-actions">
             <a class="button button-secondary" href="{% url 'core:harvest_update' harvest.pk %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>Edytuj
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>{% translate "Edit" %}
             </a>
             <a class="button button-text" href="{% url 'core:harvest_delete' harvest.pk %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>Usuń
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>{% translate "Delete" %}
             </a>
         </div>
     </header>
@@ -23,41 +24,41 @@
     <div class="balance-grid">
         <article class="sheet" aria-labelledby="harvest-data-title">
             <div class="sheet-title">
-                <h2 id="harvest-data-title">Dane zbioru</h2>
-                <a class="sheet-title-note" href="{% url 'core:cultivation_detail' harvest.cultivation.pk %}">Zobacz uprawę</a>
+                <h2 id="harvest-data-title">{% translate "Harvest details" %}</h2>
+                <a class="sheet-title-note" href="{% url 'core:cultivation_detail' harvest.cultivation.pk %}">{% translate "View cultivation" %}</a>
             </div>
             <dl class="facts">
-                <div class="fact-key"><dt>Ilość</dt><dd>{{ harvest.quantity|floatformat:"2g" }} {{ harvest.get_unit_display }}</dd></div>
-                <div><dt>Przeznaczenie</dt><dd>{{ harvest.get_disposition_display }}</dd></div>
-                <div><dt>Data zbioru</dt><dd>{{ harvest.harvest_date|date:"d.m.Y" }}</dd></div>
-                <div><dt>Pole</dt><dd>{{ harvest.cultivation.field.name }}</dd></div>
-                <div><dt>Uprawa</dt><dd>{{ harvest.cultivation.crop.name }}</dd></div>
-                <div><dt>Sezon</dt><dd>{{ harvest.cultivation.season_year }}</dd></div>
-                <div class="fact-wide"><dt>Notatki</dt><dd>{{ harvest.notes|default:"—"|linebreaksbr }}</dd></div>
+                <div class="fact-key"><dt>{% translate "Quantity" %}</dt><dd>{{ harvest.quantity|floatformat:"2g" }} {{ harvest.get_unit_display }}</dd></div>
+                <div><dt>{% translate "Disposition" %}</dt><dd>{{ harvest.get_disposition_display }}</dd></div>
+                <div><dt>{% translate "Harvest date" %}</dt><dd>{{ harvest.harvest_date|date:"d.m.Y" }}</dd></div>
+                <div><dt>{% translate "Field" %}</dt><dd>{{ harvest.cultivation.field.name }}</dd></div>
+                <div><dt>{% translate "Cultivation" %}</dt><dd>{{ harvest.cultivation.crop.name }}</dd></div>
+                <div><dt>{% translate "Season" %}</dt><dd>{{ harvest.cultivation.season_year }}</dd></div>
+                <div class="fact-wide"><dt>{% translate "Notes" %}</dt><dd>{{ harvest.notes|default:"—"|linebreaksbr }}</dd></div>
             </dl>
         </article>
 
         <figure class="sheet" aria-labelledby="harvest-result-title">
             <div class="sheet-head">
-                <strong id="harvest-result-title">Wynik zbioru</strong>
+                <strong id="harvest-result-title">{% translate "Harvest result" %}</strong>
                 <span>{{ harvest.harvest_date|date:"d.m.Y" }}</span>
             </div>
             <table class="sheet-table">
                 <thead>
-                    <tr><th scope="col">Pozycja</th><th scope="col" class="num">Kwota</th></tr>
+                    <tr><th scope="col">{% translate "Item" %}</th><th scope="col" class="num">{% translate "Amount" %}</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Przychód</td><td class="num is-in">+{{ harvest.revenue|floatformat:"2g" }} zł</td></tr>
-                    <tr><td>Koszt zbioru</td><td class="num">−{{ harvest.harvest_cost|floatformat:"2g" }} zł</td></tr>
+                    <tr><td>{% translate "Revenue" %}</td><td class="num is-in">+{{ harvest.revenue|floatformat:"2g" }} zł</td></tr>
+                    <tr><td>{% translate "Harvest cost" %}</td><td class="num">−{{ harvest.harvest_cost|floatformat:"2g" }} zł</td></tr>
                 </tbody>
                 <tfoot>
                     <tr class="sheet-result {% if harvest.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
-                        <th scope="row">Wynik</th>
+                        <th scope="row">{% translate "Result" %}</th>
                         <td class="num">{{ harvest.profit|floatformat:"2g" }} zł</td>
                     </tr>
                 </tfoot>
             </table>
-            <p class="sheet-note">Wynik zbioru to przychód pomniejszony wyłącznie o koszt zbioru, przed uwzględnieniem kosztów prac polowych i oprysków.</p>
+            <p class="sheet-note">{% translate "The harvest result is revenue minus the harvest cost only, before field work and spraying costs." %}</p>
         </figure>
     </div>
 {% endblock %}

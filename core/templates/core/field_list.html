@@ -1,43 +1,44 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Moje pola – Farmer App{% endblock %}
+{% block title %}{% translate "My fields" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
     <header class="page-head">
         <div>
-            <p class="kicker">Gospodarstwo</p>
-            <h1>Moje pola</h1>
-            <p class="page-head-lead">Każde pole z powierzchnią, glebą i uprawami, które na nim prowadzisz.</p>
+            <p class="kicker">{% translate "Farm" %}</p>
+            <h1>{% translate "My fields" %}</h1>
+            <p class="page-head-lead">{% translate "Every field with its area, soil and the cultivations you grow on it." %}</p>
         </div>
         <div class="page-actions">
             <a class="button" href="{% url 'core:field_create' %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pole
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Add field" %}
             </a>
         </div>
     </header>
 
-    <form class="filters" method="get" action="{% url 'core:field_list' %}" role="search" aria-label="Filtruj pola">
+    <form class="filters" method="get" action="{% url 'core:field_list' %}" role="search" aria-label="{% translate "Filter fields" %}">
         <div class="filters-grid">
             <div class="filter filter-wide">
-                <label for="id_q">Szukaj</label>
+                <label for="id_q">{% translate "Search" %}</label>
                 <div class="search-input">
                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
-                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Nazwa, działka lub adres">
+                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="{% translate "Name, parcel or address" %}">
                 </div>
             </div>
             <div class="filter">
-                <label for="id_soil_type">Rodzaj gleby</label>
+                <label for="id_soil_type">{% translate "Soil type" %}</label>
                 <select id="id_soil_type" name="soil_type">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for value, label in soil_type_choices %}
                         <option value="{{ value }}"{% if selected_soil_type == value %} selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="id_location_method">Sposób lokalizacji</label>
+                <label for="id_location_method">{% translate "Location method" %}</label>
                 <select id="id_location_method" name="location_method">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for value, label in location_method_choices %}
                         <option value="{{ value }}"{% if selected_location_method == value %} selected{% endif %}>{{ label }}</option>
                     {% endfor %}
@@ -45,8 +46,8 @@
             </div>
         </div>
         <div class="filters-actions">
-            <button class="button" type="submit">Filtruj</button>
-            <a class="button button-text" href="{% url 'core:field_list' %}">Wyczyść filtry</a>
+            <button class="button" type="submit">{% translate "Filter" %}</button>
+            <a class="button button-text" href="{% url 'core:field_list' %}">{% translate "Clear filters" %}</a>
         </div>
     </form>
 
@@ -59,20 +60,20 @@
                             <a class="record-title" href="{% url 'core:field_detail' field.pk %}">{{ field.name }}</a>
                             <p class="record-meta">
                                 <span>{{ field.get_soil_type_display }}</span>
-                                {% if field.parcel_identifier %}<span>działka {{ field.parcel_identifier }}</span>{% endif %}
+                                {% if field.parcel_identifier %}<span>{% blocktranslate with parcel=field.parcel_identifier %}parcel {{ parcel }}{% endblocktranslate %}</span>{% endif %}
                                 {% if field.address %}<span>{{ field.address }}</span>{% endif %}
                             </p>
                         </div>
                         <div class="record-side">
                             <span class="record-amount">{{ field.area_ha|floatformat:"2g" }} ha</span>
                             <span class="record-actions">
-                                <a class="icon-link" href="{% url 'core:field_update' field.pk %}" title="Edytuj">
+                                <a class="icon-link" href="{% url 'core:field_update' field.pk %}" title="{% translate "Edit" %}">
                                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>
-                                    <span class="visually-hidden">Edytuj pole {{ field.name }}</span>
+                                    <span class="visually-hidden">{% blocktranslate with name=field.name %}Edit field {{ name }}{% endblocktranslate %}</span>
                                 </a>
-                                <a class="icon-link is-danger" href="{% url 'core:field_delete' field.pk %}" title="Usuń">
+                                <a class="icon-link is-danger" href="{% url 'core:field_delete' field.pk %}" title="{% translate "Delete" %}">
                                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>
-                                    <span class="visually-hidden">Usuń pole {{ field.name }}</span>
+                                    <span class="visually-hidden">{% blocktranslate with name=field.name %}Delete field {{ name }}{% endblocktranslate %}</span>
                                 </a>
                             </span>
                         </div>
@@ -80,14 +81,14 @@
                 {% endfor %}
             </ul>
         </div>
-        {% include "core/partials/pagination.html" with label="Paginacja pól" %}
+        {% translate "Field pages" as pager_label %}{% include "core/partials/pagination.html" with label=pager_label %}
     {% else %}
         <div class="empty">
             <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg></span>
-            <strong>Nie ma tu żadnego pola</strong>
-            <p>Nie znaleziono pól spełniających podane kryteria. Zmień filtry albo dodaj nowe pole.</p>
+            <strong>{% translate "There are no fields here" %}</strong>
+            <p>{% translate "No fields match the given criteria. Change the filters or add a new field." %}</p>
             <a class="button" href="{% url 'core:field_create' %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pole
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Add field" %}
             </a>
         </div>
     {% endif %}

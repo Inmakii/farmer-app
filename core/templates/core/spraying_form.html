@@ -1,18 +1,19 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}{% if spraying %}Edycja oprysku{% else %}Dodawanie oprysku{% endif %} – Farmer App{% endblock %}
+{% block title %}{% if spraying %}{% translate "Edit spraying" context "page title" %}{% else %}{% translate "Add spraying" context "page title" %}{% endif %} – Farmer App{% endblock %}
 
 {% block content %}
     {% if spraying %}
         <a class="back-link" href="{% url 'core:spraying_detail' spraying.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{{ spraying.product_name }}, {{ spraying.spraying_date|date:"d.m.Y" }}</a>
     {% else %}
-        <a class="back-link" href="{% url 'core:spraying_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Opryski</a>
+        <a class="back-link" href="{% url 'core:spraying_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Sprayings" %}</a>
     {% endif %}
     <header class="page-head">
         <div>
-            <p class="kicker">Oprysk</p>
-            <h1>{% if spraying %}Edytuj oprysk{% else %}Dodaj oprysk{% endif %}</h1>
-            <p class="page-head-lead">Nazwa środka, dawka i koszt zabiegu na wybranej uprawie.</p>
+            <p class="kicker">{% translate "Spraying" %}</p>
+            <h1>{% if spraying %}{% translate "Edit spraying" %}{% else %}{% translate "Add spraying" %}{% endif %}</h1>
+            <p class="page-head-lead">{% translate "Product name, dose and treatment cost on the chosen cultivation." %}</p>
         </div>
     </header>
 
@@ -22,11 +23,11 @@
                 {% csrf_token %}
                 {% include "core/partials/form_body.html" %}
                 <div class="form-actions">
-                    <button class="button" type="submit" data-busy-label="Zapisywanie…">Zapisz</button>
+                    <button class="button" type="submit" data-busy-label="{% translate "Saving…" %}">{% translate "Save" %}</button>
                     {% if spraying %}
-                        <a class="button button-text" href="{% url 'core:spraying_detail' spraying.pk %}">Anuluj</a>
+                        <a class="button button-text" href="{% url 'core:spraying_detail' spraying.pk %}">{% translate "Cancel" %}</a>
                     {% else %}
-                        <a class="button button-text" href="{% url 'core:spraying_list' %}">Anuluj</a>
+                        <a class="button button-text" href="{% url 'core:spraying_list' %}">{% translate "Cancel" %}</a>
                     {% endif %}
                 </div>
             </form>
@@ -34,9 +35,9 @@
     {% else %}
         <div class="empty">
             <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
-            <strong>Najpierw potrzebna jest uprawa</strong>
-            <p>Nie masz jeszcze upraw. Oprysk zapisuje się zawsze przy konkretnej uprawie.</p>
-            <a class="button" href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>
+            <strong>{% translate "A cultivation is needed first" %}</strong>
+            <p>{% translate "You do not have any cultivations yet. A spraying is always recorded for a specific cultivation." %}</p>
+            <a class="button" href="{% url 'core:cultivation_create' %}">{% translate "Add cultivation" %}</a>
         </div>
     {% endif %}
 {% endblock %}

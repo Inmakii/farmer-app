@@ -11,14 +11,48 @@ msgstr ""
 msgid "%(crop)s on field %(field)s (%(year)s)"
 msgstr "%(crop)s на полі %(field)s (%(year)s)"
 
+#: core\templates\core\fieldwork_detail.html:12
+#: core\templates\core\spraying_detail.html:12
+#, python-format
+msgid "%(crop)s on the field %(field)s, season %(year)s"
+msgstr "%(crop)s на полі %(field)s, сезон %(year)s"
+
+#: core\templates\core\harvest_detail.html:12
+#, python-format
+msgid "%(quantity)s %(unit)s from the field %(field)s, season %(year)s"
+msgstr "%(quantity)s %(unit)s з поля %(field)s, сезон %(year)s"
+
+#: core\templates\core\dashboard.html:74
+msgid "A crop and season on the chosen field."
+msgstr "Культура й сезон на вибраному полі."
+
 #: core\forms.py:728
 #: core\forms.py:742
 msgid "A crop type with this name already exists."
 msgstr "Вид культури з такою назвою вже існує."
 
+#: core\templates\core\fieldwork_form.html:38
+#: core\templates\core\harvest_form.html:38
+#: core\templates\core\spraying_form.html:38
+msgid "A cultivation is needed first"
+msgstr "Спершу потрібен посів"
+
+#: core\templates\core\home.html:137
+msgid "A few fields, a few crops and a need for tidy records."
+msgstr "Кілька полів, кілька культур і потреба в порядку в записах."
+
+#: core\templates\core\cultivation_form.html:23
+#: core\templates\core\cultivation_list.html:25
+msgid "A field is needed first"
+msgstr "Спершу потрібне поле"
+
 #: core\views.py:72
 msgid "A field is the starting point: on it you record cultivations, works, sprayings and harvests."
 msgstr "Поле — це основа: на ньому ви записуєте посіви, роботи, обприскування та збори."
+
+#: core\templates\core\field_form.html:16
+msgid "A name, area and soil are enough. Add a parcel, address or coordinates if you want to find the field more easily."
+msgstr "Досить назви, площі та ґрунту. Ділянку, адресу чи координати вкажіть, якщо хочете легше знаходити поле."
 
 #: core\forms.py:106
 #: core\forms.py:150
@@ -28,6 +62,20 @@ msgstr "Користувач із цією адресою електронної
 #: core\forms.py:59
 msgid "A user with this name already exists."
 msgstr "Користувач із таким ім'ям уже існує."
+
+#: core\templates\core\register.html:24
+msgid "About you"
+msgstr "Про вас"
+
+#: core\templates\core\password_change.html:10
+#: core\templates\core\profile.html:9
+#: core\templates\core\profile_edit.html:10
+msgid "Account"
+msgstr "Обліковий запис"
+
+#: core\templates\core\profile.html:22
+msgid "Account details"
+msgstr "Дані облікового запису"
 
 #: core\models.py:95
 msgid "Active"
@@ -41,13 +89,87 @@ msgstr "Додайте виконану роботу, обприскування
 msgid "Add a cultivation to your field"
 msgstr "Додайте посів на своєму полі"
 
-#: core\views.py:80
+#: core\templates\core\crop_form.html:11
+#: core\templates\core\crop_list.html:14
+msgid "Add crop type"
+msgstr "Додати вид культури"
+
+#: core\templates\core\crop_form.html:4
+msgctxt "page title"
+msgid "Add crop type"
+msgstr "Додавання виду культури"
+
+#: core\templates\core\cultivation_form.html:15
+#: core\templates\core\cultivation_list.html:107
+#: core\templates\core\cultivation_list.html:16
+#: core\templates\core\dashboard.html:73
+#: core\templates\core\field_detail.html:47
 msgid "Add cultivation"
 msgstr "Додати посів"
 
+#: core\templates\core\cultivation_form.html:4
+msgctxt "page title"
+msgid "Add cultivation"
+msgstr "Додавання посіву"
+
+#: core\templates\core\dashboard.html:65
+#: core\templates\core\field_form.html:15
+#: core\templates\core\field_list.html:15
+#: core\templates\core\field_list.html:91
 #: core\views.py:73
 msgid "Add field"
 msgstr "Додати поле"
+
+#: core\templates\core\field_form.html:4
+msgctxt "page title"
+msgid "Add field"
+msgstr "Додавання поля"
+
+#: core\templates\core\cultivation_detail.html:97
+#: core\templates\core\harvest_form.html:15
+#: core\templates\core\harvest_list.html:121
+#: core\templates\core\harvest_list.html:15
+msgid "Add harvest"
+msgstr "Додати збір"
+
+#: core\templates\core\harvest_form.html:4
+msgctxt "page title"
+msgid "Add harvest"
+msgstr "Додавання збору"
+
+#: core\templates\core\cultivation_detail.html:72
+#: core\templates\core\spraying_form.html:15
+#: core\templates\core\spraying_list.html:109
+#: core\templates\core\spraying_list.html:15
+msgid "Add spraying"
+msgstr "Додати обприскування"
+
+#: core\templates\core\spraying_form.html:4
+msgctxt "page title"
+msgid "Add spraying"
+msgstr "Додавання обприскування"
+
+#: core\templates\core\crop_list.html:33
+#: core\templates\core\cultivation_form.html:33
+#: core\templates\core\dashboard.html:31
+msgid "Add the first crop type"
+msgstr "Додати перший вид культури"
+
+#: core\templates\core\cultivation_form.html:42
+msgid "Add the missing crop type"
+msgstr "Додати відсутній вид культури"
+
+#: core\templates\core\cultivation_detail.html:48
+#: core\templates\core\fieldwork_form.html:15
+#: core\templates\core\fieldwork_list.html:108
+#: core\templates\core\fieldwork_list.html:15
+msgid "Add work"
+msgstr "Додати роботу"
+
+#: core\templates\core\fieldwork_form.html:4
+msgctxt "page title"
+msgid "Add work"
+msgstr "Додавання роботи"
 
 #: core\views.py:71
 msgid "Add your first field"
@@ -55,6 +177,7 @@ msgstr "Додайте своє перше поле"
 
 #: core\forms.py:174
 #: core\models.py:39
+#: core\templates\core\field_detail.html:36
 msgid "Address"
 msgstr "Адреса"
 
@@ -62,21 +185,168 @@ msgstr "Адреса"
 msgid "Address is required for this location method."
 msgstr "Для цього способу розташування потрібна адреса."
 
+#: core\templates\core\login.html:36
+msgid "After you log in"
+msgstr "Після входу"
+
+#: core\templates\core\error_report_form.html:12
+msgid "After you send the report, its status will be changed by an administrator."
+msgstr "Після надсилання звернення його статус змінюватиме адміністратор."
+
+#: core\templates\core\cultivation_list.html:35
+#: core\templates\core\cultivation_list.html:44
+#: core\templates\core\cultivation_list.html:53
+#: core\templates\core\error_report_list.html:26
+#: core\templates\core\error_report_list.html:35
+msgid "All"
+msgstr "Усі"
+
+#: core\templates\core\report_dashboard.html:20
+msgid "All fields"
+msgstr "Усі поля"
+
+#: core\templates\core\cultivation_report.html:7
+#: core\templates\core\field_report.html:7
+msgid "All reports"
+msgstr "Усі звіти"
+
+#: core\templates\core\dashboard.html:117
+msgid "All seasons"
+msgstr "Усі сезони"
+
 #: core\forms.py:280
 msgid "Allowed years: {min}–{max}."
 msgstr "Допустимі роки: {min}–{max}."
+
+#: core\templates\core\register.html:43
+msgid "Already have an account?"
+msgstr "Вже маєте обліковий запис?"
+
+#: core\templates\core\dashboard.html:121
+#: core\templates\core\harvest_detail.html:48
+#: core\templates\core\home.html:72
+#: core\templates\core\partials\report_summary.html:30
+msgid "Amount"
+msgstr "Сума"
+
+#: core\templates\core\home.html:92
+msgid "An example. This is how the app collects the records of one field."
+msgstr "Приклад. Так застосунок збирає записи одного поля."
+
+#: core\templates\core\cultivation_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to delete the cultivation “%(crop)s” on the field “%(field)s” in the %(year)s season?"
+msgstr "Ви впевнені, що хочете видалити посів «%(crop)s» на полі «%(field)s» у сезоні %(year)s?"
+
+#: core\templates\core\field_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to delete the field “%(name)s”?"
+msgstr "Ви впевнені, що хочете видалити поле «%(name)s»?"
+
+#: core\templates\core\harvest_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to delete the harvest from %(date)s?"
+msgstr "Ви впевнені, що хочете видалити збір від %(date)s?"
+
+#: core\templates\core\spraying_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to delete the spraying “%(product)s” from %(date)s?"
+msgstr "Ви впевнені, що хочете видалити обприскування «%(product)s» від %(date)s?"
+
+#: core\templates\core\field_detail.html:32
+#: core\templates\core\partials\report_summary.html:59
+msgid "Area"
+msgstr "Площа"
 
 #: core\forms.py:170
 msgid "Area (ha)"
 msgstr "Площа (га)"
 
+#: core\templates\core\dashboard.html:66
+msgid "Area, soil and location."
+msgstr "Площа, ґрунт і розташування."
+
 #: core\forms.py:97
 msgid "At least 8 characters. The password cannot be all digits, resemble your username or name, or be a common password like “qwerty123”."
 msgstr "Щонайменше 8 символів. Пароль не може складатися лише з цифр, бути схожим на логін чи ім'я або бути поширеним паролем на кшталт «qwerty123»."
 
+#: core\templates\core\home.html:115
+msgid "Autumn"
+msgstr "Осінь"
+
+#: core\templates\core\cultivation_confirm_delete.html:7
+#: core\templates\core\field_confirm_delete.html:7
+#: core\templates\core\fieldwork_confirm_delete.html:7
+#: core\templates\core\harvest_confirm_delete.html:7
+#: core\templates\core\spraying_confirm_delete.html:7
+msgid "Back"
+msgstr "Назад"
+
+#: core\templates\core\error_report_detail.html:7
+msgid "Back to my reports"
+msgstr "Назад до моїх звернень"
+
+#: core\templates\core\password_change.html:7
+#: core\templates\core\profile_edit.html:7
+msgid "Back to profile"
+msgstr "Назад до профілю"
+
+#: core\templates\core\cultivation_detail.html:7
+#: core\templates\core\field_detail.html:7
+#: core\templates\core\fieldwork_detail.html:7
+#: core\templates\core\harvest_detail.html:7
+#: core\templates\core\spraying_detail.html:7
+msgid "Back to the list"
+msgstr "Назад до списку"
+
+#: core\templates\core\partials\report_summary.html:25
+msgid "Balance"
+msgstr "Рахунок"
+
+#: core\templates\core\home.html:156
+msgid "Before you create an account"
+msgstr "Перш ніж створити обліковий запис"
+
+#: core\templates\core\crop_form.html:22
+#: core\templates\core\cultivation_confirm_delete.html:16
+#: core\templates\core\cultivation_form.html:47
+#: core\templates\core\cultivation_form.html:49
+#: core\templates\core\error_report_form.html:22
+msgid "Cancel"
+msgstr "Скасувати"
+
 #: core\forms.py:283
 msgid "Cannot be earlier than the sowing date."
 msgstr "Не може бути раніше за дату сівби."
+
+#: core\templates\core\cultivation_form.html:42
+msgid "Cannot see the crop type you need?"
+msgstr "Не бачите потрібного виду культури?"
+
+#: core\templates\core\crop_form.html:10
+#: core\templates\core\crop_list.html:9
+msgid "Catalogue"
+msgstr "Каталог"
+
+#: core\templates\core\error_report_detail.html:21
+#: core\templates\core\error_report_list.html:24
+msgid "Category"
+msgstr "Категорія"
+
+#: core\templates\core\password_change.html:11
+#: core\templates\core\password_change.html:21
+#: core\templates\core\profile.html:36
+msgid "Change password"
+msgstr "Змінити пароль"
+
+#: core\templates\core\password_change.html:4
+msgctxt "page title"
+msgid "Change password"
+msgstr "Зміна пароля"
+
+#: core\templates\core\password_change.html:21
+msgid "Changing…"
+msgstr "Зміна…"
 
 #: core\views.py:92
 msgid "Check your farm results"
@@ -101,6 +371,10 @@ msgstr "Виберіть посів на одному зі своїх полів
 #: core\forms.py:599
 msgid "Choose a cultivation."
 msgstr "Виберіть посів."
+
+#: core\templates\core\cultivation_form.html:16
+msgid "Choose a field, a crop and a season year. You can add the sowing and harvest dates later."
+msgstr "Виберіть поле, культуру та рік сезону. Дати сівби й збору можна додати пізніше."
 
 #: core\forms.py:287
 msgid "Choose a field."
@@ -147,12 +421,31 @@ msgstr "Виберіть вид роботи."
 msgid "Clay soil"
 msgstr "Глинистий ґрунт"
 
+#: core\templates\core\field_report.html:30
+msgid "Clear filter"
+msgstr "Скинути фільтр"
+
+#: core\templates\core\cultivation_list.html:66
+#: core\templates\core\error_report_list.html:44
+#: core\templates\core\field_list.html:50
+#: core\templates\core\fieldwork_list.html:67
+#: core\templates\core\harvest_list.html:76
+msgid "Clear filters"
+msgstr "Скинути фільтри"
+
 #: core\models.py:96
 msgid "Completed"
 msgstr "Завершений"
 
+#: core\templates\core\cultivation_detail.html:46
+#: core\templates\core\fieldwork_list.html:10
+msgid "Completed works"
+msgstr "Виконані роботи"
+
 #: core\forms.py:427
 #: core\forms.py:534
+#: core\templates\core\fieldwork_detail.html:30
+#: core\templates\core\spraying_detail.html:30
 msgid "Cost"
 msgstr "Вартість"
 
@@ -168,7 +461,64 @@ msgstr "Вартість не може бути від'ємною."
 msgid "Cost is required."
 msgstr "Вартість обов'язкова."
 
+#: core\templates\core\dashboard.html:50
+msgid "Costs"
+msgstr "Витрати"
+
+#: core\templates\core\home.html:82
+#: core\templates\core\report_dashboard.html:77
+msgid "Costs in total"
+msgstr "Витрати разом"
+
+#: core\templates\core\dashboard.html:106
+msgid "Costs, revenue and profit from fields."
+msgstr "Витрати, дохід і прибуток з полів."
+
+#: core\templates\core\report_dashboard.html:11
+msgid "Costs, revenue and yields for the whole farm or a chosen field and season."
+msgstr "Витрати, дохід і врожаї для всього господарства або вибраного поля й сезону."
+
+#: core\templates\core\home.html:186
+#: core\templates\core\home.html:21
+msgid "Create a free account"
+msgstr "Створити безкоштовний обліковий запис"
+
+#: core\templates\core\error_report_list.html:16
+msgid "Create a new report"
+msgstr "Створити нове звернення"
+
+#: core\templates\core\profile.html:38
+msgid "Create a report"
+msgstr "Створити звернення"
+
+#: core\templates\core\register.html:12
+#: core\templates\core\register.html:39
+msgid "Create account"
+msgstr "Створити обліковий запис"
+
+#: core\templates\core\home.html:183
+msgid "Create an account, add a field and the first cultivation. Add the rest when the time comes."
+msgstr "Створіть обліковий запис, додайте поле й перший посів. Решту допишете, коли настане час."
+
+#: core\templates\core\login.html:31
+msgid "Create one for free"
+msgstr "Створіть його безкоштовно"
+
+#: core\templates\core\cultivation_form.html:25
+#: core\templates\core\cultivation_list.html:27
+msgid "Create your first field"
+msgstr "Створити перше поле"
+
+#: core\templates\core\error_report_detail.html:23
+msgid "Created at"
+msgstr "Дата створення"
+
+#: core\templates\core\register.html:39
+msgid "Creating account…"
+msgstr "Створення облікового запису…"
+
 #: core\forms.py:270
+#: core\templates\core\cultivation_list.html:42
 msgid "Crop type"
 msgstr "Вид культури"
 
@@ -186,6 +536,17 @@ msgstr "Назва виду культури обов'язкова."
 msgid "Crop type “%(name)s” has been added."
 msgstr "Вид культури «%(name)s» додано."
 
+#: core\templates\core\base.html:65
+#: core\templates\core\crop_form.html:7
+#: core\templates\core\crop_list.html:10
+msgid "Crop types"
+msgstr "Види культур"
+
+#: core\templates\core\crop_list.html:4
+msgctxt "page title"
+msgid "Crop types"
+msgstr "Види культур"
+
 #: core\forms.py:718
 msgid "Crop types are shared by all users. The name cannot be repeated."
 msgstr "Види культур спільні для всіх користувачів. Назва не може повторюватися."
@@ -193,17 +554,181 @@ msgstr "Види культур спільні для всіх користув�
 #: core\forms.py:406
 #: core\forms.py:510
 #: core\forms.py:596
+#: core\templates\core\cultivation_form.html:14
+#: core\templates\core\fieldwork_detail.html:33
 msgid "Cultivation"
 msgstr "Посів"
+
+#: core\templates\core\cultivation_detail.html:29
+msgid "Cultivation data"
+msgstr "Дані посіву"
+
+#: core\templates\core\cultivation_report.html:18
+msgid "Cultivation details"
+msgstr "Дані посіву"
+
+#: core\templates\core\cultivation_list.html:100
+msgid "Cultivation pages"
+msgstr "Сторінки посівів"
+
+#: core\templates\core\cultivation_detail.html:16
+msgid "Cultivation report"
+msgstr "Звіт посіву"
+
+#: core\templates\core\cultivation_report.html:4
+msgctxt "page title"
+msgid "Cultivation report"
+msgstr "Звіт посіву"
+
+#: core\templates\core\cultivation_report.html:10
+#, python-format
+msgid "Cultivation report · season %(year)s"
+msgstr "Звіт посіву · сезон %(year)s"
+
+#: core\templates\core\report_dashboard.html:58
+msgid "Cultivation results"
+msgstr "Результати посівів"
+
+#: core\templates\core\cultivation_detail.html:10
+#, python-format
+msgid "Cultivation · season %(year)s"
+msgstr "Посів · сезон %(year)s"
+
+#: core\templates\core\base.html:64
+#: core\templates\core\cultivation_form.html:10
+#: core\templates\core\dashboard.html:142
+#: core\templates\core\dashboard.html:42
+#: core\templates\core\field_report.html:45
+msgid "Cultivations"
+msgstr "Посіви"
+
+#: core\templates\core\cultivation_list.html:4
+msgctxt "page title"
+msgid "Cultivations"
+msgstr "Посіви"
 
 #: core\management\commands\seed_demo_data.py:141
 #, python-format
 msgid "Cultivations created or updated: %(count)s"
 msgstr "Посівів створено або оновлено: %(count)s"
 
+#: core\templates\core\field_report.html:54
+msgid "Cultivations of the field"
+msgstr "Посіви поля"
+
+#: core\templates\core\field_detail.html:45
+msgid "Cultivations on this field"
+msgstr "Посіви на цьому полі"
+
+#: core\templates\core\base.html:106
+msgid "Dark mode is on."
+msgstr "Увімкнено темну тему."
+
+#: core\templates\core\base.html:62
+#: core\templates\core\dashboard.html:4
+#: core\templates\core\dashboard.html:9
+msgid "Dashboard"
+msgstr "Панель"
+
 #: core\models.py:310
 msgid "Data problem"
 msgstr "Проблема з даними"
+
+#: core\templates\core\fieldwork_detail.html:31
+#: core\templates\core\home.html:72
+msgid "Date"
+msgstr "Дата"
+
+#: core\templates\core\cultivation_detail.html:22
+#: core\templates\core\cultivation_list.html:90
+#: core\templates\core\field_detail.html:22
+#: core\templates\core\field_list.html:74
+#: core\templates\core\fieldwork_detail.html:19
+msgid "Delete"
+msgstr "Видалити"
+
+#: core\templates\core\cultivation_confirm_delete.html:10
+msgid "Delete cultivation"
+msgstr "Видалити посів"
+
+#: core\templates\core\cultivation_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete cultivation"
+msgstr "Видалення посіву"
+
+#: core\templates\core\cultivation_list.html:92
+#, python-format
+msgid "Delete cultivation %(crop)s, %(field)s"
+msgstr "Видалити посів %(crop)s, %(field)s"
+
+#: core\templates\core\field_confirm_delete.html:10
+msgid "Delete field"
+msgstr "Видалити поле"
+
+#: core\templates\core\field_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete field"
+msgstr "Видалення поля"
+
+#: core\templates\core\field_list.html:76
+#, python-format
+msgid "Delete field %(name)s"
+msgstr "Видалити поле %(name)s"
+
+#: core\templates\core\harvest_confirm_delete.html:10
+msgid "Delete harvest"
+msgstr "Видалити збір"
+
+#: core\templates\core\harvest_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete harvest"
+msgstr "Видалити збір"
+
+#: core\templates\core\harvest_list.html:106
+#, python-format
+msgid "Delete harvest from %(date)s"
+msgstr "Видалити збір від %(date)s"
+
+#: core\templates\core\spraying_confirm_delete.html:10
+msgid "Delete spraying"
+msgstr "Видалити обприскування"
+
+#: core\templates\core\spraying_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete spraying"
+msgstr "Видалити обприскування"
+
+#: core\templates\core\spraying_list.html:94
+#, python-format
+msgid "Delete spraying %(product)s from %(date)s"
+msgstr "Видалити обприскування %(product)s від %(date)s"
+
+#: core\templates\core\fieldwork_confirm_delete.html:11
+#, python-format
+msgid "Delete the work “%(type)s” from %(date)s?"
+msgstr "Видалити роботу «%(type)s» від %(date)s?"
+
+#: core\templates\core\fieldwork_confirm_delete.html:10
+msgid "Delete work"
+msgstr "Видалити роботу"
+
+#: core\templates\core\fieldwork_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete work"
+msgstr "Видалити роботу"
+
+#: core\templates\core\fieldwork_list.html:93
+#, python-format
+msgid "Delete work %(type)s from %(date)s"
+msgstr "Видалити роботу %(type)s від %(date)s"
+
+#: core\templates\core\cultivation_confirm_delete.html:15
+#: core\templates\core\field_confirm_delete.html:15
+#: core\templates\core\fieldwork_confirm_delete.html:15
+#: core\templates\core\harvest_confirm_delete.html:15
+#: core\templates\core\spraying_confirm_delete.html:15
+msgid "Deleting…"
+msgstr "Видалення…"
 
 #: core\management\commands\seed_demo_data.py:149
 msgid "Demo data is ready."
@@ -213,16 +738,136 @@ msgstr "Демонстраційні дані підготовлено."
 msgid "Describe the problem in at least 10 and at most 5000 characters."
 msgstr "Опишіть проблему щонайменше 10 і не більше ніж 5000 символами."
 
+#: core\templates\core\error_report_form.html:12
+msgid "Describe what happened and on which page."
+msgstr "Опишіть, що сталося і на якій сторінці."
+
 #: core\forms.py:177
 #: core\forms.py:428
 #: core\forms.py:535
 #: core\forms.py:715
+#: core\templates\core\error_report_detail.html:25
 msgid "Description"
 msgstr "Опис"
+
+#: core\templates\core\fieldwork_list.html:26
+msgid "Description, field or cultivation"
+msgstr "Опис, поле або посів"
+
+#: core\templates\core\error_report_detail.html:18
+msgid "Details"
+msgstr "Подробиці"
+
+#: core\templates\core\harvest_detail.html:32
+#: core\templates\core\harvest_list.html:57
+msgid "Disposition"
+msgstr "Призначення"
+
+#: core\templates\core\home.html:164
+msgid "Do I need to install anything?"
+msgstr "Чи треба щось встановлювати?"
+
+#: core\templates\core\login.html:30
+msgid "Do not have an account yet?"
+msgstr "Ще не маєте облікового запису?"
+
+#: core\templates\core\home.html:160
+msgid "Does it cost anything?"
+msgstr "Це щось коштує?"
+
+#: core\templates\core\cultivation_detail.html:19
+#: core\templates\core\cultivation_list.html:86
+#: core\templates\core\field_detail.html:19
+#: core\templates\core\field_list.html:70
+#: core\templates\core\fieldwork_detail.html:16
+msgid "Edit"
+msgstr "Редагувати"
+
+#: core\templates\core\cultivation_form.html:15
+msgid "Edit cultivation"
+msgstr "Редагувати посів"
+
+#: core\templates\core\cultivation_form.html:4
+msgctxt "page title"
+msgid "Edit cultivation"
+msgstr "Редагування посіву"
+
+#: core\templates\core\cultivation_list.html:88
+#, python-format
+msgid "Edit cultivation %(crop)s, %(field)s"
+msgstr "Редагувати посів %(crop)s, %(field)s"
+
+#: core\templates\core\field_form.html:15
+msgid "Edit field"
+msgstr "Редагувати поле"
+
+#: core\templates\core\field_form.html:4
+msgctxt "page title"
+msgid "Edit field"
+msgstr "Редагування поля"
+
+#: core\templates\core\field_list.html:72
+#, python-format
+msgid "Edit field %(name)s"
+msgstr "Редагувати поле %(name)s"
+
+#: core\templates\core\harvest_form.html:15
+msgid "Edit harvest"
+msgstr "Редагувати збір"
+
+#: core\templates\core\harvest_form.html:4
+msgctxt "page title"
+msgid "Edit harvest"
+msgstr "Редагування збору"
+
+#: core\templates\core\harvest_list.html:102
+#, python-format
+msgid "Edit harvest from %(date)s"
+msgstr "Редагувати збір від %(date)s"
+
+#: core\templates\core\profile.html:14
+#: core\templates\core\profile.html:35
+#: core\templates\core\profile_edit.html:11
+msgid "Edit profile"
+msgstr "Редагувати профіль"
+
+#: core\templates\core\profile_edit.html:4
+msgctxt "page title"
+msgid "Edit profile"
+msgstr "Редагування профілю"
+
+#: core\templates\core\spraying_form.html:15
+msgid "Edit spraying"
+msgstr "Редагувати обприскування"
+
+#: core\templates\core\spraying_form.html:4
+msgctxt "page title"
+msgid "Edit spraying"
+msgstr "Редагування обприскування"
+
+#: core\templates\core\spraying_list.html:90
+#, python-format
+msgid "Edit spraying %(product)s from %(date)s"
+msgstr "Редагувати обприскування %(product)s від %(date)s"
+
+#: core\templates\core\fieldwork_form.html:15
+msgid "Edit work"
+msgstr "Редагувати роботу"
+
+#: core\templates\core\fieldwork_form.html:4
+msgctxt "page title"
+msgid "Edit work"
+msgstr "Редагування роботи"
+
+#: core\templates\core\fieldwork_list.html:89
+#, python-format
+msgid "Edit work %(type)s from %(date)s"
+msgstr "Редагувати роботу %(type)s від %(date)s"
 
 #: core\forms.py:131
 #: core\forms.py:54
 #: core\forms.py:75
+#: core\templates\core\profile.html:26
 msgid "Email address"
 msgstr "Електронна пошта"
 
@@ -309,11 +954,52 @@ msgstr "Введіть дату обприскування."
 msgid "Enter the date the work was done."
 msgstr "Введіть дату виконання роботи."
 
+#: core\templates\core\error_report_detail.html:10
+msgid "Error report"
+msgstr "Звернення про помилку"
+
+#: core\templates\core\field_list.html:11
+msgid "Every field with its area, soil and the cultivations you grow on it."
+msgstr "Кожне поле з площею, ґрунтом і посівами, які ви на ньому ведете."
+
+#: core\templates\core\home.html:60
+msgid "Every treatment and every harvest is one line: the date, what was done and what it cost or brought in. At the end of the season you see the field result without counting on paper."
+msgstr "Кожна обробка й кожен збір — це один рядок: дата, що зроблено і скільки це коштувало або принесло. Наприкінці сезону ви бачите результат поля без підрахунків на папері."
+
+#: core\templates\core\home.html:140
+msgid "Family farms"
+msgstr "Родинні господарства"
+
+#: core\templates\core\field_list.html:9
+msgid "Farm"
+msgstr "Господарство"
+
+#: core\templates\core\dashboard.html:116
+msgid "Farm balance"
+msgstr "Баланс господарства"
+
+#: core\templates\core\home.html:14
+msgid "Farm notebook"
+msgstr "Зошит господарства"
+
+#: core\templates\core\dashboard.html:36
+msgid "Farm summary"
+msgstr "Підсумок господарства"
+
+#: core\templates\core\base.html:9
+msgid "Farmer App – simple management of fields, cultivations, works and harvests."
+msgstr "Farmer App – просте керування полями, посівами, роботами та зборами."
+
 #: core\models.py:152
+#: core\templates\core\home.html:77
 msgid "Fertilizing"
 msgstr "Удобрення"
 
 #: core\forms.py:269
+#: core\templates\core\cultivation_list.html:33
+#: core\templates\core\field_detail.html:10
+#: core\templates\core\field_form.html:14
+#: core\templates\core\fieldwork_detail.html:32
 msgid "Field"
 msgstr "Поле"
 
@@ -325,6 +1011,28 @@ msgstr "Площа поля обов'язкова."
 msgid "Field area must be greater than zero."
 msgstr "Площа поля має бути більшою за нуль."
 
+#: core\templates\core\field_report.html:12
+#, python-format
+msgid "Field area: %(area)s ha"
+msgstr "Площа поля: %(area)s ha"
+
+#: core\templates\core\home.html:33
+#: core\templates\core\home.html:66
+msgid "Field by the forest"
+msgstr "Поле біля лісу"
+
+#: core\templates\core\home.html:43
+msgid "Field by the road"
+msgstr "Поле біля дороги"
+
+#: core\templates\core\field_detail.html:29
+msgid "Field data"
+msgstr "Дані поля"
+
+#: core\templates\core\field_report.html:16
+msgid "Field details"
+msgstr "Дані поля"
+
 #: core\forms.py:169
 msgid "Field name"
 msgstr "Назва поля"
@@ -333,14 +1041,92 @@ msgstr "Назва поля"
 msgid "Field name is required."
 msgstr "Назва поля обов'язкова."
 
+#: core\templates\core\field_list.html:84
+msgid "Field pages"
+msgstr "Сторінки полів"
+
+#: core\templates\core\cultivation_report.html:15
+#: core\templates\core\field_detail.html:16
+#: core\templates\core\field_report.html:10
+msgid "Field report"
+msgstr "Звіт поля"
+
+#: core\templates\core\field_report.html:4
+#, python-format
+msgid "Field report %(name)s"
+msgstr "Звіт поля %(name)s"
+
+#: core\templates\core\field_report.html:11
+#, python-format
+msgid "Field report: %(name)s"
+msgstr "Звіт поля: %(name)s"
+
+#: core\templates\core\home.html:31
+msgid "Field results on a sample farm"
+msgstr "Результати полів у прикладі господарства"
+
+#: core\templates\core\field_report.html:42
+msgid "Field summary"
+msgstr "Підсумок поля"
+
+#: core\templates\core\dashboard.html:38
+msgid "Fields"
+msgstr "Поля"
+
 #: core\management\commands\seed_demo_data.py:140
 #, python-format
 msgid "Fields created or updated: %(count)s"
 msgstr "Полів створено або оновлено: %(count)s"
 
+#: core\templates\core\partials\farm_map.html:5
+msgid "Fields seen from above: wheat, rapeseed, maize, meadow and fallow land"
+msgstr "Поля згори: пшениця, ріпак, кукурудза, луг і переліг"
+
+#: core\templates\core\cultivation_list.html:65
+#: core\templates\core\error_report_list.html:43
+#: core\templates\core\field_list.html:49
+#: core\templates\core\field_report.html:29
+#: core\templates\core\fieldwork_list.html:66
+msgid "Filter"
+msgstr "Фільтрувати"
+
+#: core\templates\core\cultivation_list.html:30
+msgid "Filter cultivations"
+msgstr "Фільтрувати посіви"
+
+#: core\templates\core\field_list.html:20
+msgid "Filter fields"
+msgstr "Фільтрувати поля"
+
+#: core\templates\core\harvest_list.html:20
+msgid "Filter harvests"
+msgstr "Фільтрувати збори"
+
+#: core\templates\core\error_report_list.html:21
+msgid "Filter reports"
+msgstr "Фільтрувати звернення"
+
+#: core\templates\core\spraying_list.html:20
+msgid "Filter sprayings"
+msgstr "Фільтрувати обприскування"
+
+#: core\templates\core\fieldwork_list.html:20
+msgid "Filter works"
+msgstr "Фільтрувати роботи"
+
+#: core\templates\core\report_dashboard.html:10
+msgid "Financial reports"
+msgstr "Фінансові звіти"
+
+#: core\templates\core\report_dashboard.html:4
+msgctxt "page title"
+msgid "Financial reports"
+msgstr "Фінансові звіти"
+
 #: core\forms.py:129
 #: core\forms.py:52
 #: core\forms.py:73
+#: core\templates\core\profile.html:27
 msgid "First name"
 msgstr "Ім'я"
 
@@ -348,16 +1134,35 @@ msgstr "Ім'я"
 msgid "First name is required."
 msgstr "Ім'я обов'язкове."
 
+#: core\templates\core\home.html:132
+msgid "For those who would rather know than guess."
+msgstr "Для тих, хто воліє знати, а не вгадувати."
+
+#: core\templates\core\fieldwork_list.html:57
+#: core\templates\core\harvest_list.html:66
+#: core\templates\core\spraying_list.html:57
+msgid "From"
+msgstr "Від"
+
 #: core\models.py:40
 msgid "GPS coordinates"
 msgstr "GPS-координати"
+
+#: core\templates\core\harvest_form.html:14
+msgid "Harvest"
+msgstr "Збір"
 
 #: core\models.py:302
 #, python-format
 msgid "Harvest %(cultivation)s — %(date)s"
 msgstr "Збір %(cultivation)s — %(date)s"
 
+#: core\templates\core\home.html:79
+msgid "Harvest and grain sale"
+msgstr "Збір і продаж зерна"
+
 #: core\forms.py:622
+#: core\templates\core\harvest_detail.html:52
 msgid "Harvest cost"
 msgstr "Вартість збору"
 
@@ -370,7 +1175,13 @@ msgstr "Вартість збору не може бути від'ємною."
 msgid "Harvest cost is required."
 msgstr "Вартість збору обов'язкова."
 
+#: core\templates\core\dashboard.html:127
+#: core\templates\core\partials\report_summary.html:36
+msgid "Harvest costs"
+msgstr "Витрати на збори"
+
 #: core\forms.py:617
+#: core\templates\core\harvest_detail.html:33
 msgid "Harvest date"
 msgstr "Дата збору"
 
@@ -378,9 +1189,27 @@ msgstr "Дата збору"
 msgid "Harvest date is required."
 msgstr "Дата збору обов'язкова."
 
+#: core\templates\core\harvest_detail.html:27
+msgid "Harvest details"
+msgstr "Дані збору"
+
+#: core\templates\core\harvest_detail.html:4
+msgctxt "page title"
+msgid "Harvest details"
+msgstr "Дані збору"
+
 #: core\forms.py:620
 msgid "Harvest disposition"
 msgstr "Призначення врожаю"
+
+#: core\templates\core\harvest_form.html:8
+#, python-format
+msgid "Harvest from %(date)s"
+msgstr "Збір від %(date)s"
+
+#: core\templates\core\harvest_list.html:114
+msgid "Harvest pages"
+msgstr "Сторінки зборів"
 
 #: core\forms.py:642
 msgid "Harvest quantity is required."
@@ -390,30 +1219,124 @@ msgstr "Кількість врожаю обов'язкова."
 msgid "Harvest quantity must be greater than zero."
 msgstr "Кількість врожаю має бути більшою за нуль."
 
+#: core\templates\core\harvest_detail.html:43
+msgid "Harvest result"
+msgstr "Результат збору"
+
+#: core\templates\core\harvest_detail.html:10
+#, python-format
+msgid "Harvest · %(date)s"
+msgstr "Збір · %(date)s"
+
+#: core\templates\core\harvest_detail.html:11
+#, python-format
+msgid "Harvest – %(crop)s"
+msgstr "Збір – %(crop)s"
+
+#: core\templates\core\report_dashboard.html:69
+msgid "Harvested"
+msgstr "Зібрано"
+
+#: core\templates\core\partials\report_summary.html:54
+msgid "Harvested in total"
+msgstr "Зібрано загалом"
+
+#: core\templates\core\base.html:68
+#: core\templates\core\cultivation_detail.html:95
+#: core\templates\core\cultivation_report.html:67
+#: core\templates\core\dashboard.html:145
+#: core\templates\core\field_report.html:48
+msgid "Harvests"
+msgstr "Збори"
+
+#: core\templates\core\harvest_list.html:4
+msgctxt "page title"
+msgid "Harvests"
+msgstr "Збори"
+
 #: core\management\commands\seed_demo_data.py:147
 #, python-format
 msgid "Harvests created or updated: %(count)s"
 msgstr "Зборів створено або оновлено: %(count)s"
 
+#: core\templates\core\dashboard.html:10
+#, python-format
+msgid "Hello, <em>%(name)s</em>."
+msgstr "Добрий день, <em>%(name)s</em>."
+
+#: core\templates\core\error_report_form.html:10
+#: core\templates\core\error_report_list.html:10
+msgid "Help"
+msgstr "Допомога"
+
+#: core\templates\core\partials\form_field.html:8
+msgid "Hide"
+msgstr "Сховати"
+
+#: core\templates\core\home.html:100
+msgid "How it works"
+msgstr "Як це працює"
+
+#: core\templates\core\harvest_list.html:11
+msgid "How much was harvested, what happened to it and what it brought in."
+msgstr "Скільки зібрано, що з цим сталося і скільки це дало."
+
 #: core\forms.py:173
 msgid "How the location is given"
 msgstr "Спосіб визначення розташування"
+
+#: core\templates\core\home.html:24
+msgid "I already have an account"
+msgstr "У мене вже є обліковий запис"
 
 #: core\models.py:316
 msgid "In progress"
 msgstr "В роботі"
 
+#: core\templates\core\partials\report_summary.html:57
+msgid "In storage"
+msgstr "На складі"
+
+#: core\templates\core\crop_list.html:19
+#, python-format
+msgid "In the catalogue: %(count)s"
+msgstr "У каталозі: %(count)s"
+
+#: core\templates\core\home.html:57
+msgid "Instead of a notebook and a calculator"
+msgstr "Замість зошита й калькулятора"
+
 #: core\models.py:311
 msgid "Interface problem"
 msgstr "Проблема з інтерфейсом"
+
+#: core\templates\core\dashboard.html:121
+#: core\templates\core\harvest_detail.html:48
+#: core\templates\core\partials\report_summary.html:30
+msgid "Item"
+msgstr "Стаття"
 
 #: core\models.py:238
 msgid "Kept in storage"
 msgstr "Залишено на складі"
 
+#: core\templates\core\partials\report_summary.html:3
+msgid "Key figures"
+msgstr "Головні показники"
+
+#: core\templates\core\base.html:91
+#: core\templates\core\base.html:91
+msgid "Language"
+msgstr "Мова"
+
+#: core\templates\core\home.html:145
+msgid "Large text, simple words, and after you log in the app suggests the next step."
+msgstr "Великий текст, прості слова, а після входу застосунок підказує наступний крок."
+
 #: core\forms.py:130
 #: core\forms.py:53
 #: core\forms.py:74
+#: core\templates\core\profile.html:28
 msgid "Last name"
 msgstr "Прізвище"
 
@@ -422,6 +1345,7 @@ msgid "Last name is required."
 msgstr "Прізвище обов'язкове."
 
 #: core\forms.py:175
+#: core\templates\core\field_detail.html:37
 msgid "Latitude"
 msgstr "Широта"
 
@@ -429,11 +1353,54 @@ msgstr "Широта"
 msgid "Latitude is required for this location."
 msgstr "Для цього розташування потрібна широта."
 
+#: core\templates\core\base.html:106
+msgid "Light mode is on."
+msgstr "Увімкнено світлу тему."
+
 #: core\models.py:33
 msgid "Loamy soil"
 msgstr "Суглинистий ґрунт"
 
+#: core\templates\core\field_detail.html:34
+#: core\templates\core\field_list.html:39
+msgid "Location method"
+msgstr "Спосіб визначення розташування"
+
+#: core\templates\core\home.html:189
+#: core\templates\core\login.html:12
+#: core\templates\core\login.html:26
+#: core\templates\core\register.html:44
+msgid "Log in"
+msgstr "Увійти"
+
+#: core\templates\core\base.html:86
+msgctxt "navigation"
+msgid "Log in"
+msgstr "Вхід"
+
+#: core\templates\core\base.html:82
+msgid "Log out"
+msgstr "Вийти"
+
+#: core\templates\core\login.html:26
+msgid "Logging in…"
+msgstr "Вхід…"
+
+#: core\templates\core\login.html:11
+msgid "Login"
+msgstr "Вхід"
+
+#: core\templates\core\login.html:4
+msgctxt "page title"
+msgid "Login"
+msgstr "Вхід"
+
+#: core\templates\core\register.html:33
+msgid "Login details"
+msgstr "Дані для входу"
+
 #: core\forms.py:176
+#: core\templates\core\field_detail.html:38
 msgid "Longitude"
 msgstr "Довгота"
 
@@ -445,18 +1412,220 @@ msgstr "Для цього розташування потрібна довгот
 msgid "Loss / discarded"
 msgstr "Втрати / утилізовано"
 
+#: core\templates\core\report_dashboard.html:73
+msgid "Losses"
+msgstr "Втрати"
+
+#: core\templates\core\partials\report_summary.html:58
+msgid "Losses / disposal"
+msgstr "Втрати / утилізація"
+
+#: core\templates\core\base.html:59
+msgid "Main navigation"
+msgstr "Головна навігація"
+
+#: core\templates\core\base.html:138
+msgid "Manage your farm in one place"
+msgstr "Керуйте господарством в одному місці"
+
+#: core\templates\core\base.html:122
+msgid "Messages"
+msgstr "Повідомлення"
+
+#: core\templates\core\error_report_list.html:11
+msgid "My error reports"
+msgstr "Мої звернення про помилки"
+
+#: core\templates\core\error_report_list.html:4
+msgctxt "page title"
+msgid "My error reports"
+msgstr "Мої звернення про помилки"
+
+#: core\templates\core\base.html:63
+#: core\templates\core\dashboard.html:141
+#: core\templates\core\field_form.html:10
+#: core\templates\core\field_list.html:10
+msgid "My fields"
+msgstr "Мої поля"
+
+#: core\templates\core\field_list.html:4
+msgctxt "page title"
+msgid "My fields"
+msgstr "Мої поля"
+
+#: core\templates\core\dashboard.html:139
+msgid "My records"
+msgstr "Мої записи"
+
+#: core\templates\core\error_report_form.html:7
+#: core\templates\core\profile.html:37
+msgid "My reports"
+msgstr "Мої звернення"
+
 #: core\forms.py:539
 msgid "Name of the product used, up to 150 characters."
 msgstr "Назва використаного препарату, до 150 символів."
+
+#: core\templates\core\field_list.html:26
+msgid "Name, parcel or address"
+msgstr "Назва, ділянка або адреса"
 
 #: core\models.py:315
 msgid "New"
 msgstr "Нове"
 
+#: core\templates\core\error_report_list.html:80
+#: core\templates\core\partials\pagination.html:13
+msgid "Next"
+msgstr "Наступна"
+
+#: core\templates\core\dashboard.html:15
+msgid "Next step"
+msgstr "Наступний крок"
+
+#: core\templates\core\cultivation_list.html:104
+msgid "No cultivations"
+msgstr "Немає посівів"
+
+#: core\templates\core\field_detail.html:67
+msgid "No cultivations have been recorded on this field yet."
+msgstr "На цьому полі ще не записано жодного посіву."
+
+#: core\templates\core\cultivation_list.html:105
+msgid "No cultivations match the given criteria."
+msgstr "Не знайдено посівів, що відповідають умовам."
+
+#: core\templates\core\report_dashboard.html:108
+msgid "No data"
+msgstr "Немає даних"
+
+#: core\templates\core\field_list.html:89
+msgid "No fields match the given criteria. Change the filters or add a new field."
+msgstr "Не знайдено полів, що відповідають умовам. Змініть фільтри або додайте нове поле."
+
+#: core\templates\core\report_dashboard.html:109
+msgid "No financial data for the chosen criteria."
+msgstr "Немає фінансових даних для вибраних умов."
+
+#: core\templates\core\cultivation_detail.html:119
+msgid "No harvests have been recorded for this cultivation yet."
+msgstr "Для цього посіву ще не записано жодного збору."
+
+#: core\templates\core\harvest_list.html:119
+msgid "No harvests match the given criteria."
+msgstr "Не знайдено зборів, що відповідають умовам."
+
+#: core\templates\core\harvest_list.html:118
+msgid "No harvests recorded"
+msgstr "Немає записаних зборів"
+
+#: core\templates\core\cultivation_report.html:87
+msgid "No harvests."
+msgstr "Немає зборів."
+
+#: core\templates\core\error_report_list.html:68
+msgid "No reports"
+msgstr "Немає звернень"
+
+#: core\templates\core\error_report_list.html:69
+msgid "No reports match the chosen criteria."
+msgstr "Не знайдено звернень, що відповідають умовам."
+
+#: core\templates\core\cultivation_detail.html:89
+msgid "No sprayings have been recorded for this cultivation yet."
+msgstr "Для цього посіву ще не записано жодного обприскування."
+
+#: core\templates\core\spraying_list.html:107
+msgid "No sprayings match the given criteria."
+msgstr "Не знайдено обприскувань, що відповідають умовам."
+
+#: core\templates\core\spraying_list.html:106
+msgid "No sprayings recorded"
+msgstr "Немає записаних обприскувань"
+
+#: core\templates\core\cultivation_report.html:62
+msgid "No sprayings."
+msgstr "Немає обприскувань."
+
+#: core\templates\core\cultivation_detail.html:64
+msgid "No works have been recorded for this cultivation yet."
+msgstr "Для цього посіву ще не записано жодної роботи."
+
+#: core\templates\core\fieldwork_list.html:106
+msgid "No works match the given criteria."
+msgstr "Не знайдено робіт, що відповідають умовам."
+
+#: core\templates\core\fieldwork_list.html:105
+msgid "No works recorded"
+msgstr "Немає записаних робіт"
+
+#: core\templates\core\cultivation_report.html:43
+msgid "No works."
+msgstr "Немає робіт."
+
+#: core\templates\core\home.html:169
+msgid "No. Every user sees only their own fields, cultivations and records."
+msgstr "Ні. Кожен користувач бачить лише свої поля, посіви й записи."
+
+#: core\templates\core\home.html:161
+msgid "No. The account and using the app are free."
+msgstr "Ні. Обліковий запис і користування застосунком безкоштовні."
+
+#: core\templates\core\home.html:165
+msgid "No. You open the app in a browser, like a normal website."
+msgstr "Ні. Застосунок відкривається в браузері, як звичайний сайт."
+
 #: core\forms.py:275
 #: core\forms.py:623
+#: core\templates\core\cultivation_detail.html:40
+#: core\templates\core\harvest_detail.html:37
 msgid "Notes"
 msgstr "Нотатки"
+
+#: core\templates\core\harvest_list.html:26
+msgid "Notes, field or cultivation"
+msgstr "Нотатки, поле або посів"
+
+#: core\templates\core\report_dashboard.html:49
+msgid "Number of cultivations"
+msgstr "Кількість посівів"
+
+#: core\templates\core\report_dashboard.html:48
+msgid "Number of fields"
+msgstr "Кількість полів"
+
+#: core\templates\core\cultivation_detail.html:39
+#: core\templates\core\report_dashboard.html:52
+msgid "Number of harvests"
+msgstr "Кількість зборів"
+
+#: core\templates\core\field_report.html:44
+#: core\templates\core\report_dashboard.html:47
+msgid "Number of records"
+msgstr "Кількість записів"
+
+#: core\templates\core\cultivation_detail.html:38
+#: core\templates\core\report_dashboard.html:51
+msgid "Number of sprayings"
+msgstr "Кількість обприскувань"
+
+#: core\templates\core\cultivation_detail.html:37
+#: core\templates\core\report_dashboard.html:50
+msgid "Number of works"
+msgstr "Кількість робіт"
+
+#: core\templates\core\profile.html:40
+#, python-format
+msgid "Number of your reports: %(count)s"
+msgstr "Кількість ваших звернень: %(count)s"
+
+#: core\templates\core\home.html:101
+msgid "One season in Farmer App"
+msgstr "Один сезон у Farmer App"
+
+#: core\templates\core\register.html:65
+msgid "Only you can see your fields and records."
+msgstr "Ваші поля й записи бачите лише ви."
 
 #: core\forms.py:282
 msgid "Optional date when sowing started."
@@ -493,6 +1662,12 @@ msgctxt "work type"
 msgid "Other"
 msgstr "Інша"
 
+#: core\templates\core\error_report_list.html:78
+#: core\templates\core\partials\pagination.html:10
+#, python-format
+msgid "Page %(number)s of %(total)s"
+msgstr "Сторінка %(number)s з %(total)s"
+
 #: core\views.py:904
 #, python-format
 msgid "Page: %(path)s"
@@ -500,6 +1675,7 @@ msgstr "Сторінка: %(path)s"
 
 #: core\forms.py:172
 #: core\models.py:42
+#: core\templates\core\field_detail.html:35
 msgid "Parcel identifier"
 msgstr "Ідентифікатор ділянки"
 
@@ -515,21 +1691,44 @@ msgstr "Пароль"
 msgid "Peat soil"
 msgstr "Торф'яний ґрунт"
 
+#: core\templates\core\home.html:144
+msgid "People who do not like computers"
+msgstr "Люди, які не люблять комп'ютери"
+
 #: core\models.py:94
 msgid "Planned"
 msgstr "Запланований"
 
 #: core\forms.py:274
+#: core\templates\core\cultivation_detail.html:36
 msgid "Planned harvest date"
 msgstr "Запланована дата збору"
 
+#: core\templates\core\home.html:38
+msgid "Plot behind the barn"
+msgstr "Ділянка за клунею"
+
 #: core\models.py:150
+#: core\templates\core\home.html:75
 msgid "Plowing"
 msgstr "Оранка"
+
+#: core\templates\core\fieldwork_list.html:11
+msgid "Plowing, sowing, fertilizing and other treatments with their costs."
+msgstr "Оранка, сівба, удобрення та інші обробки разом із витратами."
+
+#: core\templates\core\dashboard.html:82
+msgid "Plowing, sowing, fertilizing and their cost."
+msgstr "Оранка, сівба, удобрення та їхня вартість."
 
 #: core\models.py:41
 msgid "Point on a map"
 msgstr "Точка на мапі"
+
+#: core\templates\core\error_report_list.html:76
+#: core\templates\core\partials\pagination.html:7
+msgid "Previous"
+msgstr "Попередня"
 
 #: core\forms.py:762
 msgid "Problem description"
@@ -551,6 +1750,10 @@ msgstr "Назва препарату може мати щонайбільше 1
 msgid "Product name is required."
 msgstr "Назва препарату обов'язкова."
 
+#: core\templates\core\spraying_form.html:16
+msgid "Product name, dose and treatment cost on the chosen cultivation."
+msgstr "Назва засобу, доза й вартість обробки на вибраному посіві."
+
 #: core\forms.py:554
 msgid "Product quantity is required."
 msgstr "Кількість препарату обов'язкова."
@@ -559,8 +1762,35 @@ msgstr "Кількість препарату обов'язкова."
 msgid "Product quantity must be greater than zero."
 msgstr "Кількість препарату має бути більшою за нуль."
 
+#: core\templates\core\spraying_list.html:26
+msgid "Product, description, field or cultivation"
+msgstr "Препарат, опис, поле або посів"
+
+#: core\templates\core\dashboard.html:90
+msgid "Product, quantity and treatment cost."
+msgstr "Засіб, кількість і вартість обробки."
+
+#: core\templates\core\base.html:76
+#: core\templates\core\error_report_list.html:7
+msgid "Profile"
+msgstr "Профіль"
+
+#: core\templates\core\profile.html:4
+msgctxt "page title"
+msgid "Profile"
+msgstr "Профіль"
+
+#: core\templates\core\dashboard.html:54
+#: core\templates\core\partials\report_summary.html:13
+#: core\templates\core\partials\report_summary.html:41
+#: core\templates\core\report_dashboard.html:79
+msgid "Profit/loss"
+msgstr "Прибуток/збиток"
+
 #: core\forms.py:532
 #: core\forms.py:618
+#: core\templates\core\harvest_detail.html:31
+#: core\templates\core\spraying_detail.html:31
 msgid "Quantity"
 msgstr "Кількість"
 
@@ -569,6 +1799,23 @@ msgstr "Кількість"
 msgid "Quantity must be greater than zero."
 msgstr "Кількість має бути більшою за нуль."
 
+#: core\templates\core\home.html:155
+msgid "Questions"
+msgstr "Питання"
+
+#: core\templates\core\home.html:72
+msgid "Record"
+msgstr "Запис"
+
+#: core\templates\core\dashboard.html:97
+msgid "Record harvest"
+msgstr "Записати збір"
+
+#: core\templates\core\dashboard.html:89
+msgid "Record spraying"
+msgstr "Записати обприскування"
+
+#: core\templates\core\dashboard.html:81
 #: core\views.py:87
 msgid "Record work"
 msgstr "Записати роботу"
@@ -577,18 +1824,64 @@ msgstr "Записати роботу"
 msgid "Record your first work or harvest"
 msgstr "Запишіть першу роботу або збір"
 
+#: core\templates\core\fieldwork_list.html:9
+#: core\templates\core\harvest_list.html:9
+#: core\templates\core\spraying_list.html:9
+msgid "Records"
+msgstr "Записи"
+
 #: core\forms.py:77
 msgid "Repeat password"
 msgstr "Повторіть пароль"
+
+#: core\templates\core\error_report_detail.html:11
+#: core\templates\core\error_report_detail.html:4
+#: core\templates\core\error_report_list.html:55
+#, python-format
+msgid "Report #%(number)s"
+msgstr "Звернення #%(number)s"
 
 #: core\models.py:335
 #, python-format
 msgid "Report #%(number)s — %(category)s"
 msgstr "Звернення #%(number)s — %(category)s"
 
+#: core\templates\core\base.html:141
+#: core\templates\core\error_report_form.html:11
+msgid "Report a bug"
+msgstr "Повідомити про помилку"
+
+#: core\templates\core\error_report_form.html:4
+msgctxt "page title"
+msgid "Report a bug"
+msgstr "Повідомити про помилку"
+
+#: core\templates\core\base.html:149
+msgid "Report a problem"
+msgstr "Повідомити про проблему"
+
 #: core\forms.py:761
 msgid "Report category"
 msgstr "Категорія звернення"
+
+#: core\templates\core\error_report_list.html:74
+msgid "Report pages"
+msgstr "Сторінки звернень"
+
+#: core\templates\core\field_report.html:21
+#: core\templates\core\report_dashboard.html:15
+msgid "Report range"
+msgstr "Діапазон звіту"
+
+#: core\templates\core\cultivation_report.html:11
+#, python-format
+msgid "Report: %(crop)s – %(field)s (%(year)s)"
+msgstr "Звіт: %(crop)s – %(field)s (%(year)s)"
+
+#: core\templates\core\base.html:69
+#: core\templates\core\report_dashboard.html:9
+msgid "Reports"
+msgstr "Звіти"
 
 #: core\forms.py:185
 msgid "Required for GPS and a point on a map; range -180 to 180."
@@ -610,7 +1903,17 @@ msgstr "Обов'язково, якщо розташування визнача�
 msgid "Resolved"
 msgstr "Вирішено"
 
+#: core\templates\core\dashboard.html:131
+#: core\templates\core\harvest_detail.html:56
+#: core\templates\core\home.html:85
+msgid "Result"
+msgstr "Результат"
+
 #: core\forms.py:621
+#: core\templates\core\dashboard.html:46
+#: core\templates\core\harvest_detail.html:51
+#: core\templates\core\home.html:83
+#: core\templates\core\partials\report_summary.html:33
 msgid "Revenue"
 msgstr "Дохід"
 
@@ -618,6 +1921,10 @@ msgstr "Дохід"
 #: core\forms.py:682
 msgid "Revenue cannot be negative."
 msgstr "Дохід не може бути від'ємним."
+
+#: core\templates\core\dashboard.html:124
+msgid "Revenue from harvests"
+msgstr "Дохід від зборів"
 
 #: core\forms.py:648
 msgid "Revenue is required."
@@ -628,16 +1935,68 @@ msgstr "Дохід обов'язковий."
 msgid "Revenue must be 0 if the harvest was not sold."
 msgstr "Дохід має дорівнювати 0, якщо врожай не продано."
 
+#: core\templates\core\home.html:48
+msgid "Sample farm, 2026 season"
+msgstr "Приклад господарства, сезон 2026"
+
+#: core\templates\core\home.html:70
+msgid "Sample records for the field by the forest in the 2026 season"
+msgstr "Приклад записів для поля біля лісу в сезоні 2026"
+
 #: core\models.py:31
 msgid "Sandy soil"
 msgstr "Піщаний ґрунт"
+
+#: core\templates\core\crop_form.html:21
+#: core\templates\core\cultivation_form.html:45
+#: core\templates\core\field_form.html:25
+#: core\templates\core\fieldwork_form.html:26
+#: core\templates\core\harvest_form.html:26
+msgid "Save"
+msgstr "Зберегти"
+
+#: core\templates\core\profile_edit.html:21
+msgid "Save changes"
+msgstr "Зберегти зміни"
+
+#: core\templates\core\crop_form.html:21
+#: core\templates\core\cultivation_form.html:45
+#: core\templates\core\field_form.html:25
+#: core\templates\core\fieldwork_form.html:26
+#: core\templates\core\harvest_form.html:26
+msgid "Saving…"
+msgstr "Збереження…"
 
 #: core\forms.py:628
 msgid "Say whether the harvest was sold, put into storage or discarded as a loss."
 msgstr "Вкажіть, чи врожай продано, покладено на склад чи утилізовано як втрати."
 
+#: core\templates\core\field_list.html:23
+#: core\templates\core\fieldwork_list.html:23
+#: core\templates\core\harvest_list.html:23
+#: core\templates\core\spraying_list.html:23
+msgid "Search"
+msgstr "Пошук"
+
+#: core\templates\core\cultivation_detail.html:33
+#: core\templates\core\fieldwork_detail.html:34
+#: core\templates\core\harvest_detail.html:36
+#: core\templates\core\spraying_detail.html:35
+msgid "Season"
+msgstr "Сезон"
+
+#: core\templates\core\cultivation_list.html:76
+#: core\templates\core\field_detail.html:55
+#: core\templates\core\field_report.html:61
+#, python-format
+msgid "Season %(year)s"
+msgstr "Сезон %(year)s"
+
 #: core\forms.py:271
 #: core\forms.py:394
+#: core\templates\core\cultivation_list.html:60
+#: core\templates\core\field_report.html:24
+#: core\templates\core\report_dashboard.html:27
 msgid "Season year"
 msgstr "Рік сезону"
 
@@ -645,15 +2004,66 @@ msgstr "Рік сезону"
 msgid "Season year is required."
 msgstr "Рік сезону обов'язковий."
 
+#: core\templates\core\cultivation_list.html:10
+msgid "Seasonal cultivations"
+msgstr "Сезонні посіви"
+
+#: core\templates\core\cultivation_list.html:9
+msgid "Seasons"
+msgstr "Сезони"
+
+#: core\templates\core\error_report_form.html:21
+msgid "Send report"
+msgstr "Надіслати звернення"
+
+#: core\templates\core\error_report_form.html:21
+msgid "Sending…"
+msgstr "Надсилання…"
+
+#: core\templates\core\profile.html:33
+msgid "Settings and help"
+msgstr "Налаштування й допомога"
+
+#: core\templates\core\partials\form_field.html:8
+#: core\templates\core\partials\form_field.html:8
+msgid "Show"
+msgstr "Показати"
+
+#: core\templates\core\base.html:87
+#: core\templates\core\register.html:11
+msgid "Sign up"
+msgstr "Реєстрація"
+
+#: core\templates\core\register.html:4
+msgctxt "page title"
+msgid "Sign up"
+msgstr "Реєстрація"
+
 #: core\models.py:34
 msgid "Silt soil"
 msgstr "Пилуватий ґрунт"
 
+#: core\templates\core\base.html:52
+msgid "Skip to content"
+msgstr "Перейти до вмісту"
+
+#: core\templates\core\home.html:136
+msgid "Small and medium farms"
+msgstr "Малі й середні господарства"
+
 #: core\forms.py:171
+#: core\templates\core\field_detail.html:33
+#: core\templates\core\field_list.html:30
 msgid "Soil type"
 msgstr "Тип ґрунту"
 
 #: core\models.py:237
+msgid "Sold"
+msgstr "Продано"
+
+#: core\templates\core\partials\report_summary.html:56
+#: core\templates\core\report_dashboard.html:71
+msgctxt "harvested quantity"
 msgid "Sold"
 msgstr "Продано"
 
@@ -662,10 +2072,26 @@ msgid "Sowing"
 msgstr "Сівба"
 
 #: core\forms.py:273
+#: core\templates\core\cultivation_detail.html:35
 msgid "Sowing date"
 msgstr "Дата сівби"
 
+#: core\templates\core\home.html:76
+msgid "Sowing wheat"
+msgstr "Сівба пшениці"
+
+#: core\templates\core\home.html:78
+#: core\templates\core\spraying_form.html:14
+msgid "Spraying"
+msgstr "Обприскування"
+
+#: core\templates\core\dashboard.html:126
+#: core\templates\core\partials\report_summary.html:35
+msgid "Spraying costs"
+msgstr "Витрати на обприскування"
+
 #: core\forms.py:530
+#: core\templates\core\spraying_detail.html:32
 msgid "Spraying date"
 msgstr "Дата обприскування"
 
@@ -673,18 +2099,90 @@ msgstr "Дата обприскування"
 msgid "Spraying date is required."
 msgstr "Дата обприскування обов'язкова."
 
+#: core\templates\core\spraying_detail.html:26
+msgid "Spraying details"
+msgstr "Дані обприскування"
+
+#: core\templates\core\spraying_detail.html:4
+msgctxt "page title"
+msgid "Spraying details"
+msgstr "Дані обприскування"
+
+#: core\templates\core\spraying_list.html:102
+msgid "Spraying pages"
+msgstr "Сторінки обприскувань"
+
+#: core\templates\core\spraying_detail.html:10
+#, python-format
+msgid "Spraying · %(date)s"
+msgstr "Обприскування · %(date)s"
+
+#: core\templates\core\base.html:67
+#: core\templates\core\cultivation_detail.html:70
+#: core\templates\core\cultivation_report.html:48
+#: core\templates\core\dashboard.html:144
+#: core\templates\core\field_report.html:47
+msgid "Sprayings"
+msgstr "Обприскування"
+
+#: core\templates\core\spraying_list.html:4
+msgctxt "page title"
+msgid "Sprayings"
+msgstr "Обприскування"
+
 #: core\management\commands\seed_demo_data.py:144
 #, python-format
 msgid "Sprayings created or updated: %(count)s"
 msgstr "Обприскувань створено або оновлено: %(count)s"
 
+#: core\templates\core\home.html:105
+msgid "Spring"
+msgstr "Весна"
+
+#: core\templates\core\home.html:182
+msgid "Start with one field."
+msgstr "Почніть з одного поля."
+
 #: core\forms.py:272
+#: core\templates\core\cultivation_detail.html:34
+#: core\templates\core\cultivation_list.html:51
+#: core\templates\core\error_report_detail.html:22
+#: core\templates\core\error_report_list.html:33
 msgid "Status"
 msgstr "Статус"
+
+#: core\templates\core\report_dashboard.html:72
+msgid "Storage"
+msgstr "Склад"
+
+#: core\templates\core\cultivation_report.html:24
+#: core\templates\core\report_dashboard.html:45
+msgid "Summary"
+msgstr "Підсумок"
+
+#: core\templates\core\home.html:110
+msgid "Summer"
+msgstr "Літо"
 
 #: core\models.py:309
 msgid "Technical problem"
 msgstr "Технічна проблема"
+
+#: core\templates\core\home.html:26
+msgid "The account is free and there is nothing to install. It works on a phone and on a computer."
+msgstr "Обліковий запис безкоштовний, нічого не треба встановлювати. Працює на телефоні й на комп'ютері."
+
+#: core\templates\core\register.html:13
+msgid "The account is free. Filling in the form takes a moment."
+msgstr "Обліковий запис безкоштовний. Заповнення форми займе хвилину."
+
+#: core\templates\core\error_report_form.html:12
+msgid "The address of the page with the problem is already in the description. Add what happened and what should have happened."
+msgstr "Адресу сторінки з проблемою вже вписано в опис. Допишіть, що сталося і що мало статися."
+
+#: core\templates\core\register.html:61
+msgid "The app suggests the rest"
+msgstr "Застосунок підкаже решту"
 
 #: core\forms.py:292
 msgid "The chosen crop type is not available."
@@ -708,6 +2206,26 @@ msgstr "Вибраний сезон не збігається із сезоно�
 msgid "The chosen season is not available."
 msgstr "Вибраний сезон недоступний."
 
+#: core\templates\core\spraying_confirm_delete.html:12
+msgid "The cost of this spraying will disappear from the reports. This cannot be undone."
+msgstr "Вартість цього обприскування зникне зі звітів. Цю дію не можна скасувати."
+
+#: core\templates\core\fieldwork_confirm_delete.html:12
+msgid "The cost of this work will disappear from the reports. This cannot be undone."
+msgstr "Вартість цієї роботи зникне зі звітів. Цю дію не можна скасувати."
+
+#: core\templates\core\crop_list.html:31
+msgid "The crop type catalogue is empty."
+msgstr "Каталог видів культур порожній."
+
+#: core\templates\core\cultivation_form.html:32
+msgid "The crop type catalogue is empty. Add a crop type to be able to create a cultivation."
+msgstr "Каталог видів культур порожній. Додайте вид культури, щоб створити посів."
+
+#: core\templates\core\crop_list.html:11
+msgid "The crop type catalogue is shared by all users. If a type you need is missing, you can add it."
+msgstr "Каталог видів культур спільний для всіх користувачів. Якщо потрібного виду немає, ви можете його додати."
+
 #: core\views.py:466
 msgid "The cultivation has been created."
 msgstr "Посів створено."
@@ -719,6 +2237,14 @@ msgstr "Посів видалено."
 #: core\views.py:481
 msgid "The cultivation has been updated."
 msgstr "Посів оновлено."
+
+#: core\templates\core\field_confirm_delete.html:12
+msgid "The cultivations, works, sprayings and harvests recorded on this field will be deleted with it. This cannot be undone."
+msgstr "Разом із полем зникнуть записані на ньому посіви, роботи, обприскування та збори. Цю дію не можна скасувати."
+
+#: core\templates\core\register.html:62
+msgid "The dashboard always shows the next step."
+msgstr "На панелі завжди видно наступний крок."
 
 #: core\forms.py:748
 msgid "The description can have at most 1000 characters."
@@ -748,10 +2274,22 @@ msgstr "Поле видалено."
 msgid "The field has been updated."
 msgstr "Поле оновлено."
 
+#: core\templates\core\field_report.html:79
+msgid "The field has no cultivations in the chosen period."
+msgstr "Поле не має посівів за вибраний період."
+
 #: core\forms.py:82
 #, python-format
 msgid "The field “%(label)s” is required."
 msgstr "Поле «%(label)s» обов'язкове."
+
+#: core\templates\core\report_dashboard.html:40
+msgid "The given filters are not valid or not available."
+msgstr "Вказані фільтри неправильні або недоступні."
+
+#: core\templates\core\field_report.html:37
+msgid "The given year is not valid."
+msgstr "Вказаний рік неправильний."
 
 #: core\views.py:738
 msgid "The harvest has been created."
@@ -765,6 +2303,10 @@ msgstr "Збір видалено."
 msgid "The harvest has been updated."
 msgstr "Збір оновлено."
 
+#: core\templates\core\harvest_detail.html:61
+msgid "The harvest result is revenue minus the harvest cost only, before field work and spraying costs."
+msgstr "Результат збору — це дохід мінус лише вартість збору, без урахування витрат на польові роботи й обприскування."
+
 #: core\forms.py:727
 msgid "The name can have at most 100 characters."
 msgstr "Назва може мати щонайбільше 100 символів."
@@ -772,6 +2314,10 @@ msgstr "Назва може мати щонайбільше 100 символів
 #: core\forms.py:180
 msgid "The name must be unique among your fields."
 msgstr "Назва має бути унікальною серед ваших полів."
+
+#: core\templates\core\crop_form.html:12
+msgid "The new crop type will be visible to all users of the app."
+msgstr "Доданий вид культури буде видно всім користувачам застосунку."
 
 #: core\forms.py:44
 msgid "The passwords do not match."
@@ -785,6 +2331,15 @@ msgstr "Запланована дата збору не може бути ран
 #: core\views.py:93
 msgid "The report shows costs, revenue and profit for fields and cultivations."
 msgstr "Звіт показує витрати, дохід і прибуток для полів і посівів."
+
+#: core\templates\core\error_report_detail.html:27
+#: core\templates\core\error_report_list.html:12
+msgid "The report status is changed by an administrator."
+msgstr "Статус звернення змінює адміністратор."
+
+#: core\templates\core\harvest_confirm_delete.html:12
+msgid "The revenue and cost of this harvest will disappear from the reports. This cannot be undone."
+msgstr "Дохід і вартість цього збору зникнуть зі звітів. Цю дію не можна скасувати."
 
 #: core\forms.py:250
 msgid "The season year must be between {min} and {max}."
@@ -828,18 +2383,65 @@ msgstr "Роботу видалено."
 msgid "The work has been updated."
 msgstr "Роботу оновлено."
 
+#: core\templates\core\cultivation_confirm_delete.html:12
+msgid "The works, sprayings and harvests recorded for this cultivation will be deleted with it. This cannot be undone."
+msgstr "Разом із посівом зникнуть записані для нього роботи, обприскування та збори. Цю дію не можна скасувати."
+
+#: core\templates\core\dashboard.html:30
+msgid "There are no crop types in the catalogue yet, so a cultivation cannot be added."
+msgstr "У каталозі ще немає видів культур, тому посів додати не можна."
+
+#: core\templates\core\field_list.html:88
+msgid "There are no fields here"
+msgstr "Тут немає жодного поля"
+
 #: core\forms.py:378
 msgid "This crop is already assigned to this field and season."
 msgstr "Цю культуру вже призначено цьому полю в цьому сезоні."
+
+#: core\templates\core\register.html:50
+msgid "Three steps to your first result"
+msgstr "Три кроки до першого результату"
+
+#: core\templates\core\fieldwork_list.html:61
+#: core\templates\core\harvest_list.html:70
+#: core\templates\core\spraying_list.html:61
+msgid "To"
+msgstr "До"
+
+#: core\templates\core\register.html:58
+msgid "To start, a name and an area are enough."
+msgstr "Для початку досить назви й площі."
 
 #: core\views.py:166
 msgid "Too many failed login attempts. Try again in a few minutes."
 msgstr "Забагато невдалих спроб входу. Спробуйте ще раз за кілька хвилин."
 
+#: core\templates\core\partials\report_summary.html:39
+#: core\templates\core\partials\report_summary.html:9
+msgid "Total costs"
+msgstr "Загальні витрати"
+
+#: core\templates\core\base.html:104
+#: core\templates\core\base.html:104
+#: core\templates\core\base.html:105
+msgid "Turn on dark mode"
+msgstr "Увімкнути темну тему"
+
+#: core\templates\core\base.html:105
+msgid "Turn on light mode"
+msgstr "Увімкнути світлу тему"
+
 #: core\forms.py:533
 #: core\forms.py:619
+#: core\templates\core\harvest_list.html:48
+#: core\templates\core\spraying_list.html:48
 msgid "Unit"
 msgstr "Одиниця"
+
+#: core\templates\core\error_report_detail.html:24
+msgid "Updated at"
+msgstr "Дата оновлення"
 
 #: core\management\commands\seed_demo_data.py:31
 #, python-format
@@ -848,6 +2450,7 @@ msgstr "Користувача \"%(username)s\" не існує."
 
 #: core\forms.py:51
 #: core\forms.py:72
+#: core\templates\core\profile.html:25
 msgid "Username"
 msgstr "Ім'я користувача"
 
@@ -855,6 +2458,22 @@ msgstr "Ім'я користувача"
 msgid "Username is required."
 msgstr "Ім'я користувача обов'язкове."
 
+#: core\templates\core\profile_edit.html:12
+#, python-format
+msgid "Username: <strong>%(username)s</strong>. The username cannot be changed."
+msgstr "Ім'я користувача: <strong>%(username)s</strong>. Ім'я користувача змінити не можна."
+
+#: core\templates\core\fieldwork_detail.html:27
+#: core\templates\core\harvest_detail.html:28
+#: core\templates\core\spraying_detail.html:27
+msgid "View cultivation"
+msgstr "Переглянути посів"
+
+#: core\templates\core\cultivation_detail.html:30
+msgid "View field"
+msgstr "Переглянути поле"
+
+#: core\templates\core\dashboard.html:105
 #: core\views.py:94
 msgid "View report"
 msgstr "Переглянути звіт"
@@ -867,6 +2486,67 @@ msgstr "Зрошення"
 msgid "Weeding"
 msgstr "Прополювання"
 
+#: core\templates\core\register.html:49
+msgid "What comes next"
+msgstr "Що далі"
+
+#: core\templates\core\dashboard.html:60
+msgid "What do you want to record?"
+msgstr "Що хочете записати?"
+
+#: core\templates\core\cultivation_list.html:11
+msgid "What grows on which field and in which season."
+msgstr "Що росте на якому полі й у якому сезоні."
+
+#: core\templates\core\home.html:172
+msgid "What if I enter something wrong?"
+msgstr "А якщо я щось введу неправильно?"
+
+#: core\templates\core\fieldwork_form.html:16
+msgid "What was done, when, on which cultivation and what it cost."
+msgstr "Що зроблено, коли, на якому посіві й скільки це коштувало."
+
+#: core\templates\core\login.html:35
+msgid "What you will see after logging in"
+msgstr "Що ви побачите після входу"
+
+#: core\templates\core\home.html:67
+msgid "Wheat · 2026"
+msgstr "Пшениця · 2026"
+
+#: core\templates\core\spraying_list.html:11
+msgid "Which product, how much and at what cost, on every cultivation."
+msgstr "Яким засобом, скільки і за яку ціну, на кожному посіві."
+
+#: core\templates\core\home.html:131
+msgid "Who it is for"
+msgstr "Для кого"
+
+#: core\templates\core\home.html:168
+msgid "Will anyone see my data?"
+msgstr "Чи побачить хтось мої дані?"
+
+#: core\templates\core\home.html:120
+msgid "Winter"
+msgstr "Зима"
+
+#: core\templates\core\register.html:54
+msgid "With the username and password you set in this form."
+msgstr "За логіном і паролем, які задасте в цій формі."
+
+#: core\templates\core\crop_list.html:32
+msgid "Without crop types you cannot record a cultivation on a field."
+msgstr "Без видів культур не можна записати посів на полі."
+
+#: core\templates\core\fieldwork_form.html:14
+msgid "Work"
+msgstr "Робота"
+
+#: core\templates\core\dashboard.html:125
+#: core\templates\core\partials\report_summary.html:34
+msgid "Work costs"
+msgstr "Витрати на роботи"
+
 #: core\forms.py:426
 msgid "Work date"
 msgstr "Дата виконання"
@@ -875,38 +2555,199 @@ msgstr "Дата виконання"
 msgid "Work date is required."
 msgstr "Дата виконання обов'язкова."
 
+#: core\templates\core\fieldwork_detail.html:26
+msgid "Work details"
+msgstr "Дані роботи"
+
+#: core\templates\core\fieldwork_detail.html:4
+msgctxt "page title"
+msgid "Work details"
+msgstr "Дані роботи"
+
+#: core\templates\core\fieldwork_list.html:101
+msgid "Work pages"
+msgstr "Сторінки робіт"
+
 #: core\forms.py:425
+#: core\templates\core\fieldwork_list.html:48
 msgid "Work type"
 msgstr "Вид роботи"
+
+#: core\templates\core\fieldwork_detail.html:10
+#, python-format
+msgid "Work · %(date)s"
+msgstr "Робота · %(date)s"
+
+#: core\templates\core\base.html:66
+#: core\templates\core\cultivation_report.html:29
+#: core\templates\core\dashboard.html:143
+#: core\templates\core\field_report.html:46
+#: core\templates\core\fieldwork_form.html:10
+msgid "Works"
+msgstr "Роботи"
+
+#: core\templates\core\fieldwork_list.html:4
+msgctxt "page title"
+msgid "Works"
+msgstr "Роботи"
 
 #: core\management\commands\seed_demo_data.py:142
 #, python-format
 msgid "Works created or updated: %(count)s"
 msgstr "Робіт створено або оновлено: %(count)s"
 
+#: core\templates\core\home.html:141
+msgid "Works, sprayings and harvests are in one place, so it is easy to check what has already been done."
+msgstr "Роботи, обприскування та збори в одному місці, тож легко перевірити, що вже зроблено."
+
+#: core\templates\core\report_dashboard.html:67
+msgid "Year"
+msgstr "Рік"
+
+#: core\templates\core\fieldwork_confirm_delete.html:15
+msgid "Yes, delete"
+msgstr "Так, видалити"
+
+#: core\templates\core\cultivation_confirm_delete.html:15
+msgid "Yes, delete cultivation"
+msgstr "Так, видалити посів"
+
+#: core\templates\core\field_confirm_delete.html:15
+msgid "Yes, delete field"
+msgstr "Так, видалити поле"
+
+#: core\templates\core\harvest_confirm_delete.html:15
+msgid "Yes, delete harvest"
+msgstr "Так, видалити збір"
+
+#: core\templates\core\spraying_confirm_delete.html:15
+msgid "Yes, delete spraying"
+msgstr "Так, видалити обприскування"
+
+#: core\templates\core\report_dashboard.html:70
+msgid "Yield"
+msgstr "Урожайність"
+
+#: core\templates\core\partials\report_summary.html:17
+#: core\templates\core\partials\report_summary.html:55
+msgid "Yield per hectare"
+msgstr "Урожайність з гектара"
+
+#: core\templates\core\dashboard.html:98
+msgid "Yield quantity and sales revenue."
+msgstr "Обсяг урожаю та дохід від продажу."
+
+#: core\templates\core\harvest_form.html:16
+msgid "Yield quantity, what happened to it, revenue and the cost of the harvest itself."
+msgstr "Обсяг урожаю, що з ним сталося, дохід і вартість самого збору."
+
+#: core\templates\core\partials\report_summary.html:50
+msgid "Yields"
+msgstr "Врожаї"
+
+#: core\templates\core\home.html:106
+msgid "You add fields and cultivations and record plowing and sowing."
+msgstr "Ви додаєте поля й посіви, записуєте оранку та сівбу."
+
+#: core\templates\core\register.html:57
+msgid "You add your first field"
+msgstr "Ви додаєте перше поле"
+
 #: core\forms.py:210
 msgid "You already have a field with this name."
 msgstr "У вас уже є поле з такою назвою."
+
+#: core\templates\core\home.html:173
+msgid "You can correct or delete any entry later."
+msgstr "Будь-який запис можна пізніше виправити або видалити."
 
 #: core\forms.py:278
 msgid "You can only choose one of your own fields."
 msgstr "Можна вибрати лише одне зі своїх полів."
 
+#: core\templates\core\harvest_form.html:39
+msgid "You do not have any cultivations yet. A harvest is always recorded for a specific cultivation."
+msgstr "У вас ще немає посівів. Збір завжди записують для конкретного посіву."
+
+#: core\templates\core\spraying_form.html:39
+msgid "You do not have any cultivations yet. A spraying is always recorded for a specific cultivation."
+msgstr "У вас ще немає посівів. Обприскування завжди записують для конкретного посіву."
+
+#: core\templates\core\fieldwork_form.html:39
+msgid "You do not have any cultivations yet. A work is always recorded for a specific cultivation."
+msgstr "У вас ще немає посівів. Роботу завжди записують для конкретного посіву."
+
+#: core\templates\core\cultivation_form.html:24
+msgid "You do not have any fields yet. Create a field before adding a cultivation."
+msgstr "У вас ще немає полів. Створіть поле, перш ніж додавати посів."
+
+#: core\templates\core\cultivation_list.html:26
+msgid "You do not have any fields yet. Create a field first to add a cultivation."
+msgstr "У вас ще немає полів. Спершу створіть поле, щоб додати посів."
+
+#: core\templates\core\password_change.html:12
+msgid "You do not need to log in again. The new password works right away."
+msgstr "Не потрібно входити знову. Новий пароль діє одразу."
+
+#: core\templates\core\home.html:116
+msgid "You enter the harvests and what happened to them: sale, storage or losses."
+msgstr "Ви вносите збори і те, що з ними сталося: продаж, склад або втрати."
+
+#: core\templates\core\home.html:15
+msgid "You know what <em>every field</em> earned."
+msgstr "Ви знаєте, скільки заробило <em>кожне поле</em>."
+
+#: core\templates\core\register.html:53
+msgid "You log in"
+msgstr "Ви входите"
+
+#: core\templates\core\home.html:111
+msgid "You note fertilizing and sprayings together with their costs."
+msgstr "Ви занотовуєте удобрення та обприскування разом із витратами."
+
+#: core\templates\core\home.html:121
+msgid "You open the report and see which field made money and which did not."
+msgstr "Ви відкриваєте звіт і бачите, яке поле заробило, а яке ні."
+
+#: core\templates\core\home.html:17
+msgid "You record sowing, sprayings and harvests, and Farmer App works out costs, revenue and profit for each field and each cultivation separately."
+msgstr "Ви записуєте сівбу, обприскування та збори, а Farmer App рахує витрати, дохід і прибуток окремо для кожного поля й кожного посіву."
+
+#: core\templates\core\login.html:37
+msgid "You will see your fields and how much each of them earned."
+msgstr "Ви побачите свої поля і скільки заробило кожне з них."
+
 #: core\forms.py:88
 msgid "You will use it to log in, e.g. jan.kowalski. Letters, digits and @ . + - _ characters, no spaces."
 msgstr "З ним ви входитимете, напр. jan.kowalski. Літери, цифри та символи @ . + - _, без пробілів."
+
+#: core\templates\core\home.html:58
+msgid "You write down what you did. The sums do themselves."
+msgstr "Ви записуєте, що зробили. Рахунок складається сам."
 
 #: core\views.py:136
 msgid "Your account has been created. You can log in now."
 msgstr "Обліковий запис створено. Тепер можна увійти."
 
+#: core\templates\core\login.html:13
+msgid "Your fields, cultivations and reports are right where you left them."
+msgstr "Ваші поля, посіви та звіти там, де ви їх залишили."
+
 #: core\views.py:228
 msgid "Your password has been changed."
 msgstr "Пароль змінено."
 
+#: core\templates\core\profile.html:10
+msgid "Your profile"
+msgstr "Ваш профіль"
+
 #: core\views.py:211
 msgid "Your profile has been updated."
 msgstr "Дані профілю оновлено."
+
+#: core\templates\core\home.html:4
+msgid "a farm notebook online"
+msgstr "зошит господарства в інтернеті"
 
 #: core\models.py:60
 msgid "address"
@@ -924,6 +2765,11 @@ msgstr "категорія"
 #: core\models.py:208
 msgid "cost"
 msgstr "вартість"
+
+#: core\templates\core\cultivation_report.html:80
+#, python-format
+msgid "cost %(amount)s zł"
+msgstr "вартість %(amount)s zł"
 
 #: core\models.py:115
 #: core\models.py:167
@@ -1007,9 +2853,18 @@ msgstr "дата збору"
 msgid "harvest disposition"
 msgstr "призначення врожаю"
 
+#: core\templates\core\field_report.html:64
+#, python-format
+msgid "harvested %(quantity)s kg"
+msgstr "зібрано %(quantity)s kg"
+
 #: core\models.py:269
 msgid "harvests"
 msgstr "збори"
+
+#: core\templates\core\partials\report_summary.html:51
+msgid "in kilograms"
+msgstr "у кілограмах"
 
 #: core\models.py:62
 msgid "latitude"
@@ -1022,6 +2877,15 @@ msgstr "спосіб визначення розташування"
 #: core\models.py:67
 msgid "longitude"
 msgstr "довгота"
+
+#: core\templates\core\field_report.html:66
+#, python-format
+msgid "losses %(quantity)s kg"
+msgstr "втрати %(quantity)s kg"
+
+#: core\templates\core\home.html:44
+msgid "maize"
+msgstr "кукурудза"
 
 #: core\models.py:16
 #: core\models.py:50
@@ -1041,6 +2905,11 @@ msgstr "нотатки"
 msgid "owner"
 msgstr "власник"
 
+#: core\templates\core\field_list.html:63
+#, python-format
+msgid "parcel %(parcel)s"
+msgstr "ділянка %(parcel)s"
+
 #: core\models.py:56
 msgid "parcel identifier"
 msgstr "ідентифікатор ділянки"
@@ -1058,9 +2927,34 @@ msgstr "назва засобу"
 msgid "quantity"
 msgstr "кількість"
 
+#: core\templates\core\home.html:39
+msgid "rapeseed"
+msgstr "ріпак"
+
 #: core\models.py:257
 msgid "revenue"
 msgstr "дохід"
+
+#: core\templates\core\cultivation_report.html:79
+#, python-format
+msgid "revenue %(amount)s zł"
+msgstr "дохід %(amount)s zł"
+
+#: core\templates\core\cultivation_detail.html:112
+#: core\templates\core\harvest_list.html:97
+#, python-format
+msgid "revenue %(revenue)s zł · cost %(cost)s zł"
+msgstr "дохід %(revenue)s zł · вартість %(cost)s zł"
+
+#: core\templates\core\field_report.html:72
+#, python-format
+msgid "revenue %(revenue)s zł · costs %(costs)s zł"
+msgstr "дохід %(revenue)s zł · витрати %(costs)s zł"
+
+#: core\templates\core\harvest_list.html:91
+#, python-format
+msgid "season %(year)s"
+msgstr "сезон %(year)s"
 
 #: core\models.py:106
 msgid "season year"
@@ -1073,6 +2967,12 @@ msgstr "тип ґрунту"
 #: core\models.py:112
 msgid "sowing date"
 msgstr "дата сівби"
+
+#: core\templates\core\cultivation_list.html:80
+#: core\templates\core\field_detail.html:57
+#, python-format
+msgid "sown %(date)s"
+msgstr "сівба %(date)s"
 
 #: core\models.py:215
 msgid "spraying"
@@ -1105,6 +3005,10 @@ msgstr "дата оновлення"
 msgid "user"
 msgstr "користувач"
 
+#: core\templates\core\home.html:34
+msgid "wheat"
+msgstr "пшениця"
+
 #: core\models.py:161
 msgid "work date"
 msgstr "дата виконання"
@@ -1112,3 +3016,7 @@ msgstr "дата виконання"
 #: core\models.py:160
 msgid "work type"
 msgstr "вид роботи"
+
+#: core\templates\core\field_report.html:65
+msgid "yield"
+msgstr "урожайність"

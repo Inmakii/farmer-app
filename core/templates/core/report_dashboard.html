@@ -1,81 +1,82 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Raporty finansowe – Farmer App{% endblock %}
+{% block title %}{% translate "Financial reports" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
     <header class="page-head">
         <div>
-            <p class="kicker">Raporty</p>
-            <h1>Raporty finansowe</h1>
-            <p class="page-head-lead">Koszty, przychody i plony dla całego gospodarstwa albo wybranego pola i sezonu.</p>
+            <p class="kicker">{% translate "Reports" %}</p>
+            <h1>{% translate "Financial reports" %}</h1>
+            <p class="page-head-lead">{% translate "Costs, revenue and yields for the whole farm or a chosen field and season." %}</p>
         </div>
     </header>
 
-    <form class="filters" method="get" action="{% url 'core:report_dashboard' %}" aria-label="Zakres raportu">
+    <form class="filters" method="get" action="{% url 'core:report_dashboard' %}" aria-label="{% translate "Report range" %}">
         <div class="filters-grid">
             <div class="filter">
-                <label for="id_field">Pole</label>
+                <label for="id_field">{% translate "Field" %}</label>
                 <select id="id_field" name="field">
-                    <option value="">Wszystkie pola</option>
+                    <option value="">{% translate "All fields" %}</option>
                     {% for field in user_fields %}
                         <option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="id_season_year">Rok sezonu</label>
+                <label for="id_season_year">{% translate "Season year" %}</label>
                 <input id="id_season_year" type="number" min="1980" max="2100" name="season_year" value="{{ selected_season_year }}" inputmode="numeric">
             </div>
         </div>
         <div class="filters-actions">
-            <button class="button" type="submit">Filtruj</button>
-            <a class="button button-text" href="{% url 'core:report_dashboard' %}">Wyczyść filtry</a>
+            <button class="button" type="submit">{% translate "Filter" %}</button>
+            <a class="button button-text" href="{% url 'core:report_dashboard' %}">{% translate "Clear filters" %}</a>
         </div>
     </form>
 
     {% if invalid_filters %}
         <div class="callout callout-error" role="alert">
             <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-alert"/></svg>
-            <p>Podane filtry są nieprawidłowe lub niedostępne.</p>
+            <p>{% translate "The given filters are not valid or not available." %}</p>
         </div>
     {% endif %}
 
     <section aria-labelledby="summary-title">
-        <h2 id="summary-title" class="visually-hidden">Podsumowanie</h2>
+        <h2 id="summary-title" class="visually-hidden">{% translate "Summary" %}</h2>
         {% include "core/partials/report_summary.html" with t=totals area=totals.total_area_ha %}
-        <dl class="tally" aria-label="Liczba zapisów">
-            <div><dt>Liczba pól</dt><dd>{{ totals.field_count }}</dd></div>
-            <div><dt>Liczba upraw</dt><dd>{{ totals.cultivation_count }}</dd></div>
-            <div><dt>Liczba prac</dt><dd>{{ totals.work_count }}</dd></div>
-            <div><dt>Liczba oprysków</dt><dd>{{ totals.spraying_count }}</dd></div>
-            <div><dt>Liczba zbiorów</dt><dd>{{ totals.harvest_count }}</dd></div>
+        <dl class="tally" aria-label="{% translate "Number of records" %}">
+            <div><dt>{% translate "Number of fields" %}</dt><dd>{{ totals.field_count }}</dd></div>
+            <div><dt>{% translate "Number of cultivations" %}</dt><dd>{{ totals.cultivation_count }}</dd></div>
+            <div><dt>{% translate "Number of works" %}</dt><dd>{{ totals.work_count }}</dd></div>
+            <div><dt>{% translate "Number of sprayings" %}</dt><dd>{{ totals.spraying_count }}</dd></div>
+            <div><dt>{% translate "Number of harvests" %}</dt><dd>{{ totals.harvest_count }}</dd></div>
         </dl>
     </section>
 
     <section class="block" aria-labelledby="results-title">
         <div class="block-head">
-            <h2 id="results-title">Wyniki upraw</h2>
+            <h2 id="results-title">{% translate "Cultivation results" %}</h2>
         </div>
         {% if cultivation_reports %}
             <div class="table-scroll" role="region" aria-labelledby="results-title" tabindex="0">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th scope="col">Pole</th>
-                            <th scope="col">Uprawa</th>
-                            <th scope="col">Rok</th>
-                            <th scope="col">Status</th>
-                            <th scope="col" class="num">Zebrano</th>
-                            <th scope="col" class="num">Wydajność</th>
-                            <th scope="col" class="num">Sprzedano</th>
-                            <th scope="col" class="num">Magazyn</th>
-                            <th scope="col" class="num">Straty</th>
-                            <th scope="col" class="num">Prace</th>
-                            <th scope="col" class="num">Opryski</th>
-                            <th scope="col" class="num">Zbiory</th>
-                            <th scope="col" class="num">Koszty razem</th>
-                            <th scope="col" class="num">Przychód</th>
-                            <th scope="col" class="num">Zysk/strata</th>
+                            <th scope="col">{% translate "Field" %}</th>
+                            <th scope="col">{% translate "Cultivation" %}</th>
+                            <th scope="col">{% translate "Year" %}</th>
+                            <th scope="col">{% translate "Status" %}</th>
+                            <th scope="col" class="num">{% translate "Harvested" %}</th>
+                            <th scope="col" class="num">{% translate "Yield" %}</th>
+                            <th scope="col" class="num">{% translate "Sold" context "harvested quantity" %}</th>
+                            <th scope="col" class="num">{% translate "Storage" %}</th>
+                            <th scope="col" class="num">{% translate "Losses" %}</th>
+                            <th scope="col" class="num">{% translate "Works" %}</th>
+                            <th scope="col" class="num">{% translate "Sprayings" %}</th>
+                            <th scope="col" class="num">{% translate "Harvests" %}</th>
+                            <th scope="col" class="num">{% translate "Costs in total" %}</th>
+                            <th scope="col" class="num">{% translate "Revenue" %}</th>
+                            <th scope="col" class="num">{% translate "Profit/loss" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,8 +105,8 @@
         {% else %}
             <div class="empty">
                 <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg></span>
-                <strong>Brak danych</strong>
-                <p>Brak danych finansowych dla wybranych kryteriów.</p>
+                <strong>{% translate "No data" %}</strong>
+                <p>{% translate "No financial data for the chosen criteria." %}</p>
             </div>
         {% endif %}
     </section>

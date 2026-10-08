@@ -1,17 +1,22 @@
-{% load static %}
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!doctype html>
-<html lang="pl">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Farmer App{% endblock %}</title>
-    <meta name="description" content="Farmer App – proste zarządzanie polami, uprawami, pracami i zbiorami.">
+    <meta name="description" content="{% translate "Farmer App – simple management of fields, cultivations, works and harvests." %}">
     <meta name="theme-color" content="#f5f0e3" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0f1612" media="(prefers-color-scheme: dark)">
     <script src="{% static 'core/theme-init.js' %}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap">
+    {% if LANGUAGE_CODE == "uk" %}
+        {# The main fonts have no Cyrillic, so Ukrainian uses close matches as a fallback. #}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Golos+Text:wght@400;600;700;800&display=swap">
+    {% endif %}
     <link rel="stylesheet" href="{% static 'core/styles.css' %}">
     <script src="{% static 'core/theme.js' %}" defer></script>
     <script src="{% static 'core/forms.js' %}" defer></script>
@@ -41,47 +46,64 @@
         <symbol id="i-key" viewBox="0 0 24 24"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></symbol>
         <symbol id="i-bug" viewBox="0 0 24 24"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></symbol>
         <symbol id="i-log-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></symbol>
+        <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
         <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
     </svg>
-    <a class="skip-link" href="#main-content">Przejdź do treści</a>
+    <a class="skip-link" href="#main-content">{% translate "Skip to content" %}</a>
     <header class="site-header{% if user.is_authenticated %} is-app{% endif %}">
         <div class="container nav-shell">
             <a class="brand" href="{% url 'core:home' %}">
                 <svg class="brand-mark" aria-hidden="true" focusable="false"><use href="#i-wheat"/></svg>
                 <span translate="no">Farmer App</span>
             </a>
-            <nav class="main-nav" aria-label="Główna nawigacja">
+            <nav class="main-nav" aria-label="{% translate "Main navigation" %}">
                 {% if user.is_authenticated %}
                 <div class="nav-links">
-                    <a href="{% url 'core:home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}>Pulpit</a>
-                    <a href="{% url 'core:field_list' %}"{% if nav_section == "field" %} aria-current="page"{% endif %}>Moje pola</a>
-                    <a href="{% url 'core:cultivation_list' %}"{% if nav_section == "cultivation" %} aria-current="page"{% endif %}>Uprawy</a>
-                    <a href="{% url 'core:crop_list' %}"{% if nav_section == "crop" %} aria-current="page"{% endif %}>Rodzaje upraw</a>
-                    <a href="{% url 'core:fieldwork_list' %}"{% if nav_section == "fieldwork" %} aria-current="page"{% endif %}>Prace</a>
-                    <a href="{% url 'core:spraying_list' %}"{% if nav_section == "spraying" %} aria-current="page"{% endif %}>Opryski</a>
-                    <a href="{% url 'core:harvest_list' %}"{% if nav_section == "harvest" %} aria-current="page"{% endif %}>Zbiory</a>
-                    <a href="{% url 'core:report_dashboard' %}"{% if nav_section == "report" %} aria-current="page"{% endif %}>Raporty</a>
+                    <a href="{% url 'core:home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}>{% translate "Dashboard" %}</a>
+                    <a href="{% url 'core:field_list' %}"{% if nav_section == "field" %} aria-current="page"{% endif %}>{% translate "My fields" %}</a>
+                    <a href="{% url 'core:cultivation_list' %}"{% if nav_section == "cultivation" %} aria-current="page"{% endif %}>{% translate "Cultivations" %}</a>
+                    <a href="{% url 'core:crop_list' %}"{% if nav_section == "crop" %} aria-current="page"{% endif %}>{% translate "Crop types" %}</a>
+                    <a href="{% url 'core:fieldwork_list' %}"{% if nav_section == "fieldwork" %} aria-current="page"{% endif %}>{% translate "Works" %}</a>
+                    <a href="{% url 'core:spraying_list' %}"{% if nav_section == "spraying" %} aria-current="page"{% endif %}>{% translate "Sprayings" %}</a>
+                    <a href="{% url 'core:harvest_list' %}"{% if nav_section == "harvest" %} aria-current="page"{% endif %}>{% translate "Harvests" %}</a>
+                    <a href="{% url 'core:report_dashboard' %}"{% if nav_section == "report" %} aria-current="page"{% endif %}>{% translate "Reports" %}</a>
                 </div>
                 {% endif %}
                 <div class="nav-tools">
                 {% if user.is_authenticated %}
                     <a class="nav-profile" href="{% url 'core:profile' %}"{% if nav_section == "profile" %} aria-current="page"{% endif %}>
                         <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-user"/></svg>
-                        <span>Profil</span>
+                        <span>{% translate "Profile" %}</span>
                     </a>
                     <form class="logout-form" method="post" action="{% url 'core:logout' %}">
                         {% csrf_token %}
                         <button class="button button-ghost button-logout" type="submit">
                                 <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-log-out"/></svg>
-                                <span>Wyloguj się</span>
+                                <span>{% translate "Log out" %}</span>
                             </button>
                     </form>
                 {% else %}
-                    <a class="nav-login" href="{% url 'core:login' %}">Logowanie</a>
-                    <a class="button button-header" href="{% url 'core:register' %}">Rejestracja</a>
+                    <a class="nav-login" href="{% url 'core:login' %}">{% translate "Log in" context "navigation" %}</a>
+                    <a class="button button-header" href="{% url 'core:register' %}">{% translate "Sign up" %}</a>
                 {% endif %}
+                    {% get_available_languages as LANGUAGES %}
+                    <details class="lang-menu">
+                        <summary aria-label="{% translate "Language" %}" title="{% translate "Language" %}">
+                            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg>
+                            <span>{{ LANGUAGE_CODE|upper }}</span>
+                        </summary>
+                        <form class="lang-list" action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            {% for code, name in LANGUAGES %}
+                                <button type="submit" name="language" value="{{ code }}" lang="{{ code }}"{% if code == LANGUAGE_CODE %} aria-current="true"{% endif %}>{{ name }}</button>
+                            {% endfor %}
+                        </form>
+                    </details>
                     <button class="theme-toggle" id="theme-toggle" type="button"
-                            aria-label="Włącz tryb ciemny" title="Włącz tryb ciemny">
+                            aria-label="{% translate "Turn on dark mode" %}" title="{% translate "Turn on dark mode" %}"
+                            data-label-light="{% translate "Turn on dark mode" %}" data-label-dark="{% translate "Turn on light mode" %}"
+                            data-announce-light="{% translate "Light mode is on." %}" data-announce-dark="{% translate "Dark mode is on." %}">
                         <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                             <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
                         </svg>
@@ -97,7 +119,7 @@
     </header>
 
     {% if messages %}
-        <section class="container messages" aria-label="Komunikaty">
+        <section class="container messages" aria-label="{% translate "Messages" %}">
             <ul class="message-list">
                 {% for message in messages %}
                     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}{% if message.level_tag == "error" %} role="alert"{% else %} role="status"{% endif %}>{{ message }}</li>
@@ -113,10 +135,10 @@
     <footer class="site-footer">
         <div class="container">
             <p>
-                Farmer App <span aria-hidden="true">·</span> Zarządzaj gospodarstwem w jednym miejscu
+                Farmer App <span aria-hidden="true">·</span> {% translate "Manage your farm in one place" %}
                 {% if user.is_authenticated %}
                     <span aria-hidden="true">·</span>
-                    <a href="{% url 'core:error_report_create' %}">Zgłoś błąd</a>
+                    <a href="{% url 'core:error_report_create' %}">{% translate "Report a bug" %}</a>
                 {% endif %}
             </p>
         </div>
@@ -124,7 +146,7 @@
     {% if user.is_authenticated and request.resolver_match.url_name != "error_report_create" %}
         <a class="report-fab" href="{% url 'core:error_report_create' %}?from={{ request.get_full_path|urlencode }}">
             <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bug"/></svg>
-            <span>Zgłoś problem</span>
+            <span>{% translate "Report a problem" %}</span>
         </a>
     {% endif %}
     {% block scripts %}{% endblock %}

@@ -1,69 +1,70 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Opryski – Farmer App{% endblock %}
+{% block title %}{% translate "Sprayings" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
     <header class="page-head">
         <div>
-            <p class="kicker">Zapisy</p>
-            <h1>Opryski</h1>
-            <p class="page-head-lead">Jakim środkiem, ile i za ile, na każdej uprawie.</p>
+            <p class="kicker">{% translate "Records" %}</p>
+            <h1>{% translate "Sprayings" %}</h1>
+            <p class="page-head-lead">{% translate "Which product, how much and at what cost, on every cultivation." %}</p>
         </div>
         <div class="page-actions">
             <a class="button" href="{% url 'core:spraying_create' %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj oprysk
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Add spraying" %}
             </a>
         </div>
     </header>
 
-    <form class="filters" method="get" action="{% url 'core:spraying_list' %}" role="search" aria-label="Filtruj opryski">
+    <form class="filters" method="get" action="{% url 'core:spraying_list' %}" role="search" aria-label="{% translate "Filter sprayings" %}">
         <div class="filters-grid">
             <div class="filter filter-wide">
-                <label for="id_q">Szukaj</label>
+                <label for="id_q">{% translate "Search" %}</label>
                 <div class="search-input">
                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
-                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Preparat, opis, pole lub uprawa">
+                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="{% translate "Product, description, field or cultivation" %}">
                 </div>
             </div>
             <div class="filter">
-                <label for="id_field">Pole</label>
+                <label for="id_field">{% translate "Field" %}</label>
                 <select id="id_field" name="field">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for field in user_fields %}
                         <option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="id_cultivation">Uprawa</label>
+                <label for="id_cultivation">{% translate "Cultivation" %}</label>
                 <select id="id_cultivation" name="cultivation">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for cultivation in user_cultivations %}
                         <option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="id_unit">Jednostka</label>
+                <label for="id_unit">{% translate "Unit" %}</label>
                 <select id="id_unit" name="unit">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for value, label in unit_choices %}
                         <option value="{{ value }}"{% if selected_unit == value %} selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="id_date_from">Od</label>
+                <label for="id_date_from">{% translate "From" %}</label>
                 <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}">
             </div>
             <div class="filter">
-                <label for="id_date_to">Do</label>
+                <label for="id_date_to">{% translate "To" %}</label>
                 <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}">
             </div>
         </div>
         <div class="filters-actions">
-            <button class="button" type="submit">Filtruj</button>
-            <a class="button button-text" href="{% url 'core:spraying_list' %}">Wyczyść filtry</a>
+            <button class="button" type="submit">{% translate "Filter" %}</button>
+            <a class="button button-text" href="{% url 'core:spraying_list' %}">{% translate "Clear filters" %}</a>
         </div>
     </form>
 
@@ -84,13 +85,13 @@
                         <div class="record-side">
                             <span class="record-amount">{{ spraying.cost|floatformat:"2g" }} zł</span>
                             <span class="record-actions">
-                                <a class="icon-link" href="{% url 'core:spraying_update' spraying.pk %}" title="Edytuj">
+                                <a class="icon-link" href="{% url 'core:spraying_update' spraying.pk %}" title="{% translate "Edit" %}">
                                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>
-                                    <span class="visually-hidden">Edytuj oprysk {{ spraying.product_name }} z dnia {{ spraying.spraying_date|date:"d.m.Y" }}</span>
+                                    <span class="visually-hidden">{% blocktranslate with product=spraying.product_name date=spraying.spraying_date|date:"d.m.Y" %}Edit spraying {{ product }} from {{ date }}{% endblocktranslate %}</span>
                                 </a>
-                                <a class="icon-link is-danger" href="{% url 'core:spraying_delete' spraying.pk %}" title="Usuń">
+                                <a class="icon-link is-danger" href="{% url 'core:spraying_delete' spraying.pk %}" title="{% translate "Delete" %}">
                                     <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>
-                                    <span class="visually-hidden">Usuń oprysk {{ spraying.product_name }} z dnia {{ spraying.spraying_date|date:"d.m.Y" }}</span>
+                                    <span class="visually-hidden">{% blocktranslate with product=spraying.product_name date=spraying.spraying_date|date:"d.m.Y" %}Delete spraying {{ product }} from {{ date }}{% endblocktranslate %}</span>
                                 </a>
                             </span>
                         </div>
@@ -98,14 +99,14 @@
                 {% endfor %}
             </ul>
         </div>
-        {% include "core/partials/pagination.html" with label="Paginacja oprysków" %}
+        {% translate "Spraying pages" as pager_label %}{% include "core/partials/pagination.html" with label=pager_label %}
     {% else %}
         <div class="empty">
             <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-droplets"/></svg></span>
-            <strong>Brak zapisanych oprysków</strong>
-            <p>Nie znaleziono oprysków spełniających podane kryteria.</p>
+            <strong>{% translate "No sprayings recorded" %}</strong>
+            <p>{% translate "No sprayings match the given criteria." %}</p>
             <a class="button" href="{% url 'core:spraying_create' %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj oprysk
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Add spraying" %}
             </a>
         </div>
     {% endif %}

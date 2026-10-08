@@ -1,37 +1,38 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Moje zgłoszenia błędów – Farmer App{% endblock %}
+{% block title %}{% translate "My error reports" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <a class="back-link" href="{% url 'core:profile' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Profil</a>
+    <a class="back-link" href="{% url 'core:profile' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Profile" %}</a>
     <header class="page-head">
         <div>
-            <p class="kicker">Pomoc</p>
-            <h1>Moje zgłoszenia błędów</h1>
-            <p class="page-head-lead">Status zgłoszenia jest zmieniany przez administratora.</p>
+            <p class="kicker">{% translate "Help" %}</p>
+            <h1>{% translate "My error reports" %}</h1>
+            <p class="page-head-lead">{% translate "The report status is changed by an administrator." %}</p>
         </div>
         <div class="page-actions">
             <a class="button" href="{% url 'core:error_report_create' %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Utwórz nowe zgłoszenie
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Create a new report" %}
             </a>
         </div>
     </header>
 
-    <form class="filters" method="get" role="search" aria-label="Filtruj zgłoszenia">
+    <form class="filters" method="get" role="search" aria-label="{% translate "Filter reports" %}">
         <div class="filters-grid">
             <div class="filter">
-                <label for="category">Kategoria</label>
+                <label for="category">{% translate "Category" %}</label>
                 <select name="category" id="category">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for value, label in category_choices %}
                         <option value="{{ value }}"{% if selected_category == value %} selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="filter">
-                <label for="status">Status</label>
+                <label for="status">{% translate "Status" %}</label>
                 <select name="status" id="status">
-                    <option value="">Wszystkie</option>
+                    <option value="">{% translate "All" %}</option>
                     {% for value, label in status_choices %}
                         <option value="{{ value }}"{% if selected_status == value %} selected{% endif %}>{{ label }}</option>
                     {% endfor %}
@@ -39,8 +40,8 @@
             </div>
         </div>
         <div class="filters-actions">
-            <button class="button" type="submit">Filtruj</button>
-            <a class="button button-text" href="{% url 'core:error_report_list' %}">Wyczyść filtry</a>
+            <button class="button" type="submit">{% translate "Filter" %}</button>
+            <a class="button button-text" href="{% url 'core:error_report_list' %}">{% translate "Clear filters" %}</a>
         </div>
     </form>
 
@@ -51,7 +52,7 @@
                     <li class="record">
                         <div class="record-main">
                             <time class="record-date" datetime="{{ report.created_at|date:'c' }}">{{ report.created_at|date:"d.m.Y" }}</time>
-                            <a class="record-title" href="{% url 'core:error_report_detail' report.pk %}">Zgłoszenie #{{ report.pk }}</a>
+                            <a class="record-title" href="{% url 'core:error_report_detail' report.pk %}">{% blocktranslate with number=report.pk %}Report #{{ number }}{% endblocktranslate %}</a>
                             <p class="record-meta"><span>{{ report.get_category_display }}</span><span>{{ report.created_at|date:"H:i" }}</span></p>
                         </div>
                         <div class="record-side">
@@ -64,19 +65,19 @@
     {% else %}
         <div class="empty">
             <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bug"/></svg></span>
-            <strong>Brak zgłoszeń</strong>
-            <p>Nie znaleziono zgłoszeń spełniających wybrane kryteria.</p>
+            <strong>{% translate "No reports" %}</strong>
+            <p>{% translate "No reports match the chosen criteria." %}</p>
         </div>
     {% endif %}
 
     {% if is_paginated %}
-        <nav class="pager" aria-label="Paginacja zgłoszeń">
+        <nav class="pager" aria-label="{% translate "Report pages" %}">
             {% if page_obj.has_previous %}
-                <a class="pager-link" rel="prev" href="?page={{ page_obj.previous_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-left"/></svg>Poprzednia</a>
+                <a class="pager-link" rel="prev" href="?page={{ page_obj.previous_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-left"/></svg>{% translate "Previous" %}</a>
             {% else %}<span class="pager-spacer"></span>{% endif %}
-            <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+            <span>{% blocktranslate with number=page_obj.number total=page_obj.paginator.num_pages %}Page {{ number }} of {{ total }}{% endblocktranslate %}</span>
             {% if page_obj.has_next %}
-                <a class="pager-link" rel="next" href="?page={{ page_obj.next_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}">Następna<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-right"/></svg></a>
+                <a class="pager-link" rel="next" href="?page={{ page_obj.next_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}">{% translate "Next" %}<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-right"/></svg></a>
             {% else %}<span class="pager-spacer"></span>{% endif %}
         </nav>
     {% endif %}

@@ -1,18 +1,19 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}{% if harvest %}Edycja zbioru{% else %}Dodawanie zbioru{% endif %} – Farmer App{% endblock %}
+{% block title %}{% if harvest %}{% translate "Edit harvest" context "page title" %}{% else %}{% translate "Add harvest" context "page title" %}{% endif %} – Farmer App{% endblock %}
 
 {% block content %}
     {% if harvest %}
-        <a class="back-link" href="{% url 'core:harvest_detail' harvest.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Zbiór z dnia {{ harvest.harvest_date|date:"d.m.Y" }}</a>
+        <a class="back-link" href="{% url 'core:harvest_detail' harvest.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% blocktranslate with date=harvest.harvest_date|date:"d.m.Y" %}Harvest from {{ date }}{% endblocktranslate %}</a>
     {% else %}
-        <a class="back-link" href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Zbiory</a>
+        <a class="back-link" href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Harvests" %}</a>
     {% endif %}
     <header class="page-head">
         <div>
-            <p class="kicker">Zbiór</p>
-            <h1>{% if harvest %}Edytuj zbiór{% else %}Dodaj zbiór{% endif %}</h1>
-            <p class="page-head-lead">Ilość plonu, co się z nim stało, przychód i koszt samego zbioru.</p>
+            <p class="kicker">{% translate "Harvest" %}</p>
+            <h1>{% if harvest %}{% translate "Edit harvest" %}{% else %}{% translate "Add harvest" %}{% endif %}</h1>
+            <p class="page-head-lead">{% translate "Yield quantity, what happened to it, revenue and the cost of the harvest itself." %}</p>
         </div>
     </header>
 
@@ -22,11 +23,11 @@
                 {% csrf_token %}
                 {% include "core/partials/form_body.html" %}
                 <div class="form-actions">
-                    <button class="button" type="submit" data-busy-label="Zapisywanie…">Zapisz</button>
+                    <button class="button" type="submit" data-busy-label="{% translate "Saving…" %}">{% translate "Save" %}</button>
                     {% if harvest %}
-                        <a class="button button-text" href="{% url 'core:harvest_detail' harvest.pk %}">Anuluj</a>
+                        <a class="button button-text" href="{% url 'core:harvest_detail' harvest.pk %}">{% translate "Cancel" %}</a>
                     {% else %}
-                        <a class="button button-text" href="{% url 'core:harvest_list' %}">Anuluj</a>
+                        <a class="button button-text" href="{% url 'core:harvest_list' %}">{% translate "Cancel" %}</a>
                     {% endif %}
                 </div>
             </form>
@@ -34,9 +35,9 @@
     {% else %}
         <div class="empty">
             <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
-            <strong>Najpierw potrzebna jest uprawa</strong>
-            <p>Nie masz jeszcze upraw. Zbiór zapisuje się zawsze przy konkretnej uprawie.</p>
-            <a class="button" href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>
+            <strong>{% translate "A cultivation is needed first" %}</strong>
+            <p>{% translate "You do not have any cultivations yet. A harvest is always recorded for a specific cultivation." %}</p>
+            <a class="button" href="{% url 'core:cultivation_create' %}">{% translate "Add cultivation" %}</a>
         </div>
     {% endif %}
 {% endblock %}

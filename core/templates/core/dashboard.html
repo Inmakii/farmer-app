@@ -1,17 +1,18 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Pulpit – Farmer App{% endblock %}
+{% block title %}{% translate "Dashboard" %} – Farmer App{% endblock %}
 
 {% block content %}
 <div class="dash-hero">
     <div>
-        <p class="kicker">Pulpit</p>
-        <h1>Dzień dobry, <em>{{ user.first_name|default:user.username }}</em>.</h1>
+        <p class="kicker">{% translate "Dashboard" %}</p>
+        <h1>{% blocktranslate with name=user.first_name|default:user.username %}Hello, <em>{{ name }}</em>.{% endblocktranslate %}</h1>
         <p class="dash-date">{% now "l, j E Y" %}</p>
     </div>
     {% if next_step %}
         <aside class="next-step" aria-labelledby="next-step-title">
-            <p class="kicker">Następny krok</p>
+            <p class="kicker">{% translate "Next step" %}</p>
             <h2 id="next-step-title">{{ next_step.title }}</h2>
             <p>{{ next_step.text }}</p>
             <a class="button button-wheat" href="{{ next_step.url }}">
@@ -26,83 +27,83 @@
     <div class="callout" role="note">
         <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-alert"/></svg>
         <p>
-            W katalogu nie ma jeszcze rodzajów upraw, więc nie da się dodać uprawy.
-            <a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a>.
+            {% translate "There are no crop types in the catalogue yet, so a cultivation cannot be added." %}
+            <a href="{% url 'core:crop_create' %}">{% translate "Add the first crop type" %}</a>.
         </p>
     </div>
 {% endif %}
 
-<dl class="tally" aria-label="Podsumowanie gospodarstwa">
+<dl class="tally" aria-label="{% translate "Farm summary" %}">
     <div>
-        <dt>Pola</dt>
+        <dt>{% translate "Fields" %}</dt>
         <dd>{{ totals.field_count }}<small>{{ totals.total_area_ha|floatformat:"2g" }} ha</small></dd>
     </div>
     <div>
-        <dt>Uprawy</dt>
+        <dt>{% translate "Cultivations" %}</dt>
         <dd>{{ totals.cultivation_count }}</dd>
     </div>
     <div>
-        <dt>Przychód</dt>
+        <dt>{% translate "Revenue" %}</dt>
         <dd>{{ totals.total_revenue|floatformat:"2g" }}<small>zł</small></dd>
     </div>
     <div>
-        <dt>Koszty</dt>
+        <dt>{% translate "Costs" %}</dt>
         <dd>{{ totals.total_costs|floatformat:"2g" }}<small>zł</small></dd>
     </div>
     <div class="{% if totals.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
-        <dt>Zysk / strata</dt>
+        <dt>{% translate "Profit/loss" %}</dt>
         <dd>{{ totals.profit|floatformat:"2g" }}<small>zł</small></dd>
     </div>
 </dl>
 
 <section aria-labelledby="quick-title">
-    <h2 id="quick-title">Co chcesz zapisać?</h2>
+    <h2 id="quick-title">{% translate "What do you want to record?" %}</h2>
     <ul class="quick-grid">
         <li>
             <a class="quick-link" href="{% url 'core:field_create' %}">
                 <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg></span>
-                <strong>Dodaj pole</strong>
-                <span class="quick-text">Powierzchnia, gleba i lokalizacja.</span>
+                <strong>{% translate "Add field" %}</strong>
+                <span class="quick-text">{% translate "Area, soil and location." %}</span>
                 <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
             </a>
         </li>
         <li>
             <a class="quick-link" href="{% url 'core:cultivation_create' %}">
                 <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
-                <strong>Dodaj uprawę</strong>
-                <span class="quick-text">Roślina i sezon na wybranym polu.</span>
+                <strong>{% translate "Add cultivation" %}</strong>
+                <span class="quick-text">{% translate "A crop and season on the chosen field." %}</span>
                 <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
             </a>
         </li>
         <li>
             <a class="quick-link" href="{% url 'core:fieldwork_create' %}">
                 <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shovel"/></svg></span>
-                <strong>Zapisz pracę</strong>
-                <span class="quick-text">Orka, siew, nawożenie i ich koszt.</span>
+                <strong>{% translate "Record work" %}</strong>
+                <span class="quick-text">{% translate "Plowing, sowing, fertilizing and their cost." %}</span>
                 <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
             </a>
         </li>
         <li>
             <a class="quick-link" href="{% url 'core:spraying_create' %}">
                 <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-droplets"/></svg></span>
-                <strong>Zapisz oprysk</strong>
-                <span class="quick-text">Środek, ilość i koszt zabiegu.</span>
+                <strong>{% translate "Record spraying" %}</strong>
+                <span class="quick-text">{% translate "Product, quantity and treatment cost." %}</span>
                 <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
             </a>
         </li>
         <li>
             <a class="quick-link" href="{% url 'core:harvest_create' %}">
                 <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-package"/></svg></span>
-                <strong>Zapisz zbiór</strong>
-                <span class="quick-text">Ilość plonu i przychód ze sprzedaży.</span>
+                <strong>{% translate "Record harvest" %}</strong>
+                <span class="quick-text">{% translate "Yield quantity and sales revenue." %}</span>
                 <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
             </a>
         </li>
         <li>
             <a class="quick-link" href="{% url 'core:report_dashboard' %}">
                 <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg></span>
-                <strong>Zobacz raport</strong>
-                <span class="quick-text">Koszty, przychody i zysk z pól.</span>
+                <strong>{% translate "View report" %}</strong>
+                <span class="quick-text">{% translate "Costs, revenue and profit from fields." %}</span>
                 <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
             </a>
         </li>
@@ -112,22 +113,22 @@
 <div class="balance-grid">
     <figure class="sheet" aria-labelledby="balance-title">
         <div class="sheet-head">
-            <strong id="balance-title">Bilans gospodarstwa</strong>
-            <span>Wszystkie sezony</span>
+            <strong id="balance-title">{% translate "Farm balance" %}</strong>
+            <span>{% translate "All seasons" %}</span>
         </div>
         <table class="sheet-table">
             <thead>
-                <tr><th scope="col">Pozycja</th><th scope="col" class="num">Kwota</th></tr>
+                <tr><th scope="col">{% translate "Item" %}</th><th scope="col" class="num">{% translate "Amount" %}</th></tr>
             </thead>
             <tbody>
-                <tr><td>Przychód ze zbiorów</td><td class="num is-in">+{{ totals.total_revenue|floatformat:"2g" }} zł</td></tr>
-                <tr><td>Koszty prac</td><td class="num">−{{ totals.work_costs|floatformat:"2g" }} zł</td></tr>
-                <tr><td>Koszty oprysków</td><td class="num">−{{ totals.spraying_costs|floatformat:"2g" }} zł</td></tr>
-                <tr><td>Koszty zbiorów</td><td class="num">−{{ totals.harvest_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>{% translate "Revenue from harvests" %}</td><td class="num is-in">+{{ totals.total_revenue|floatformat:"2g" }} zł</td></tr>
+                <tr><td>{% translate "Work costs" %}</td><td class="num">−{{ totals.work_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>{% translate "Spraying costs" %}</td><td class="num">−{{ totals.spraying_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>{% translate "Harvest costs" %}</td><td class="num">−{{ totals.harvest_costs|floatformat:"2g" }} zł</td></tr>
             </tbody>
             <tfoot>
                 <tr class="sheet-result {% if totals.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
-                    <th scope="row">Wynik</th>
+                    <th scope="row">{% translate "Result" %}</th>
                     <td class="num">{{ totals.profit|floatformat:"2g" }} zł</td>
                 </tr>
             </tfoot>
@@ -135,13 +136,13 @@
     </figure>
 
     <section aria-labelledby="records-title">
-        <h2 id="records-title">Moje zapisy</h2>
+        <h2 id="records-title">{% translate "My records" %}</h2>
         <ul class="side-links">
-            <li><a href="{% url 'core:field_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg>Moje pola<span class="side-count">{{ totals.field_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
-            <li><a href="{% url 'core:cultivation_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg>Uprawy<span class="side-count">{{ totals.cultivation_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
-            <li><a href="{% url 'core:fieldwork_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shovel"/></svg>Prace<span class="side-count">{{ totals.work_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
-            <li><a href="{% url 'core:spraying_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-droplets"/></svg>Opryski<span class="side-count">{{ totals.spraying_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
-            <li><a href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-package"/></svg>Zbiory<span class="side-count">{{ totals.harvest_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:field_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg>{% translate "My fields" %}<span class="side-count">{{ totals.field_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:cultivation_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg>{% translate "Cultivations" %}<span class="side-count">{{ totals.cultivation_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:fieldwork_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shovel"/></svg>{% translate "Works" %}<span class="side-count">{{ totals.work_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:spraying_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-droplets"/></svg>{% translate "Sprayings" %}<span class="side-count">{{ totals.spraying_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-package"/></svg>{% translate "Harvests" %}<span class="side-count">{{ totals.harvest_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
         </ul>
     </section>
 </div>

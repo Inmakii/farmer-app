@@ -1,21 +1,22 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Rodzaje upraw – Farmer App{% endblock %}
+{% block title %}{% translate "Crop types" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
     <header class="page-head">
         <div>
-            <p class="kicker">Katalog</p>
-            <h1>Rodzaje upraw</h1>
-            <p class="page-head-lead">Katalog rodzajów upraw jest wspólny dla wszystkich użytkowników. Jeżeli brakuje potrzebnego rodzaju, możesz go dodać.</p>
+            <p class="kicker">{% translate "Catalogue" %}</p>
+            <h1>{% translate "Crop types" %}</h1>
+            <p class="page-head-lead">{% translate "The crop type catalogue is shared by all users. If a type you need is missing, you can add it." %}</p>
         </div>
         <div class="page-actions">
-            <a class="button" href="{% url 'core:crop_create' %}">Dodaj rodzaj uprawy</a>
+            <a class="button" href="{% url 'core:crop_create' %}">{% translate "Add crop type" %}</a>
         </div>
     </header>
 
     {% if crops %}
-        <p class="result-count">{{ crops|length }} w katalogu</p>
+        <p class="result-count">{% blocktranslate with count=crops|length %}In the catalogue: {{ count }}{% endblocktranslate %}</p>
         <ul class="catalog">
             {% for crop in crops %}
                 <li>
@@ -27,9 +28,9 @@
     {% else %}
         <div class="empty">
             <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
-            <strong>Katalog rodzajów upraw jest pusty.</strong>
-            <p>Bez rodzajów upraw nie da się zapisać uprawy na polu.</p>
-            <a class="button button-secondary" href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a>
+            <strong>{% translate "The crop type catalogue is empty." %}</strong>
+            <p>{% translate "Without crop types you cannot record a cultivation on a field." %}</p>
+            <a class="button button-secondary" href="{% url 'core:crop_create' %}">{% translate "Add the first crop type" %}</a>
         </div>
     {% endif %}
 {% endblock %}

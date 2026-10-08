@@ -1,28 +1,29 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Zgłoszenie #{{ error_report.pk }} – Farmer App{% endblock %}
+{% block title %}{% blocktranslate with number=error_report.pk %}Report #{{ number }}{% endblocktranslate %} – Farmer App{% endblock %}
 
 {% block content %}
-    <a class="back-link" href="{% url 'core:error_report_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć do moich zgłoszeń</a>
+    <a class="back-link" href="{% url 'core:error_report_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Back to my reports" %}</a>
     <header class="page-head">
         <div>
-            <p class="kicker">Zgłoszenie błędu</p>
-            <h1>Zgłoszenie #{{ error_report.pk }}</h1>
+            <p class="kicker">{% translate "Error report" %}</p>
+            <h1>{% blocktranslate with number=error_report.pk %}Report #{{ number }}{% endblocktranslate %}</h1>
             <p class="page-head-lead"><span class="tag tag-{{ error_report.status|lower }}">{{ error_report.get_status_display }}</span></p>
         </div>
     </header>
 
     <article class="sheet" aria-labelledby="report-data-title">
         <div class="sheet-title">
-            <h2 id="report-data-title">Szczegóły</h2>
+            <h2 id="report-data-title">{% translate "Details" %}</h2>
         </div>
         <dl class="facts">
-            <div><dt>Kategoria</dt><dd>{{ error_report.get_category_display }}</dd></div>
-            <div><dt>Status</dt><dd>{{ error_report.get_status_display }}</dd></div>
-            <div><dt>Data utworzenia</dt><dd>{{ error_report.created_at|date:"d.m.Y H:i" }}</dd></div>
-            <div><dt>Data aktualizacji</dt><dd>{{ error_report.updated_at|date:"d.m.Y H:i" }}</dd></div>
-            <div class="fact-wide"><dt>Opis</dt><dd>{{ error_report.description|linebreaksbr }}</dd></div>
+            <div><dt>{% translate "Category" %}</dt><dd>{{ error_report.get_category_display }}</dd></div>
+            <div><dt>{% translate "Status" %}</dt><dd>{{ error_report.get_status_display }}</dd></div>
+            <div><dt>{% translate "Created at" %}</dt><dd>{{ error_report.created_at|date:"d.m.Y H:i" }}</dd></div>
+            <div><dt>{% translate "Updated at" %}</dt><dd>{{ error_report.updated_at|date:"d.m.Y H:i" }}</dd></div>
+            <div class="fact-wide"><dt>{% translate "Description" %}</dt><dd>{{ error_report.description|linebreaksbr }}</dd></div>
         </dl>
-        <p class="note">Status zgłoszenia jest zmieniany przez administratora.</p>
+        <p class="note">{% translate "The report status is changed by an administrator." %}</p>
     </article>
 {% endblock %}

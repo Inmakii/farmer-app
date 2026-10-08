@@ -3,13 +3,14 @@
     "use strict";
 
     var STORAGE_KEY = "farmer-theme";
-    var LABELS = {
-        light: "Włącz tryb ciemny",
-        dark: "Włącz tryb jasny"
+    // Translated texts come from data-* attributes on the button; these are fallbacks.
+    var DEFAULT_LABELS = {
+        light: "Turn on dark mode",
+        dark: "Turn on light mode"
     };
-    var ANNOUNCEMENTS = {
-        light: "Włączono tryb jasny.",
-        dark: "Włączono tryb ciemny."
+    var DEFAULT_ANNOUNCEMENTS = {
+        light: "Light mode is on.",
+        dark: "Dark mode is on."
     };
     var root = document.documentElement;
 
@@ -42,8 +43,9 @@
         root.setAttribute("data-theme", theme);
         root.style.colorScheme = theme;
         if (button) {
-            button.setAttribute("aria-label", LABELS[theme]);
-            button.setAttribute("title", LABELS[theme]);
+            var label = button.getAttribute("data-label-" + theme) || DEFAULT_LABELS[theme];
+            button.setAttribute("aria-label", label);
+            button.setAttribute("title", label);
         }
     }
 
@@ -61,7 +63,8 @@
             applyTheme(nextTheme, button);
             storeTheme(nextTheme);
             if (status) {
-                status.textContent = ANNOUNCEMENTS[nextTheme];
+                status.textContent = button.getAttribute("data-announce-" + nextTheme)
+                    || DEFAULT_ANNOUNCEMENTS[nextTheme];
             }
         });
 

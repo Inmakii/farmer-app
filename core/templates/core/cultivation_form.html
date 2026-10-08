@@ -1,35 +1,36 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}{% if cultivation %}Edycja uprawy{% else %}Dodawanie uprawy{% endif %} – Farmer App{% endblock %}
+{% block title %}{% if cultivation %}{% translate "Edit cultivation" context "page title" %}{% else %}{% translate "Add cultivation" context "page title" %}{% endif %} – Farmer App{% endblock %}
 
 {% block content %}
     {% if cultivation %}
         <a class="back-link" href="{% url 'core:cultivation_detail' cultivation.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{{ cultivation.crop.name }} – {{ cultivation.field.name }}</a>
     {% else %}
-        <a class="back-link" href="{% url 'core:cultivation_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Uprawy</a>
+        <a class="back-link" href="{% url 'core:cultivation_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Cultivations" %}</a>
     {% endif %}
     <header class="page-head">
         <div>
-            <p class="kicker">Uprawa</p>
-            <h1>{% if cultivation %}Edytuj uprawę{% else %}Dodaj uprawę{% endif %}</h1>
-            <p class="page-head-lead">Wybierz pole, roślinę i rok sezonu. Daty siewu i zbioru możesz uzupełnić później.</p>
+            <p class="kicker">{% translate "Cultivation" %}</p>
+            <h1>{% if cultivation %}{% translate "Edit cultivation" %}{% else %}{% translate "Add cultivation" %}{% endif %}</h1>
+            <p class="page-head-lead">{% translate "Choose a field, a crop and a season year. You can add the sowing and harvest dates later." %}</p>
         </div>
     </header>
 
     {% if not has_fields %}
         <div class="empty">
             <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg></span>
-            <strong>Najpierw potrzebne jest pole</strong>
-            <p>Nie masz jeszcze żadnych pól. Utwórz pole przed dodaniem uprawy.</p>
-            <a class="button" href="{% url 'core:field_create' %}">Utwórz pierwsze pole</a>
+            <strong>{% translate "A field is needed first" %}</strong>
+            <p>{% translate "You do not have any fields yet. Create a field before adding a cultivation." %}</p>
+            <a class="button" href="{% url 'core:field_create' %}">{% translate "Create your first field" %}</a>
         </div>
     {% else %}
         {% if not has_crops %}
             <div class="callout" role="note">
                 <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-alert"/></svg>
                 <div>
-                    <p>Katalog rodzajów upraw jest pusty. Dodaj rodzaj uprawy, aby móc utworzyć uprawę.</p>
-                    <p><a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a></p>
+                    <p>{% translate "The crop type catalogue is empty. Add a crop type to be able to create a cultivation." %}</p>
+                    <p><a href="{% url 'core:crop_create' %}">{% translate "Add the first crop type" %}</a></p>
                 </div>
             </div>
         {% endif %}
@@ -38,14 +39,14 @@
                 {% csrf_token %}
                 {% include "core/partials/form_body.html" %}
                 {% if has_crops %}
-                    <p class="note">Nie widzisz potrzebnego rodzaju uprawy? <a href="{% url 'core:crop_create' %}">Dodaj brakujący rodzaj uprawy</a></p>
+                    <p class="note">{% translate "Cannot see the crop type you need?" %} <a href="{% url 'core:crop_create' %}">{% translate "Add the missing crop type" %}</a></p>
                 {% endif %}
                 <div class="form-actions">
-                    <button class="button" type="submit" data-busy-label="Zapisywanie…">Zapisz</button>
+                    <button class="button" type="submit" data-busy-label="{% translate "Saving…" %}">{% translate "Save" %}</button>
                     {% if cultivation %}
-                        <a class="button button-text" href="{% url 'core:cultivation_detail' cultivation.pk %}">Anuluj</a>
+                        <a class="button button-text" href="{% url 'core:cultivation_detail' cultivation.pk %}">{% translate "Cancel" %}</a>
                     {% else %}
-                        <a class="button button-text" href="{% url 'core:cultivation_list' %}">Anuluj</a>
+                        <a class="button button-text" href="{% url 'core:cultivation_list' %}">{% translate "Cancel" %}</a>
                     {% endif %}
                 </div>
             </form>

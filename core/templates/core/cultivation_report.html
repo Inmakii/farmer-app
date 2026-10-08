@@ -1,31 +1,32 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Raport uprawy – Farmer App{% endblock %}
+{% block title %}{% translate "Cultivation report" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <a class="back-link" href="{% url 'core:report_dashboard' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wszystkie raporty</a>
+    <a class="back-link" href="{% url 'core:report_dashboard' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "All reports" %}</a>
     <header class="page-head">
         <div>
-            <p class="kicker">Raport uprawy · sezon {{ cultivation.season_year }}</p>
-            <h1>Raport: {{ cultivation.crop.name }} – {{ cultivation.field.name }} ({{ cultivation.season_year }})</h1>
+            <p class="kicker">{% blocktranslate with year=cultivation.season_year %}Cultivation report · season {{ year }}{% endblocktranslate %}</p>
+            <h1>{% blocktranslate with crop=cultivation.crop.name field=cultivation.field.name year=cultivation.season_year %}Report: {{ crop }} – {{ field }} ({{ year }}){% endblocktranslate %}</h1>
         </div>
         <div class="page-actions">
             <a class="button button-secondary" href="{% url 'core:field_report' cultivation.field.pk %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg>Raport pola
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg>{% translate "Field report" %}
             </a>
             <a class="button button-secondary" href="{% url 'core:cultivation_detail' cultivation.pk %}">
-                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg>Szczegóły uprawy
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg>{% translate "Cultivation details" %}
             </a>
         </div>
     </header>
 
     <section aria-labelledby="summary-title">
-        <h2 id="summary-title" class="visually-hidden">Podsumowanie</h2>
+        <h2 id="summary-title" class="visually-hidden">{% translate "Summary" %}</h2>
         {% include "core/partials/report_summary.html" with t=report area=report.field_area_ha %}
     </section>
 
     <section class="block" aria-labelledby="works-title">
-        <div class="block-head"><h2 id="works-title">Prace</h2></div>
+        <div class="block-head"><h2 id="works-title">{% translate "Works" %}</h2></div>
         {% if report.works %}
             <ul class="records">
                 {% for work in report.works %}
@@ -39,12 +40,12 @@
                 {% endfor %}
             </ul>
         {% else %}
-            <div class="empty empty-compact"><p>Brak prac.</p></div>
+            <div class="empty empty-compact"><p>{% translate "No works." %}</p></div>
         {% endif %}
     </section>
 
     <section class="block" aria-labelledby="sprayings-title">
-        <div class="block-head"><h2 id="sprayings-title">Opryski</h2></div>
+        <div class="block-head"><h2 id="sprayings-title">{% translate "Sprayings" %}</h2></div>
         {% if report.sprayings %}
             <ul class="records">
                 {% for spraying in report.sprayings %}
@@ -58,12 +59,12 @@
                 {% endfor %}
             </ul>
         {% else %}
-            <div class="empty empty-compact"><p>Brak oprysków.</p></div>
+            <div class="empty empty-compact"><p>{% translate "No sprayings." %}</p></div>
         {% endif %}
     </section>
 
     <section class="block" aria-labelledby="harvests-title">
-        <div class="block-head"><h2 id="harvests-title">Zbiory</h2></div>
+        <div class="block-head"><h2 id="harvests-title">{% translate "Harvests" %}</h2></div>
         {% if report.harvests %}
             <ul class="records">
                 {% for harvest in report.harvests %}
@@ -75,15 +76,15 @@
                         </div>
                         <div class="record-side">
                             <span class="record-amount">
-                                przychód {{ harvest.revenue|floatformat:"2g" }} zł
-                                <small>koszt {{ harvest.harvest_cost|floatformat:"2g" }} zł</small>
+                                {% blocktranslate with amount=harvest.revenue|floatformat:"2g" %}revenue {{ amount }} zł{% endblocktranslate %}
+                                <small>{% blocktranslate with amount=harvest.harvest_cost|floatformat:"2g" %}cost {{ amount }} zł{% endblocktranslate %}</small>
                             </span>
                         </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <div class="empty empty-compact"><p>Brak zbiorów.</p></div>
+            <div class="empty empty-compact"><p>{% translate "No harvests." %}</p></div>
         {% endif %}
     </section>
 {% endblock %}
