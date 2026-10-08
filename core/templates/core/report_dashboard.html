@@ -3,208 +3,110 @@
 {% block title %}Raporty finansowe – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Raporty finansowe</h1>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Raporty</p>
+            <h1>Raporty finansowe</h1>
+            <p class="page-head-lead">Koszty, przychody i plony dla całego gospodarstwa albo wybranego pola i sezonu.</p>
+        </div>
+    </header>
 
-    <form method="get" action="{% url 'core:report_dashboard' %}">
-        <p>
-            <label for="id_field">Pole</label>
-            <select id="id_field" name="field">
-                <option value="">Wszystkie pola</option>
-                {% for field in user_fields %}
-                    <option
-                        value="{{ field.pk }}"
-                        {% if selected_field == field.pk|stringformat:"s" %}selected{% endif %}
-                    >
-                        {{ field.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </p>
-
-        <p>
-            <label for="id_season_year">Rok sezonu</label>
-            <input
-                id="id_season_year"
-                type="number"
-                min="1980"
-                max="2100"
-                name="season_year"
-                value="{{ selected_season_year }}"
-            >
-        </p>
-
-        <button type="submit">Filtruj</button>
-        <a href="{% url 'core:report_dashboard' %}">Wyczyść filtry</a>
+    <form class="filters" method="get" action="{% url 'core:report_dashboard' %}" aria-label="Zakres raportu">
+        <div class="filters-grid">
+            <div class="filter">
+                <label for="id_field">Pole</label>
+                <select id="id_field" name="field">
+                    <option value="">Wszystkie pola</option>
+                    {% for field in user_fields %}
+                        <option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_season_year">Rok sezonu</label>
+                <input id="id_season_year" type="number" min="1980" max="2100" name="season_year" value="{{ selected_season_year }}" inputmode="numeric">
+            </div>
+        </div>
+        <div class="filters-actions">
+            <button class="button" type="submit">Filtruj</button>
+            <a class="button button-text" href="{% url 'core:report_dashboard' %}">Wyczyść filtry</a>
+        </div>
     </form>
 
     {% if invalid_filters %}
-        <p>Podane filtry są nieprawidłowe lub niedostępne.</p>
+        <div class="callout callout-error" role="alert">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-alert"/></svg>
+            <p>Podane filtry są nieprawidłowe lub niedostępne.</p>
+        </div>
     {% endif %}
 
-    <section>
-        <h2>Podsumowanie</h2>
-
-        <dl>
-            <dt>Liczba pól</dt>
-            <dd>{{ totals.field_count }}</dd>
-
-            <dt>Liczba upraw</dt>
-            <dd>{{ totals.cultivation_count }}</dd>
-
-            <dt>Liczba prac</dt>
-            <dd>{{ totals.work_count }}</dd>
-
-            <dt>Liczba oprysków</dt>
-            <dd>{{ totals.spraying_count }}</dd>
-
-            <dt>Liczba zbiorów</dt>
-            <dd>{{ totals.harvest_count }}</dd>
-
-            <dt>Zebrano łącznie</dt>
-            <dd>{{ totals.total_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Powierzchnia</dt>
-            <dd>{{ totals.total_area_ha|floatformat:2 }} ha</dd>
-
-            <dt>Wydajność na hektar</dt>
-            <dd>
-                <strong>{{ totals.yield_kg_per_ha|floatformat:2 }} kg/ha</strong>
-            </dd>
-
-            <dt>Sprzedano</dt>
-            <dd>{{ totals.sold_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>W magazynie</dt>
-            <dd>{{ totals.stored_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Straty / utylizacja</dt>
-            <dd>{{ totals.discarded_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Koszty prac</dt>
-            <dd>{{ totals.work_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty oprysków</dt>
-            <dd>{{ totals.spraying_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty zbiorów</dt>
-            <dd>{{ totals.harvest_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty całkowite</dt>
-            <dd>
-                <strong>{{ totals.total_costs|floatformat:2 }} zł</strong>
-            </dd>
-
-            <dt>Przychód</dt>
-            <dd>
-                <strong>{{ totals.total_revenue|floatformat:2 }} zł</strong>
-            </dd>
-
-            <dt>Zysk/strata</dt>
-            <dd>
-                <strong>{{ totals.profit|floatformat:2 }} zł</strong>
-            </dd>
+    <section aria-labelledby="summary-title">
+        <h2 id="summary-title" class="visually-hidden">Podsumowanie</h2>
+        {% include "core/partials/report_summary.html" with t=totals area=totals.total_area_ha %}
+        <dl class="tally" aria-label="Liczba zapisów">
+            <div><dt>Liczba pól</dt><dd>{{ totals.field_count }}</dd></div>
+            <div><dt>Liczba upraw</dt><dd>{{ totals.cultivation_count }}</dd></div>
+            <div><dt>Liczba prac</dt><dd>{{ totals.work_count }}</dd></div>
+            <div><dt>Liczba oprysków</dt><dd>{{ totals.spraying_count }}</dd></div>
+            <div><dt>Liczba zbiorów</dt><dd>{{ totals.harvest_count }}</dd></div>
         </dl>
     </section>
 
-    <section>
-        <h2>Wyniki upraw</h2>
-
+    <section class="block" aria-labelledby="results-title">
+        <div class="block-head">
+            <h2 id="results-title">Wyniki upraw</h2>
+        </div>
         {% if cultivation_reports %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pole</th>
-                        <th>Uprawa</th>
-                        <th>Rok</th>
-                        <th>Status</th>
-                        <th>Zebrano</th>
-                        <th>Wydajność</th>
-                        <th>Sprzedano</th>
-                        <th>Magazyn</th>
-                        <th>Straty</th>
-                        <th>Prace</th>
-                        <th>Opryski</th>
-                        <th>Zbiory</th>
-                        <th>Koszty razem</th>
-                        <th>Przychód</th>
-                        <th>Zysk/strata</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for item in cultivation_reports %}
+            <div class="table-scroll" role="region" aria-labelledby="results-title" tabindex="0">
+                <table class="data-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <a href="{% url 'core:field_report' item.cultivation.field.pk %}">
-                                    {{ item.cultivation.field.name }}
-                                </a>
-                            </td>
-
-                            <td>
-                                <a href="{% url 'core:cultivation_report' item.cultivation.pk %}">
-                                    {{ item.cultivation.crop.name }}
-                                </a>
-                            </td>
-
-                            <td>
-                                {{ item.cultivation.season_year }}
-                            </td>
-
-                            <td>
-                                {{ item.cultivation.get_status_display }}
-                            </td>
-
-                            <td>
-                                {{ item.total_quantity_kg|floatformat:2 }} kg
-                            </td>
-
-                            <td>
-                                <strong>
-                                    {{ item.yield_kg_per_ha|floatformat:2 }} kg/ha
-                                </strong>
-                            </td>
-
-                            <td>
-                                {{ item.sold_quantity_kg|floatformat:2 }} kg
-                            </td>
-
-                            <td>
-                                {{ item.stored_quantity_kg|floatformat:2 }} kg
-                            </td>
-
-                            <td>
-                                {{ item.discarded_quantity_kg|floatformat:2 }} kg
-                            </td>
-
-                            <td>
-                                {{ item.work_costs|floatformat:2 }} zł
-                            </td>
-
-                            <td>
-                                {{ item.spraying_costs|floatformat:2 }} zł
-                            </td>
-
-                            <td>
-                                {{ item.harvest_costs|floatformat:2 }} zł
-                            </td>
-
-                            <td>
-                                {{ item.total_costs|floatformat:2 }} zł
-                            </td>
-
-                            <td>
-                                {{ item.total_revenue|floatformat:2 }} zł
-                            </td>
-
-                            <td>
-                                {{ item.profit|floatformat:2 }} zł
-                            </td>
+                            <th scope="col">Pole</th>
+                            <th scope="col">Uprawa</th>
+                            <th scope="col">Rok</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="num">Zebrano</th>
+                            <th scope="col" class="num">Wydajność</th>
+                            <th scope="col" class="num">Sprzedano</th>
+                            <th scope="col" class="num">Magazyn</th>
+                            <th scope="col" class="num">Straty</th>
+                            <th scope="col" class="num">Prace</th>
+                            <th scope="col" class="num">Opryski</th>
+                            <th scope="col" class="num">Zbiory</th>
+                            <th scope="col" class="num">Koszty razem</th>
+                            <th scope="col" class="num">Przychód</th>
+                            <th scope="col" class="num">Zysk/strata</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for item in cultivation_reports %}
+                            <tr>
+                                <td><a href="{% url 'core:field_report' item.cultivation.field.pk %}">{{ item.cultivation.field.name }}</a></td>
+                                <td><a href="{% url 'core:cultivation_report' item.cultivation.pk %}">{{ item.cultivation.crop.name }}</a></td>
+                                <td>{{ item.cultivation.season_year }}</td>
+                                <td><span class="tag tag-{{ item.cultivation.status|lower }}">{{ item.cultivation.get_status_display }}</span></td>
+                                <td class="num">{{ item.total_quantity_kg|floatformat:"2g" }} kg</td>
+                                <td class="num"><strong>{{ item.yield_kg_per_ha|floatformat:"2g" }} kg/ha</strong></td>
+                                <td class="num">{{ item.sold_quantity_kg|floatformat:"2g" }} kg</td>
+                                <td class="num">{{ item.stored_quantity_kg|floatformat:"2g" }} kg</td>
+                                <td class="num">{{ item.discarded_quantity_kg|floatformat:"2g" }} kg</td>
+                                <td class="num">{{ item.work_costs|floatformat:"2g" }} zł</td>
+                                <td class="num">{{ item.spraying_costs|floatformat:"2g" }} zł</td>
+                                <td class="num">{{ item.harvest_costs|floatformat:"2g" }} zł</td>
+                                <td class="num">{{ item.total_costs|floatformat:"2g" }} zł</td>
+                                <td class="num">{{ item.total_revenue|floatformat:"2g" }} zł</td>
+                                <td class="num {% if item.profit < 0 %}is-loss{% else %}is-gain{% endif %}"><strong>{{ item.profit|floatformat:"2g" }} zł</strong></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <p>Brak danych finansowych dla wybranych kryteriów.</p>
+            <div class="empty">
+                <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg></span>
+                <strong>Brak danych</strong>
+                <p>Brak danych finansowych dla wybranych kryteriów.</p>
+            </div>
         {% endif %}
     </section>
 {% endblock %}

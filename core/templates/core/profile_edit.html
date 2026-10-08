@@ -3,22 +3,23 @@
 {% block title %}Edycja profilu – Farmer App{% endblock %}
 
 {% block content %}
-<section>
-    <h1>Edytuj profil</h1>
-    <p>Nazwa użytkownika: <strong>{{ user.username }}</strong></p>
-    <p>Nazwy użytkownika nie można zmienić.</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-            <p>
-                {{ field.label_tag }}
-                {{ field }}
-                {{ field.errors }}
-            </p>
-        {% endfor %}
-        <button type="submit">Zapisz zmiany</button>
-    </form>
-    <p><a href="{% url 'core:profile' %}">Wróć do profilu</a></p>
-</section>
+    <a class="back-link" href="{% url 'core:profile' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć do profilu</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Konto</p>
+            <h1>Edytuj profil</h1>
+            <p class="page-head-lead">Nazwa użytkownika: <strong>{{ user.username }}</strong>. Nazwy użytkownika nie można zmienić.</p>
+        </div>
+    </header>
+
+    <div class="sheet app-form">
+        <form method="post" data-busy-form>
+            {% csrf_token %}
+            {% include "core/partials/form_body.html" %}
+            <div class="form-actions">
+                <button class="button" type="submit" data-busy-label="Zapisywanie…">Zapisz zmiany</button>
+                <a class="button button-text" href="{% url 'core:profile' %}">Anuluj</a>
+            </div>
+        </form>
+    </div>
 {% endblock %}

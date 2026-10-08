@@ -3,64 +3,92 @@
 {% block title %}Moje pola – Farmer App{% endblock %}
 
 {% block content %}
-    <header>
-        <h1>Moje pola</h1>
-        <a href="{% url 'core:field_create' %}">Dodaj pole</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Gospodarstwo</p>
+            <h1>Moje pola</h1>
+            <p class="page-head-lead">Każde pole z powierzchnią, glebą i uprawami, które na nim prowadzisz.</p>
+        </div>
+        <div class="page-actions">
+            <a class="button" href="{% url 'core:field_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pole
+            </a>
+        </div>
     </header>
 
-    <form method="get" action="{% url 'core:field_list' %}">
-        <p>
-            <label for="id_q">Szukaj</label>
-            <input id="id_q" type="search" name="q" value="{{ query }}"
-                   placeholder="Nazwa, działka lub adres">
-        </p>
-        <p>
-            <label for="id_soil_type">Rodzaj gleby</label>
-            <select id="id_soil_type" name="soil_type">
-                <option value="">Wszystkie</option>
-                {% for value, label in soil_type_choices %}
-                    <option value="{{ value }}"{% if selected_soil_type == value %} selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-        </p>
-        <p>
-            <label for="id_location_method">Sposób lokalizacji</label>
-            <select id="id_location_method" name="location_method">
-                <option value="">Wszystkie</option>
-                {% for value, label in location_method_choices %}
-                    <option value="{{ value }}"{% if selected_location_method == value %} selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-        </p>
-        <button type="submit">Filtruj</button>
-        <a href="{% url 'core:field_list' %}">Wyczyść filtry</a>
+    <form class="filters" method="get" action="{% url 'core:field_list' %}" role="search" aria-label="Filtruj pola">
+        <div class="filters-grid">
+            <div class="filter filter-wide">
+                <label for="id_q">Szukaj</label>
+                <div class="search-input">
+                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
+                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Nazwa, działka lub adres">
+                </div>
+            </div>
+            <div class="filter">
+                <label for="id_soil_type">Rodzaj gleby</label>
+                <select id="id_soil_type" name="soil_type">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in soil_type_choices %}
+                        <option value="{{ value }}"{% if selected_soil_type == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_location_method">Sposób lokalizacji</label>
+                <select id="id_location_method" name="location_method">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in location_method_choices %}
+                        <option value="{{ value }}"{% if selected_location_method == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="filters-actions">
+            <button class="button" type="submit">Filtruj</button>
+            <a class="button button-text" href="{% url 'core:field_list' %}">Wyczyść filtry</a>
+        </div>
     </form>
 
     {% if fields %}
-        <ul>
-            {% for field in fields %}
-                <li>
-                    <strong>{{ field.name }}</strong> – {{ field.area_ha }} ha,
-                    {{ field.get_soil_type_display }}
-                    <a href="{% url 'core:field_detail' field.pk %}">Szczegóły</a>
-                    <a href="{% url 'core:field_update' field.pk %}">Edytuj</a>
-                    <a href="{% url 'core:field_delete' field.pk %}">Usuń</a>
-                </li>
-            {% endfor %}
-        </ul>
-
-        {% if is_paginated %}
-            <nav aria-label="Paginacja pól">
-                {% if page_obj.has_previous %}
-                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Poprzednia</a>
-                {% endif %}
-                <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
-                {% if page_obj.has_next %}
-                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Następna</a>
-                {% endif %}
-            </nav>
-        {% endif %}
+        <div class="sheet">
+            <ul class="records records-plain">
+                {% for field in fields %}
+                    <li class="record">
+                        <div class="record-main">
+                            <a class="record-title" href="{% url 'core:field_detail' field.pk %}">{{ field.name }}</a>
+                            <p class="record-meta">
+                                <span>{{ field.get_soil_type_display }}</span>
+                                {% if field.parcel_identifier %}<span>działka {{ field.parcel_identifier }}</span>{% endif %}
+                                {% if field.address %}<span>{{ field.address }}</span>{% endif %}
+                            </p>
+                        </div>
+                        <div class="record-side">
+                            <span class="record-amount">{{ field.area_ha|floatformat:"2g" }} ha</span>
+                            <span class="record-actions">
+                                <a class="icon-link" href="{% url 'core:field_update' field.pk %}" title="Edytuj">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>
+                                    <span class="visually-hidden">Edytuj pole {{ field.name }}</span>
+                                </a>
+                                <a class="icon-link is-danger" href="{% url 'core:field_delete' field.pk %}" title="Usuń">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>
+                                    <span class="visually-hidden">Usuń pole {{ field.name }}</span>
+                                </a>
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% include "core/partials/pagination.html" with label="Paginacja pól" %}
     {% else %}
-        <p>Nie znaleziono pól spełniających podane kryteria.</p>
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg></span>
+            <strong>Nie ma tu żadnego pola</strong>
+            <p>Nie znaleziono pól spełniających podane kryteria. Zmień filtry albo dodaj nowe pole.</p>
+            <a class="button" href="{% url 'core:field_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pole
+            </a>
+        </div>
     {% endif %}
 {% endblock %}

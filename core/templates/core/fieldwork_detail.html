@@ -1,3 +1,37 @@
 {% extends "core/base.html" %}
+
 {% block title %}Szczegóły pracy – Farmer App{% endblock %}
-{% block content %}<article><h1>{{ work.get_work_type_display }}</h1><dl><dt>Data</dt><dd>{{ work.work_date|date:"d.m.Y" }}</dd><dt>Pole</dt><dd>{{ work.cultivation.field.name }}</dd><dt>Uprawa</dt><dd>{{ work.cultivation.crop.name }}</dd><dt>Sezon</dt><dd>{{ work.cultivation.season_year }}</dd><dt>Koszt</dt><dd>{{ work.cost }} zł</dd><dt>Opis</dt><dd>{{ work.description|default:"—" }}</dd></dl><p><a href="{% url 'core:fieldwork_list' %}">Wróć</a> <a href="{% url 'core:fieldwork_update' work.pk %}">Edytuj</a> <a href="{% url 'core:fieldwork_delete' work.pk %}">Usuń</a></p></article>{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{% url 'core:fieldwork_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć do listy</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Praca · {{ work.work_date|date:"d.m.Y" }}</p>
+            <h1>{{ work.get_work_type_display }}</h1>
+            <p class="page-head-lead">{{ work.cultivation.crop.name }} na polu {{ work.cultivation.field.name }}, sezon {{ work.cultivation.season_year }}</p>
+        </div>
+        <div class="page-actions">
+            <a class="button button-secondary" href="{% url 'core:fieldwork_update' work.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>Edytuj
+            </a>
+            <a class="button button-text" href="{% url 'core:fieldwork_delete' work.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>Usuń
+            </a>
+        </div>
+    </header>
+
+    <article class="sheet" aria-labelledby="work-data-title">
+        <div class="sheet-title">
+            <h2 id="work-data-title">Dane pracy</h2>
+            <a class="sheet-title-note" href="{% url 'core:cultivation_detail' work.cultivation.pk %}">Zobacz uprawę</a>
+        </div>
+        <dl class="facts">
+            <div class="fact-key"><dt>Koszt</dt><dd>{{ work.cost|floatformat:"2g" }} zł</dd></div>
+            <div><dt>Data</dt><dd>{{ work.work_date|date:"d.m.Y" }}</dd></div>
+            <div><dt>Pole</dt><dd>{{ work.cultivation.field.name }}</dd></div>
+            <div><dt>Uprawa</dt><dd>{{ work.cultivation.crop.name }}</dd></div>
+            <div><dt>Sezon</dt><dd>{{ work.cultivation.season_year }}</dd></div>
+            <div class="fact-wide"><dt>Opis</dt><dd>{{ work.description|default:"—"|linebreaksbr }}</dd></div>
+        </dl>
+    </article>
+{% endblock %}

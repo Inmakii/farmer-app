@@ -3,21 +3,61 @@
 {% block title %}Szczegóły zbioru – Farmer App{% endblock %}
 
 {% block content %}
-    <article>
-        <h1>Zbiór – {{ harvest.cultivation.crop.name }}</h1>
-        <dl>
-            <dt>Data zbioru</dt><dd>{{ harvest.harvest_date|date:"d.m.Y" }}</dd>
-            <dt>Pole</dt><dd>{{ harvest.cultivation.field.name }}</dd>
-            <dt>Uprawa</dt><dd>{{ harvest.cultivation.crop.name }}</dd>
-            <dt>Sezon</dt><dd>{{ harvest.cultivation.season_year }}</dd>
-            <dt>Ilość</dt><dd>{{ harvest.quantity }} {{ harvest.get_unit_display }}</dd>
-            <dt>Przeznaczenie</dt><dd>{{ harvest.get_disposition_display }}</dd>
-            <dt>Przychód</dt><dd>{{ harvest.revenue }} zł</dd>
-            <dt>Koszt zbioru</dt><dd>{{ harvest.harvest_cost }} zł</dd>
-            <dt>Wynik zbioru</dt><dd>{{ harvest.profit }} zł</dd>
-            <dt>Notatki</dt><dd>{{ harvest.notes|default:"—" }}</dd>
-        </dl>
-        <p>Wynik zbioru to przychód pomniejszony wyłącznie o koszt zbioru, przed uwzględnieniem kosztów prac polowych i oprysków.</p>
-        <p><a href="{% url 'core:harvest_list' %}">Wróć do listy</a> <a href="{% url 'core:cultivation_detail' harvest.cultivation.pk %}">Zobacz uprawę</a> <a href="{% url 'core:harvest_update' harvest.pk %}">Edytuj</a> <a href="{% url 'core:harvest_delete' harvest.pk %}">Usuń</a></p>
-    </article>
+    <a class="back-link" href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć do listy</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Zbiór · {{ harvest.harvest_date|date:"d.m.Y" }}</p>
+            <h1>Zbiór – {{ harvest.cultivation.crop.name }}</h1>
+            <p class="page-head-lead">{{ harvest.quantity|floatformat:"2g" }} {{ harvest.get_unit_display }} z pola {{ harvest.cultivation.field.name }}, sezon {{ harvest.cultivation.season_year }}</p>
+        </div>
+        <div class="page-actions">
+            <a class="button button-secondary" href="{% url 'core:harvest_update' harvest.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>Edytuj
+            </a>
+            <a class="button button-text" href="{% url 'core:harvest_delete' harvest.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>Usuń
+            </a>
+        </div>
+    </header>
+
+    <div class="balance-grid">
+        <article class="sheet" aria-labelledby="harvest-data-title">
+            <div class="sheet-title">
+                <h2 id="harvest-data-title">Dane zbioru</h2>
+                <a class="sheet-title-note" href="{% url 'core:cultivation_detail' harvest.cultivation.pk %}">Zobacz uprawę</a>
+            </div>
+            <dl class="facts">
+                <div class="fact-key"><dt>Ilość</dt><dd>{{ harvest.quantity|floatformat:"2g" }} {{ harvest.get_unit_display }}</dd></div>
+                <div><dt>Przeznaczenie</dt><dd>{{ harvest.get_disposition_display }}</dd></div>
+                <div><dt>Data zbioru</dt><dd>{{ harvest.harvest_date|date:"d.m.Y" }}</dd></div>
+                <div><dt>Pole</dt><dd>{{ harvest.cultivation.field.name }}</dd></div>
+                <div><dt>Uprawa</dt><dd>{{ harvest.cultivation.crop.name }}</dd></div>
+                <div><dt>Sezon</dt><dd>{{ harvest.cultivation.season_year }}</dd></div>
+                <div class="fact-wide"><dt>Notatki</dt><dd>{{ harvest.notes|default:"—"|linebreaksbr }}</dd></div>
+            </dl>
+        </article>
+
+        <figure class="sheet" aria-labelledby="harvest-result-title">
+            <div class="sheet-head">
+                <strong id="harvest-result-title">Wynik zbioru</strong>
+                <span>{{ harvest.harvest_date|date:"d.m.Y" }}</span>
+            </div>
+            <table class="sheet-table">
+                <thead>
+                    <tr><th scope="col">Pozycja</th><th scope="col" class="num">Kwota</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Przychód</td><td class="num is-in">+{{ harvest.revenue|floatformat:"2g" }} zł</td></tr>
+                    <tr><td>Koszt zbioru</td><td class="num">−{{ harvest.harvest_cost|floatformat:"2g" }} zł</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr class="sheet-result {% if harvest.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+                        <th scope="row">Wynik</th>
+                        <td class="num">{{ harvest.profit|floatformat:"2g" }} zł</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <p class="sheet-note">Wynik zbioru to przychód pomniejszony wyłącznie o koszt zbioru, przed uwzględnieniem kosztów prac polowych i oprysków.</p>
+        </figure>
+    </div>
 {% endblock %}

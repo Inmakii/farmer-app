@@ -1,7 +1,111 @@
 {% extends "core/base.html" %}
+
 {% block title %}Prace – Farmer App{% endblock %}
+
 {% block content %}
-<header><h1>Wykonane prace</h1><a href="{% url 'core:fieldwork_create' %}">Dodaj pracę</a></header>
-<form method="get" action="{% url 'core:fieldwork_list' %}"><p><label for="id_q">Szukaj</label><input id="id_q" type="search" name="q" value="{{ query }}"></p><p><label for="id_field">Pole</label><select id="id_field" name="field"><option value="">Wszystkie</option>{% for field in user_fields %}<option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>{% endfor %}</select></p><p><label for="id_cultivation">Uprawa</label><select id="id_cultivation" name="cultivation"><option value="">Wszystkie</option>{% for cultivation in user_cultivations %}<option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>{% endfor %}</select></p><p><label for="id_work_type">Rodzaj pracy</label><select id="id_work_type" name="work_type"><option value="">Wszystkie</option>{% for value,label in work_type_choices %}<option value="{{ value }}"{% if selected_work_type == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></p><p><label for="id_date_from">Od</label><input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}"> <label for="id_date_to">Do</label><input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}"></p><button type="submit">Filtruj</button> <a href="{% url 'core:fieldwork_list' %}">Wyczyść</a></form>
-{% if works %}<ul>{% for work in works %}<li>{{ work.work_date|date:"d.m.Y" }} – {{ work.get_work_type_display }} – {{ work.cultivation.field.name }} – {{ work.cultivation.crop.name }} – {{ work.cultivation.season_year }} – {{ work.cost }} zł <a href="{% url 'core:fieldwork_detail' work.pk %}">Szczegóły</a> <a href="{% url 'core:fieldwork_update' work.pk %}">Edytuj</a> <a href="{% url 'core:fieldwork_delete' work.pk %}">Usuń</a></li>{% endfor %}</ul>{% if is_paginated %}<nav>{% if page_obj.has_previous %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Poprzednia</a>{% endif %} Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }} {% if page_obj.has_next %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Następna</a>{% endif %}</nav>{% endif %}{% else %}<p>Nie znaleziono prac spełniających podane kryteria.</p>{% endif %}
+    <header class="page-head">
+        <div>
+            <p class="kicker">Zapisy</p>
+            <h1>Wykonane prace</h1>
+            <p class="page-head-lead">Orka, siew, nawożenie i inne zabiegi razem z kosztami.</p>
+        </div>
+        <div class="page-actions">
+            <a class="button" href="{% url 'core:fieldwork_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pracę
+            </a>
+        </div>
+    </header>
+
+    <form class="filters" method="get" action="{% url 'core:fieldwork_list' %}" role="search" aria-label="Filtruj prace">
+        <div class="filters-grid">
+            <div class="filter filter-wide">
+                <label for="id_q">Szukaj</label>
+                <div class="search-input">
+                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
+                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Opis, pole lub uprawa">
+                </div>
+            </div>
+            <div class="filter">
+                <label for="id_field">Pole</label>
+                <select id="id_field" name="field">
+                    <option value="">Wszystkie</option>
+                    {% for field in user_fields %}
+                        <option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_cultivation">Uprawa</label>
+                <select id="id_cultivation" name="cultivation">
+                    <option value="">Wszystkie</option>
+                    {% for cultivation in user_cultivations %}
+                        <option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_work_type">Rodzaj pracy</label>
+                <select id="id_work_type" name="work_type">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in work_type_choices %}
+                        <option value="{{ value }}"{% if selected_work_type == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_date_from">Od</label>
+                <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}">
+            </div>
+            <div class="filter">
+                <label for="id_date_to">Do</label>
+                <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}">
+            </div>
+        </div>
+        <div class="filters-actions">
+            <button class="button" type="submit">Filtruj</button>
+            <a class="button button-text" href="{% url 'core:fieldwork_list' %}">Wyczyść filtry</a>
+        </div>
+    </form>
+
+    {% if works %}
+        <div class="sheet">
+            <ul class="records">
+                {% for work in works %}
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ work.work_date|date:'Y-m-d' }}">{{ work.work_date|date:"d.m.Y" }}</time>
+                            <a class="record-title" href="{% url 'core:fieldwork_detail' work.pk %}">{{ work.get_work_type_display }}</a>
+                            <p class="record-meta">
+                                <span>{{ work.cultivation.field.name }}</span>
+                                <span>{{ work.cultivation.crop.name }} {{ work.cultivation.season_year }}</span>
+                            </p>
+                        </div>
+                        <div class="record-side">
+                            <span class="record-amount">{{ work.cost|floatformat:"2g" }} zł</span>
+                            <span class="record-actions">
+                                <a class="icon-link" href="{% url 'core:fieldwork_update' work.pk %}" title="Edytuj">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>
+                                    <span class="visually-hidden">Edytuj pracę {{ work.get_work_type_display }} z dnia {{ work.work_date|date:"d.m.Y" }}</span>
+                                </a>
+                                <a class="icon-link is-danger" href="{% url 'core:fieldwork_delete' work.pk %}" title="Usuń">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>
+                                    <span class="visually-hidden">Usuń pracę {{ work.get_work_type_display }} z dnia {{ work.work_date|date:"d.m.Y" }}</span>
+                                </a>
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% include "core/partials/pagination.html" with label="Paginacja prac" %}
+    {% else %}
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shovel"/></svg></span>
+            <strong>Brak zapisanych prac</strong>
+            <p>Nie znaleziono prac spełniających podane kryteria.</p>
+            <a class="button" href="{% url 'core:fieldwork_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pracę
+            </a>
+        </div>
+    {% endif %}
 {% endblock %}

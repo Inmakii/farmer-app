@@ -3,95 +3,146 @@
 {% block title %}Pulpit – Farmer App{% endblock %}
 
 {% block content %}
-<div class="dashboard">
-    <div class="dashboard-head">
-        <h1>Cześć, {{ user.first_name|default:user.username }}!</h1>
-        <p class="lead">To jest Twój pulpit. Stąd przejdziesz do wszystkiego, co potrzebne w gospodarstwie.</p>
+<div class="dash-hero">
+    <div>
+        <p class="kicker">Pulpit</p>
+        <h1>Dzień dobry, <em>{{ user.first_name|default:user.username }}</em>.</h1>
+        <p class="dash-date">{% now "l, j E Y" %}</p>
     </div>
-
     {% if next_step %}
-    <div class="next-step">
-        <div>
-            <span class="eyebrow">Następny krok</span>
-            <h2>{{ next_step.title }}</h2>
+        <aside class="next-step" aria-labelledby="next-step-title">
+            <p class="kicker">Następny krok</p>
+            <h2 id="next-step-title">{{ next_step.title }}</h2>
             <p>{{ next_step.text }}</p>
-        </div>
-        <a class="button button-large" href="{{ next_step.url }}">{{ next_step.button }}</a>
-    </div>
+            <a class="button button-wheat" href="{{ next_step.url }}">
+                {{ next_step.button }}
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+        </aside>
     {% endif %}
+</div>
 
-    {% if no_crops %}
-    <div class="notice">
-        W słowniku nie ma jeszcze rodzajów upraw, więc nie da się dodać uprawy.
-        Poproś administratora o uzupełnienie listy w panelu administracyjnym.
+{% if no_crops %}
+    <div class="callout" role="note">
+        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-alert"/></svg>
+        <p>
+            W katalogu nie ma jeszcze rodzajów upraw, więc nie da się dodać uprawy.
+            <a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a>.
+        </p>
     </div>
-    {% endif %}
+{% endif %}
 
-    <div class="stat-grid">
-        <div class="stat-card">
-            <span class="stat-label">Pola</span>
-            <strong class="stat-value">{{ totals.field_count }}</strong>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Uprawy</span>
-            <strong class="stat-value">{{ totals.cultivation_count }}</strong>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Przychód</span>
-            <strong class="stat-value">{{ totals.total_revenue|floatformat:2 }} zł</strong>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Koszty</span>
-            <strong class="stat-value">{{ totals.total_costs|floatformat:2 }} zł</strong>
-        </div>
-        <div class="stat-card {% if totals.profit < 0 %}stat-negative{% else %}stat-positive{% endif %}">
-            <span class="stat-label">Zysk / strata</span>
-            <strong class="stat-value">{{ totals.profit|floatformat:2 }} zł</strong>
-        </div>
+<dl class="tally" aria-label="Podsumowanie gospodarstwa">
+    <div>
+        <dt>Pola</dt>
+        <dd>{{ totals.field_count }}<small>{{ totals.total_area_ha|floatformat:"2g" }} ha</small></dd>
     </div>
+    <div>
+        <dt>Uprawy</dt>
+        <dd>{{ totals.cultivation_count }}</dd>
+    </div>
+    <div>
+        <dt>Przychód</dt>
+        <dd>{{ totals.total_revenue|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+    <div>
+        <dt>Koszty</dt>
+        <dd>{{ totals.total_costs|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+    <div class="{% if totals.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+        <dt>Zysk / strata</dt>
+        <dd>{{ totals.profit|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+</dl>
 
-    <h2 class="section-title">Co chcesz zrobić?</h2>
-    <div class="action-grid">
-        <a class="action-card" href="{% url 'core:field_create' %}">
-            <span class="feature-icon" aria-hidden="true">🌾</span>
-            <strong>Dodaj pole</strong>
-            <span>Zapisz nowe pole z powierzchnią i lokalizacją.</span>
-        </a>
-        <a class="action-card" href="{% url 'core:cultivation_create' %}">
-            <span class="feature-icon" aria-hidden="true">🌱</span>
-            <strong>Dodaj uprawę</strong>
-            <span>Przypisz roślinę i sezon do swojego pola.</span>
-        </a>
-        <a class="action-card" href="{% url 'core:fieldwork_create' %}">
-            <span class="feature-icon" aria-hidden="true">🚜</span>
-            <strong>Zapisz pracę</strong>
-            <span>Orka, siew, nawożenie – razem z kosztem.</span>
-        </a>
-        <a class="action-card" href="{% url 'core:spraying_create' %}">
-            <span class="feature-icon" aria-hidden="true">💧</span>
-            <strong>Zapisz oprysk</strong>
-            <span>Środek, ilość i koszt zabiegu.</span>
-        </a>
-        <a class="action-card" href="{% url 'core:harvest_create' %}">
-            <span class="feature-icon" aria-hidden="true">📦</span>
-            <strong>Zapisz zbiór</strong>
-            <span>Ilość plonu i przychód ze sprzedaży.</span>
-        </a>
-        <a class="action-card" href="{% url 'core:report_dashboard' %}">
-            <span class="feature-icon" aria-hidden="true">📊</span>
-            <strong>Zobacz raport</strong>
-            <span>Koszty, przychody i zysk gospodarstwa.</span>
-        </a>
-    </div>
+<section aria-labelledby="quick-title">
+    <h2 id="quick-title">Co chcesz zapisać?</h2>
+    <ul class="quick-grid">
+        <li>
+            <a class="quick-link" href="{% url 'core:field_create' %}">
+                <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg></span>
+                <strong>Dodaj pole</strong>
+                <span class="quick-text">Powierzchnia, gleba i lokalizacja.</span>
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+        </li>
+        <li>
+            <a class="quick-link" href="{% url 'core:cultivation_create' %}">
+                <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
+                <strong>Dodaj uprawę</strong>
+                <span class="quick-text">Roślina i sezon na wybranym polu.</span>
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+        </li>
+        <li>
+            <a class="quick-link" href="{% url 'core:fieldwork_create' %}">
+                <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shovel"/></svg></span>
+                <strong>Zapisz pracę</strong>
+                <span class="quick-text">Orka, siew, nawożenie i ich koszt.</span>
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+        </li>
+        <li>
+            <a class="quick-link" href="{% url 'core:spraying_create' %}">
+                <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-droplets"/></svg></span>
+                <strong>Zapisz oprysk</strong>
+                <span class="quick-text">Środek, ilość i koszt zabiegu.</span>
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+        </li>
+        <li>
+            <a class="quick-link" href="{% url 'core:harvest_create' %}">
+                <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-package"/></svg></span>
+                <strong>Zapisz zbiór</strong>
+                <span class="quick-text">Ilość plonu i przychód ze sprzedaży.</span>
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+        </li>
+        <li>
+            <a class="quick-link" href="{% url 'core:report_dashboard' %}">
+                <span class="quick-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg></span>
+                <strong>Zobacz raport</strong>
+                <span class="quick-text">Koszty, przychody i zysk z pól.</span>
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+        </li>
+    </ul>
+</section>
 
-    <h2 class="section-title">Moje dane</h2>
-    <div class="link-row">
-        <a class="button button-outline" href="{% url 'core:field_list' %}">Moje pola</a>
-        <a class="button button-outline" href="{% url 'core:cultivation_list' %}">Uprawy</a>
-        <a class="button button-outline" href="{% url 'core:fieldwork_list' %}">Prace</a>
-        <a class="button button-outline" href="{% url 'core:spraying_list' %}">Opryski</a>
-        <a class="button button-outline" href="{% url 'core:harvest_list' %}">Zbiory</a>
-        <a class="button button-outline" href="{% url 'core:profile' %}">Profil</a>
-    </div>
+<div class="balance-grid">
+    <figure class="sheet" aria-labelledby="balance-title">
+        <div class="sheet-head">
+            <strong id="balance-title">Bilans gospodarstwa</strong>
+            <span>Wszystkie sezony</span>
+        </div>
+        <table class="sheet-table">
+            <thead>
+                <tr><th scope="col">Pozycja</th><th scope="col" class="num">Kwota</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Przychód ze zbiorów</td><td class="num is-in">+{{ totals.total_revenue|floatformat:"2g" }} zł</td></tr>
+                <tr><td>Koszty prac</td><td class="num">−{{ totals.work_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>Koszty oprysków</td><td class="num">−{{ totals.spraying_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>Koszty zbiorów</td><td class="num">−{{ totals.harvest_costs|floatformat:"2g" }} zł</td></tr>
+            </tbody>
+            <tfoot>
+                <tr class="sheet-result {% if totals.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+                    <th scope="row">Wynik</th>
+                    <td class="num">{{ totals.profit|floatformat:"2g" }} zł</td>
+                </tr>
+            </tfoot>
+        </table>
+    </figure>
+
+    <section aria-labelledby="records-title">
+        <h2 id="records-title">Moje zapisy</h2>
+        <ul class="side-links">
+            <li><a href="{% url 'core:field_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg>Moje pola<span class="side-count">{{ totals.field_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:cultivation_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg>Uprawy<span class="side-count">{{ totals.cultivation_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:fieldwork_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shovel"/></svg>Prace<span class="side-count">{{ totals.work_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:spraying_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-droplets"/></svg>Opryski<span class="side-count">{{ totals.spraying_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            <li><a href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-package"/></svg>Zbiory<span class="side-count">{{ totals.harvest_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+        </ul>
+    </section>
 </div>
 {% endblock %}

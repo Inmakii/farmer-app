@@ -1,3 +1,42 @@
 {% extends "core/base.html" %}
-{% block title %}Praca – Farmer App{% endblock %}
-{% block content %}<h1>{% if work %}Edytuj pracę{% else %}Dodaj pracę{% endif %}</h1>{% if has_cultivations %}<form method="post">{% csrf_token %}{{ form.non_field_errors }}{% for field in form %}<p>{{ field.label_tag }} {{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{{ field.errors }}</p>{% endfor %}<button type="submit">Zapisz</button></form>{% else %}<p>Nie masz jeszcze upraw. <a href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>.</p>{% endif %}{% endblock %}
+
+{% block title %}{% if work %}Edycja pracy{% else %}Dodawanie pracy{% endif %} – Farmer App{% endblock %}
+
+{% block content %}
+    {% if work %}
+        <a class="back-link" href="{% url 'core:fieldwork_detail' work.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{{ work.get_work_type_display }}, {{ work.work_date|date:"d.m.Y" }}</a>
+    {% else %}
+        <a class="back-link" href="{% url 'core:fieldwork_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Prace</a>
+    {% endif %}
+    <header class="page-head">
+        <div>
+            <p class="kicker">Praca</p>
+            <h1>{% if work %}Edytuj pracę{% else %}Dodaj pracę{% endif %}</h1>
+            <p class="page-head-lead">Co zrobiono, kiedy, na której uprawie i ile to kosztowało.</p>
+        </div>
+    </header>
+
+    {% if has_cultivations %}
+        <div class="sheet app-form">
+            <form method="post" data-busy-form>
+                {% csrf_token %}
+                {% include "core/partials/form_body.html" %}
+                <div class="form-actions">
+                    <button class="button" type="submit" data-busy-label="Zapisywanie…">Zapisz</button>
+                    {% if work %}
+                        <a class="button button-text" href="{% url 'core:fieldwork_detail' work.pk %}">Anuluj</a>
+                    {% else %}
+                        <a class="button button-text" href="{% url 'core:fieldwork_list' %}">Anuluj</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
+            <strong>Najpierw potrzebna jest uprawa</strong>
+            <p>Nie masz jeszcze upraw. Pracę zapisuje się zawsze przy konkretnej uprawie.</p>
+            <a class="button" href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>
+        </div>
+    {% endif %}
+{% endblock %}

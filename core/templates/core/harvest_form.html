@@ -3,6 +3,40 @@
 {% block title %}{% if harvest %}Edycja zbioru{% else %}Dodawanie zbioru{% endif %} – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>{% if harvest %}Edytuj zbiór{% else %}Dodaj zbiór{% endif %}</h1>
-    {% if has_cultivations %}<form method="post">{% csrf_token %}{{ form.non_field_errors }}{% for form_field in form %}<p>{{ form_field.label_tag }} {{ form_field }}{% if form_field.help_text %}<small>{{ form_field.help_text }}</small>{% endif %}{{ form_field.errors }}</p>{% endfor %}<button type="submit">Zapisz</button></form>{% else %}<p>Nie masz jeszcze upraw. <a href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>.</p>{% endif %}
+    {% if harvest %}
+        <a class="back-link" href="{% url 'core:harvest_detail' harvest.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Zbiór z dnia {{ harvest.harvest_date|date:"d.m.Y" }}</a>
+    {% else %}
+        <a class="back-link" href="{% url 'core:harvest_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Zbiory</a>
+    {% endif %}
+    <header class="page-head">
+        <div>
+            <p class="kicker">Zbiór</p>
+            <h1>{% if harvest %}Edytuj zbiór{% else %}Dodaj zbiór{% endif %}</h1>
+            <p class="page-head-lead">Ilość plonu, co się z nim stało, przychód i koszt samego zbioru.</p>
+        </div>
+    </header>
+
+    {% if has_cultivations %}
+        <div class="sheet app-form">
+            <form method="post" data-busy-form>
+                {% csrf_token %}
+                {% include "core/partials/form_body.html" %}
+                <div class="form-actions">
+                    <button class="button" type="submit" data-busy-label="Zapisywanie…">Zapisz</button>
+                    {% if harvest %}
+                        <a class="button button-text" href="{% url 'core:harvest_detail' harvest.pk %}">Anuluj</a>
+                    {% else %}
+                        <a class="button button-text" href="{% url 'core:harvest_list' %}">Anuluj</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
+            <strong>Najpierw potrzebna jest uprawa</strong>
+            <p>Nie masz jeszcze upraw. Zbiór zapisuje się zawsze przy konkretnej uprawie.</p>
+            <a class="button" href="{% url 'core:cultivation_create' %}">Dodaj uprawę</a>
+        </div>
+    {% endif %}
 {% endblock %}

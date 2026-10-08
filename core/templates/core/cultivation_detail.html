@@ -3,95 +3,119 @@
 {% block title %}{{ cultivation.crop.name }} – Farmer App{% endblock %}
 
 {% block content %}
-    <article>
-        <h1>{{ cultivation.crop.name }} – {{ cultivation.field.name }}</h1>
-        <dl>
-            <dt>Sezon</dt>
-            <dd>{{ cultivation.season_year }}</dd>
-            <dt>Status</dt>
-            <dd>{{ cultivation.get_status_display }}</dd>
-            <dt>Data siewu</dt>
-            <dd>{{ cultivation.sowing_date|date:"d.m.Y"|default:"—" }}</dd>
-            <dt>Planowana data zbioru</dt>
-            <dd>{{ cultivation.planned_harvest_date|date:"d.m.Y"|default:"—" }}</dd>
-            <dt>Notatki</dt>
-            <dd>{{ cultivation.notes|default:"—" }}</dd>
-            <dt>Liczba prac</dt>
-            <dd>{{ work_count }}</dd>
-            <dt>Liczba oprysków</dt>
-            <dd>{{ spraying_count }}</dd>
-            <dt>Liczba zbiorów</dt>
-            <dd>{{ harvest_count }}</dd>
+    <a class="back-link" href="{% url 'core:cultivation_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć do listy</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Uprawa · sezon {{ cultivation.season_year }}</p>
+            <h1>{{ cultivation.crop.name }} – {{ cultivation.field.name }}</h1>
+            <p class="page-head-lead"><span class="tag tag-{{ cultivation.status|lower }}">{{ cultivation.get_status_display }}</span></p>
+        </div>
+        <div class="page-actions">
+            <a class="button button-secondary" href="{% url 'core:cultivation_report' cultivation.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg>Raport uprawy
+            </a>
+            <a class="button button-secondary" href="{% url 'core:cultivation_update' cultivation.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>Edytuj
+            </a>
+            <a class="button button-text" href="{% url 'core:cultivation_delete' cultivation.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>Usuń
+            </a>
+        </div>
+    </header>
+
+    <article class="sheet" aria-labelledby="cultivation-data-title">
+        <div class="sheet-title">
+            <h2 id="cultivation-data-title">Dane uprawy</h2>
+            <a class="sheet-title-note" href="{% url 'core:field_detail' cultivation.field.pk %}">Zobacz pole</a>
+        </div>
+        <dl class="facts">
+            <div><dt>Sezon</dt><dd>{{ cultivation.season_year }}</dd></div>
+            <div><dt>Status</dt><dd>{{ cultivation.get_status_display }}</dd></div>
+            <div><dt>Data siewu</dt><dd>{{ cultivation.sowing_date|date:"d.m.Y"|default:"—" }}</dd></div>
+            <div><dt>Planowana data zbioru</dt><dd>{{ cultivation.planned_harvest_date|date:"d.m.Y"|default:"—" }}</dd></div>
+            <div><dt>Liczba prac</dt><dd>{{ work_count }}</dd></div>
+            <div><dt>Liczba oprysków</dt><dd>{{ spraying_count }}</dd></div>
+            <div><dt>Liczba zbiorów</dt><dd>{{ harvest_count }}</dd></div>
+            <div class="fact-wide"><dt>Notatki</dt><dd>{{ cultivation.notes|default:"—"|linebreaksbr }}</dd></div>
         </dl>
-        <p>
-            <a href="{% url 'core:cultivation_list' %}">Wróć do listy</a>
-            <a href="{% url 'core:field_detail' cultivation.field.pk %}">Zobacz pole</a>
-            <a href="{% url 'core:cultivation_update' cultivation.pk %}">Edytuj</a>
-            <a href="{% url 'core:cultivation_delete' cultivation.pk %}">Usuń</a>
-            <a href="{% url 'core:cultivation_report' cultivation.pk %}">Raport uprawy</a>
-        </p>
     </article>
 
-    <section>
-        <h2>Wykonane prace</h2>
-        <p>
-            <a href="{% url 'core:fieldwork_create' %}?cultivation={{ cultivation.pk }}">Dodaj pracę</a>
-        </p>
+    <section class="block" aria-labelledby="works-title">
+        <div class="block-head">
+            <h2 id="works-title">Wykonane prace</h2>
+            <a class="button button-secondary" href="{% url 'core:fieldwork_create' %}?cultivation={{ cultivation.pk }}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj pracę
+            </a>
+        </div>
         {% if works %}
-            <ul>
+            <ul class="records">
                 {% for work in works %}
-                    <li>
-                        {{ work.work_date|date:"d.m.Y" }} – {{ work.get_work_type_display }} –
-                        {{ work.cost }} zł
-                        <a href="{% url 'core:fieldwork_detail' work.pk %}">Szczegóły</a>
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ work.work_date|date:'Y-m-d' }}">{{ work.work_date|date:"d.m.Y" }}</time>
+                            <a class="record-title" href="{% url 'core:fieldwork_detail' work.pk %}">{{ work.get_work_type_display }}</a>
+                        </div>
+                        <div class="record-side"><span class="record-amount">{{ work.cost|floatformat:"2g" }} zł</span></div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Dla tej uprawy nie zarejestrowano jeszcze prac.</p>
+            <div class="empty empty-compact"><p>Dla tej uprawy nie zarejestrowano jeszcze prac.</p></div>
         {% endif %}
     </section>
 
-    <section>
-        <h2>Opryski</h2>
-        <p>
-            <a href="{% url 'core:spraying_create' %}?cultivation={{ cultivation.pk }}">Dodaj oprysk</a>
-        </p>
+    <section class="block" aria-labelledby="sprayings-title">
+        <div class="block-head">
+            <h2 id="sprayings-title">Opryski</h2>
+            <a class="button button-secondary" href="{% url 'core:spraying_create' %}?cultivation={{ cultivation.pk }}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj oprysk
+            </a>
+        </div>
         {% if sprayings %}
-            <ul>
+            <ul class="records">
                 {% for spraying in sprayings %}
-                    <li>
-                        {{ spraying.spraying_date|date:"d.m.Y" }} –
-                        {{ spraying.product_name }} – {{ spraying.quantity }}
-                        {{ spraying.get_unit_display }} – {{ spraying.cost }} zł
-                        <a href="{% url 'core:spraying_detail' spraying.pk %}">Szczegóły</a>
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ spraying.spraying_date|date:'Y-m-d' }}">{{ spraying.spraying_date|date:"d.m.Y" }}</time>
+                            <a class="record-title" href="{% url 'core:spraying_detail' spraying.pk %}">{{ spraying.product_name }}</a>
+                            <p class="record-meta"><span>{{ spraying.quantity|floatformat:"2g" }} {{ spraying.get_unit_display }}</span></p>
+                        </div>
+                        <div class="record-side"><span class="record-amount">{{ spraying.cost|floatformat:"2g" }} zł</span></div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Dla tej uprawy nie zarejestrowano jeszcze oprysków.</p>
+            <div class="empty empty-compact"><p>Dla tej uprawy nie zarejestrowano jeszcze oprysków.</p></div>
         {% endif %}
     </section>
 
-    <section>
-        <h2>Zbiory</h2>
-        <p>
-            <a href="{% url 'core:harvest_create' %}?cultivation={{ cultivation.pk }}">Dodaj zbiór</a>
-        </p>
+    <section class="block" aria-labelledby="harvests-title">
+        <div class="block-head">
+            <h2 id="harvests-title">Zbiory</h2>
+            <a class="button button-secondary" href="{% url 'core:harvest_create' %}?cultivation={{ cultivation.pk }}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj zbiór
+            </a>
+        </div>
         {% if harvests %}
-            <ul>
+            <ul class="records">
                 {% for harvest in harvests %}
-                    <li>
-                        {{ harvest.harvest_date|date:"d.m.Y" }} – {{ harvest.quantity }}
-                        {{ harvest.get_unit_display }} – {{ harvest.get_disposition_display }} –
-                        przychód {{ harvest.revenue }} zł –
-                        koszt {{ harvest.harvest_cost }} zł – wynik {{ harvest.profit }} zł
-                        <a href="{% url 'core:harvest_detail' harvest.pk %}">Szczegóły</a>
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ harvest.harvest_date|date:'Y-m-d' }}">{{ harvest.harvest_date|date:"d.m.Y" }}</time>
+                            <a class="record-title" href="{% url 'core:harvest_detail' harvest.pk %}">{{ harvest.quantity|floatformat:"2g" }} {{ harvest.get_unit_display }}</a>
+                            <p class="record-meta"><span>{{ harvest.get_disposition_display }}</span></p>
+                        </div>
+                        <div class="record-side">
+                            <span class="record-amount {% if harvest.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+                                {{ harvest.profit|floatformat:"2g" }} zł
+                                <small>przychód {{ harvest.revenue|floatformat:"2g" }} zł · koszt {{ harvest.harvest_cost|floatformat:"2g" }} zł</small>
+                            </span>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Dla tej uprawy nie zarejestrowano jeszcze zbiorów.</p>
+            <div class="empty empty-compact"><p>Dla tej uprawy nie zarejestrowano jeszcze zbiorów.</p></div>
         {% endif %}
     </section>
 {% endblock %}

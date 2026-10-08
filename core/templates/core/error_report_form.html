@@ -3,22 +3,23 @@
 {% block title %}Zgłoś błąd – Farmer App{% endblock %}
 
 {% block content %}
-<section>
-    <h1>Zgłoś błąd</h1>
-    <p>Po wysłaniu zgłoszenia jego status będzie zmieniany przez administratora.</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-            <p>
-                {{ field.label_tag }}
-                {{ field }}
-                {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
-                {{ field.errors }}
-            </p>
-        {% endfor %}
-        <button type="submit">Wyślij zgłoszenie</button>
-    </form>
-    <p><a href="{% url 'core:error_report_list' %}">Moje zgłoszenia</a></p>
-</section>
+    <a class="back-link" href="{% url 'core:error_report_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Moje zgłoszenia</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Pomoc</p>
+            <h1>Zgłoś błąd</h1>
+            <p class="page-head-lead">Opisz, co się stało i na której stronie. Po wysłaniu zgłoszenia jego status będzie zmieniany przez administratora.</p>
+        </div>
+    </header>
+
+    <div class="sheet app-form">
+        <form method="post" data-busy-form>
+            {% csrf_token %}
+            {% include "core/partials/form_body.html" %}
+            <div class="form-actions">
+                <button class="button" type="submit" data-busy-label="Wysyłanie…">Wyślij zgłoszenie</button>
+                <a class="button button-text" href="{% url 'core:error_report_list' %}">Anuluj</a>
+            </div>
+        </form>
+    </div>
 {% endblock %}

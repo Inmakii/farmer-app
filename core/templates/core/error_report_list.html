@@ -3,54 +3,81 @@
 {% block title %}Moje zgłoszenia błędów – Farmer App{% endblock %}
 
 {% block content %}
-<section>
-    <h1>Moje zgłoszenia błędów</h1>
-    <p><a href="{% url 'core:error_report_create' %}">Utwórz nowe zgłoszenie</a></p>
-    <p>Status zgłoszenia jest zmieniany przez administratora.</p>
+    <a class="back-link" href="{% url 'core:profile' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Profil</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Pomoc</p>
+            <h1>Moje zgłoszenia błędów</h1>
+            <p class="page-head-lead">Status zgłoszenia jest zmieniany przez administratora.</p>
+        </div>
+        <div class="page-actions">
+            <a class="button" href="{% url 'core:error_report_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Utwórz nowe zgłoszenie
+            </a>
+        </div>
+    </header>
 
-    <form method="get">
-        <label for="category">Kategoria</label>
-        <select name="category" id="category">
-            <option value="">Wszystkie</option>
-            {% for value, label in category_choices %}
-                <option value="{{ value }}"{% if selected_category == value %} selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-        <label for="status">Status</label>
-        <select name="status" id="status">
-            <option value="">Wszystkie</option>
-            {% for value, label in status_choices %}
-                <option value="{{ value }}"{% if selected_status == value %} selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Filtruj</button>
-        <a href="{% url 'core:error_report_list' %}">Wyczyść filtry</a>
+    <form class="filters" method="get" role="search" aria-label="Filtruj zgłoszenia">
+        <div class="filters-grid">
+            <div class="filter">
+                <label for="category">Kategoria</label>
+                <select name="category" id="category">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in category_choices %}
+                        <option value="{{ value }}"{% if selected_category == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="status">Status</label>
+                <select name="status" id="status">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}"{% if selected_status == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="filters-actions">
+            <button class="button" type="submit">Filtruj</button>
+            <a class="button button-text" href="{% url 'core:error_report_list' %}">Wyczyść filtry</a>
+        </div>
     </form>
 
     {% if error_reports %}
-        <ul>
-            {% for report in error_reports %}
-                <li>
-                    <a href="{% url 'core:error_report_detail' report.pk %}">Zgłoszenie #{{ report.pk }}</a>
-                    – {{ report.get_category_display }}, {{ report.get_status_display }},
-                    {{ report.created_at|date:"d.m.Y H:i" }}
-                </li>
-            {% endfor %}
-        </ul>
+        <div class="sheet">
+            <ul class="records">
+                {% for report in error_reports %}
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ report.created_at|date:'c' }}">{{ report.created_at|date:"d.m.Y" }}</time>
+                            <a class="record-title" href="{% url 'core:error_report_detail' report.pk %}">Zgłoszenie #{{ report.pk }}</a>
+                            <p class="record-meta"><span>{{ report.get_category_display }}</span><span>{{ report.created_at|date:"H:i" }}</span></p>
+                        </div>
+                        <div class="record-side">
+                            <span class="tag tag-{{ report.status|lower }}">{{ report.get_status_display }}</span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% else %}
-        <p>Nie znaleziono zgłoszeń spełniających wybrane kryteria.</p>
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bug"/></svg></span>
+            <strong>Brak zgłoszeń</strong>
+            <p>Nie znaleziono zgłoszeń spełniających wybrane kryteria.</p>
+        </div>
     {% endif %}
 
     {% if is_paginated %}
-        <nav aria-label="Paginacja zgłoszeń">
+        <nav class="pager" aria-label="Paginacja zgłoszeń">
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}">Poprzednia</a>
-            {% endif %}
+                <a class="pager-link" rel="prev" href="?page={{ page_obj.previous_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-left"/></svg>Poprzednia</a>
+            {% else %}<span class="pager-spacer"></span>{% endif %}
             <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}">Następna</a>
-            {% endif %}
+                <a class="pager-link" rel="next" href="?page={{ page_obj.next_page_number }}&amp;category={{ selected_category|urlencode }}&amp;status={{ selected_status|urlencode }}">Następna<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-right"/></svg></a>
+            {% else %}<span class="pager-spacer"></span>{% endif %}
         </nav>
     {% endif %}
-</section>
 {% endblock %}

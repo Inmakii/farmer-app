@@ -3,23 +3,31 @@
 {% block title %}{% if field %}Edycja pola{% else %}Dodawanie pola{% endif %} – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>{% if field %}Edytuj pole{% else %}Dodaj pole{% endif %}</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for form_field in form %}
-            <p>
-                {{ form_field.label_tag }}
-                {{ form_field }}
-                {% if form_field.help_text %}<small>{{ form_field.help_text }}</small>{% endif %}
-                {{ form_field.errors }}
-            </p>
-        {% endfor %}
-        <button type="submit">Zapisz</button>
-        {% if field %}
-            <a href="{% url 'core:field_detail' field.pk %}">Anuluj</a>
-        {% else %}
-            <a href="{% url 'core:field_list' %}">Anuluj</a>
-        {% endif %}
-    </form>
+    {% if field %}
+        <a class="back-link" href="{% url 'core:field_detail' field.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{{ field.name }}</a>
+    {% else %}
+        <a class="back-link" href="{% url 'core:field_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Moje pola</a>
+    {% endif %}
+    <header class="page-head">
+        <div>
+            <p class="kicker">Pole</p>
+            <h1>{% if field %}Edytuj pole{% else %}Dodaj pole{% endif %}</h1>
+            <p class="page-head-lead">Wystarczy nazwa, powierzchnia i gleba. Działkę, adres lub współrzędne podaj, jeśli chcesz łatwiej odnaleźć pole.</p>
+        </div>
+    </header>
+
+    <div class="sheet app-form">
+        <form method="post" data-busy-form>
+            {% csrf_token %}
+            {% include "core/partials/form_body.html" %}
+            <div class="form-actions">
+                <button class="button" type="submit" data-busy-label="Zapisywanie…">Zapisz</button>
+                {% if field %}
+                    <a class="button button-text" href="{% url 'core:field_detail' field.pk %}">Anuluj</a>
+                {% else %}
+                    <a class="button button-text" href="{% url 'core:field_list' %}">Anuluj</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
 {% endblock %}

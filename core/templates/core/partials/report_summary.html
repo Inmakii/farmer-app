@@ -1,0 +1,61 @@
+{# Podsumowanie raportu: rachunek i plony. Oczekuje t (totals albo report) oraz area (ha). #}
+<dl class="tally" aria-label="Najważniejsze liczby">
+    <div>
+        <dt>Przychód</dt>
+        <dd>{{ t.total_revenue|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+    <div>
+        <dt>Koszty całkowite</dt>
+        <dd>{{ t.total_costs|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+    <div class="{% if t.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+        <dt>Zysk/strata</dt>
+        <dd>{{ t.profit|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+    <div>
+        <dt>Wydajność na hektar</dt>
+        <dd>{{ t.yield_kg_per_ha|floatformat:"2g" }}<small>kg/ha</small></dd>
+    </div>
+</dl>
+
+<div class="balance-grid">
+    <figure class="sheet" aria-labelledby="summary-money-title">
+        <div class="sheet-head">
+            <strong id="summary-money-title">Rachunek</strong>
+            <span>{{ area|floatformat:"2g" }} ha</span>
+        </div>
+        <table class="sheet-table">
+            <thead>
+                <tr><th scope="col">Pozycja</th><th scope="col" class="num">Kwota</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Przychód</td><td class="num is-in">+{{ t.total_revenue|floatformat:"2g" }} zł</td></tr>
+                <tr><td>Koszty prac</td><td class="num">−{{ t.work_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>Koszty oprysków</td><td class="num">−{{ t.spraying_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>Koszty zbiorów</td><td class="num">−{{ t.harvest_costs|floatformat:"2g" }} zł</td></tr>
+            </tbody>
+            <tfoot>
+                <tr><th scope="row">Koszty całkowite</th><td class="num">{{ t.total_costs|floatformat:"2g" }} zł</td></tr>
+                <tr class="sheet-result {% if t.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+                    <th scope="row">Zysk/strata</th>
+                    <td class="num">{{ t.profit|floatformat:"2g" }} zł</td>
+                </tr>
+            </tfoot>
+        </table>
+    </figure>
+
+    <section class="sheet" aria-labelledby="summary-yield-title">
+        <div class="sheet-title">
+            <h2 id="summary-yield-title">Plony</h2>
+            <span class="sheet-title-note">w kilogramach</span>
+        </div>
+        <dl class="facts">
+            <div class="fact-key"><dt>Zebrano łącznie</dt><dd>{{ t.total_quantity_kg|floatformat:"2g" }} kg</dd></div>
+            <div class="fact-key"><dt>Wydajność na hektar</dt><dd>{{ t.yield_kg_per_ha|floatformat:"2g" }} kg/ha</dd></div>
+            <div><dt>Sprzedano</dt><dd>{{ t.sold_quantity_kg|floatformat:"2g" }} kg</dd></div>
+            <div><dt>W magazynie</dt><dd>{{ t.stored_quantity_kg|floatformat:"2g" }} kg</dd></div>
+            <div><dt>Straty / utylizacja</dt><dd>{{ t.discarded_quantity_kg|floatformat:"2g" }} kg</dd></div>
+            <div><dt>Powierzchnia</dt><dd>{{ area|floatformat:"2g" }} ha</dd></div>
+        </dl>
+    </section>
+</div>

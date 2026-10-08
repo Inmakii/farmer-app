@@ -3,11 +3,16 @@
 {% block title %}Usuwanie pola – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Usuń pole</h1>
-    <p>Czy na pewno chcesz usunąć pole „{{ field.name }}”?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Tak, usuń pole</button>
-        <a href="{% url 'core:field_detail' field.pk %}">Anuluj</a>
-    </form>
+    <a class="back-link" href="{% url 'core:field_detail' field.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć</a>
+    <div class="sheet confirm">
+        <span class="confirm-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg></span>
+        <h1>Usuń pole</h1>
+        <p class="confirm-text">Czy na pewno chcesz usunąć pole „{{ field.name }}”?</p>
+        <p class="confirm-note">Razem z polem znikną zapisane na nim uprawy, prace, opryski i zbiory. Tego nie da się cofnąć.</p>
+        <form method="post" class="form-actions" data-busy-form>
+            {% csrf_token %}
+            <button class="button button-danger" type="submit" data-busy-label="Usuwanie…">Tak, usuń pole</button>
+            <a class="button button-text" href="{% url 'core:field_detail' field.pk %}">Anuluj</a>
+        </form>
+    </div>
 {% endblock %}

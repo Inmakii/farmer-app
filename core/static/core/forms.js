@@ -1,4 +1,4 @@
-// Login and registration forms: show/hide password and a busy state on submit.
+// Forms: show/hide password and a busy state on submit.
 (function () {
     "use strict";
 
@@ -33,8 +33,20 @@
                         input.type = "password";
                     }
                 });
+                button.setAttribute("data-idle-label", button.textContent);
                 button.setAttribute("aria-busy", "true");
                 button.textContent = button.getAttribute("data-busy-label");
+            });
+        });
+
+        // Back/forward cache restores the page as it was, so undo the busy state.
+        window.addEventListener("pageshow", function (event) {
+            if (!event.persisted) {
+                return;
+            }
+            Array.prototype.forEach.call(document.querySelectorAll("[data-busy-label][aria-busy='true']"), function (button) {
+                button.removeAttribute("aria-busy");
+                button.textContent = button.getAttribute("data-idle-label");
             });
         });
     }

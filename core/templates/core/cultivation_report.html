@@ -3,162 +3,87 @@
 {% block title %}Raport uprawy – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>
-        Raport: {{ cultivation.crop.name }} –
-        {{ cultivation.field.name }}
-        ({{ cultivation.season_year }})
-    </h1>
+    <a class="back-link" href="{% url 'core:report_dashboard' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wszystkie raporty</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Raport uprawy · sezon {{ cultivation.season_year }}</p>
+            <h1>Raport: {{ cultivation.crop.name }} – {{ cultivation.field.name }} ({{ cultivation.season_year }})</h1>
+        </div>
+        <div class="page-actions">
+            <a class="button button-secondary" href="{% url 'core:field_report' cultivation.field.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg>Raport pola
+            </a>
+            <a class="button button-secondary" href="{% url 'core:cultivation_detail' cultivation.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg>Szczegóły uprawy
+            </a>
+        </div>
+    </header>
 
-    <p>
-        <a href="{% url 'core:report_dashboard' %}">
-            Wszystkie raporty
-        </a>
-
-        <a href="{% url 'core:field_report' cultivation.field.pk %}">
-            Raport pola
-        </a>
-
-        <a href="{% url 'core:cultivation_detail' cultivation.pk %}">
-            Szczegóły uprawy
-        </a>
-    </p>
-
-    <section>
-        <h2>Podsumowanie</h2>
-
-        <dl>
-            <dt>Powierzchnia pola</dt>
-            <dd>{{ report.field_area_ha|floatformat:2 }} ha</dd>
-
-            <dt>Zebrano łącznie</dt>
-            <dd>
-                {{ report.total_quantity_kg|floatformat:2 }} kg
-            </dd>
-
-            <dt>Wydajność na hektar</dt>
-            <dd>
-                <strong>
-                    {{ report.yield_kg_per_ha|floatformat:2 }} kg/ha
-                </strong>
-            </dd>
-
-            <dt>Sprzedano</dt>
-            <dd>
-                {{ report.sold_quantity_kg|floatformat:2 }} kg
-            </dd>
-
-            <dt>W magazynie</dt>
-            <dd>
-                {{ report.stored_quantity_kg|floatformat:2 }} kg
-            </dd>
-
-            <dt>Straty / utylizacja</dt>
-            <dd>
-                {{ report.discarded_quantity_kg|floatformat:2 }} kg
-            </dd>
-
-            <dt>Koszty prac</dt>
-            <dd>
-                {{ report.work_costs|floatformat:2 }} zł
-            </dd>
-
-            <dt>Koszty oprysków</dt>
-            <dd>
-                {{ report.spraying_costs|floatformat:2 }} zł
-            </dd>
-
-            <dt>Koszty zbiorów</dt>
-            <dd>
-                {{ report.harvest_costs|floatformat:2 }} zł
-            </dd>
-
-            <dt>Koszty całkowite</dt>
-            <dd>
-                <strong>
-                    {{ report.total_costs|floatformat:2 }} zł
-                </strong>
-            </dd>
-
-            <dt>Przychód</dt>
-            <dd>
-                <strong>
-                    {{ report.total_revenue|floatformat:2 }} zł
-                </strong>
-            </dd>
-
-            <dt>Zysk/strata</dt>
-            <dd>
-                <strong>
-                    {{ report.profit|floatformat:2 }} zł
-                </strong>
-            </dd>
-        </dl>
+    <section aria-labelledby="summary-title">
+        <h2 id="summary-title" class="visually-hidden">Podsumowanie</h2>
+        {% include "core/partials/report_summary.html" with t=report area=report.field_area_ha %}
     </section>
 
-    <section>
-        <h2>Prace</h2>
-
+    <section class="block" aria-labelledby="works-title">
+        <div class="block-head"><h2 id="works-title">Prace</h2></div>
         {% if report.works %}
-            <ul>
+            <ul class="records">
                 {% for work in report.works %}
-                    <li>
-                        {{ work.work_date|date:"d.m.Y" }}
-                        –
-                        {{ work.get_work_type_display }}
-                        –
-                        {{ work.cost|floatformat:2 }} zł
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ work.work_date|date:'Y-m-d' }}">{{ work.work_date|date:"d.m.Y" }}</time>
+                            <span class="record-title">{{ work.get_work_type_display }}</span>
+                        </div>
+                        <div class="record-side"><span class="record-amount">{{ work.cost|floatformat:"2g" }} zł</span></div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Brak prac.</p>
+            <div class="empty empty-compact"><p>Brak prac.</p></div>
         {% endif %}
     </section>
 
-    <section>
-        <h2>Opryski</h2>
-
+    <section class="block" aria-labelledby="sprayings-title">
+        <div class="block-head"><h2 id="sprayings-title">Opryski</h2></div>
         {% if report.sprayings %}
-            <ul>
+            <ul class="records">
                 {% for spraying in report.sprayings %}
-                    <li>
-                        {{ spraying.spraying_date|date:"d.m.Y" }}
-                        –
-                        {{ spraying.product_name }}
-                        –
-                        {{ spraying.cost|floatformat:2 }} zł
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ spraying.spraying_date|date:'Y-m-d' }}">{{ spraying.spraying_date|date:"d.m.Y" }}</time>
+                            <span class="record-title">{{ spraying.product_name }}</span>
+                        </div>
+                        <div class="record-side"><span class="record-amount">{{ spraying.cost|floatformat:"2g" }} zł</span></div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Brak oprysków.</p>
+            <div class="empty empty-compact"><p>Brak oprysków.</p></div>
         {% endif %}
     </section>
 
-    <section>
-        <h2>Zbiory</h2>
-
+    <section class="block" aria-labelledby="harvests-title">
+        <div class="block-head"><h2 id="harvests-title">Zbiory</h2></div>
         {% if report.harvests %}
-            <ul>
+            <ul class="records">
                 {% for harvest in report.harvests %}
-                    <li>
-                        {{ harvest.harvest_date|date:"d.m.Y" }}
-                        –
-                        {{ harvest.quantity }}
-                        {{ harvest.get_unit_display }}
-                        –
-                        {{ harvest.get_disposition_display }}
-                        –
-                        przychód
-                        {{ harvest.revenue|floatformat:2 }} zł
-                        –
-                        koszt
-                        {{ harvest.harvest_cost|floatformat:2 }} zł
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ harvest.harvest_date|date:'Y-m-d' }}">{{ harvest.harvest_date|date:"d.m.Y" }}</time>
+                            <span class="record-title">{{ harvest.quantity|floatformat:"2g" }} {{ harvest.get_unit_display }}</span>
+                            <p class="record-meta"><span>{{ harvest.get_disposition_display }}</span></p>
+                        </div>
+                        <div class="record-side">
+                            <span class="record-amount">
+                                przychód {{ harvest.revenue|floatformat:"2g" }} zł
+                                <small>koszt {{ harvest.harvest_cost|floatformat:"2g" }} zł</small>
+                            </span>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Brak zbiorów.</p>
+            <div class="empty empty-compact"><p>Brak zbiorów.</p></div>
         {% endif %}
     </section>
 {% endblock %}

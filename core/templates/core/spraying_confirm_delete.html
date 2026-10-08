@@ -3,7 +3,16 @@
 {% block title %}Usuń oprysk – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Usuń oprysk</h1>
-    <p>Czy na pewno chcesz usunąć oprysk „{{ spraying.product_name }}” z dnia {{ spraying.spraying_date|date:"d.m.Y" }}?</p>
-    <form method="post">{% csrf_token %}<button type="submit">Tak, usuń oprysk</button> <a href="{% url 'core:spraying_detail' spraying.pk %}">Anuluj</a></form>
+    <a class="back-link" href="{% url 'core:spraying_detail' spraying.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wróć</a>
+    <div class="sheet confirm">
+        <span class="confirm-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg></span>
+        <h1>Usuń oprysk</h1>
+        <p class="confirm-text">Czy na pewno chcesz usunąć oprysk „{{ spraying.product_name }}” z dnia {{ spraying.spraying_date|date:"d.m.Y" }}?</p>
+        <p class="confirm-note">Koszt tego oprysku zniknie z raportów. Tego nie da się cofnąć.</p>
+        <form method="post" class="form-actions" data-busy-form>
+            {% csrf_token %}
+            <button class="button button-danger" type="submit" data-busy-label="Usuwanie…">Tak, usuń oprysk</button>
+            <a class="button button-text" href="{% url 'core:spraying_detail' spraying.pk %}">Anuluj</a>
+        </form>
+    </div>
 {% endblock %}

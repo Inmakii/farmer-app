@@ -3,34 +3,52 @@
 {% block title %}{% if cultivation %}Edycja uprawy{% else %}Dodawanie uprawy{% endif %} – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>{% if cultivation %}Edytuj uprawę{% else %}Dodaj uprawę{% endif %}</h1>
+    {% if cultivation %}
+        <a class="back-link" href="{% url 'core:cultivation_detail' cultivation.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{{ cultivation.crop.name }} – {{ cultivation.field.name }}</a>
+    {% else %}
+        <a class="back-link" href="{% url 'core:cultivation_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Uprawy</a>
+    {% endif %}
+    <header class="page-head">
+        <div>
+            <p class="kicker">Uprawa</p>
+            <h1>{% if cultivation %}Edytuj uprawę{% else %}Dodaj uprawę{% endif %}</h1>
+            <p class="page-head-lead">Wybierz pole, roślinę i rok sezonu. Daty siewu i zbioru możesz uzupełnić później.</p>
+        </div>
+    </header>
+
     {% if not has_fields %}
-        <p>Nie masz jeszcze żadnych pól. Utwórz pole przed dodaniem uprawy.</p>
-        <p><a href="{% url 'core:field_create' %}">Utwórz pierwsze pole</a></p>
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg></span>
+            <strong>Najpierw potrzebne jest pole</strong>
+            <p>Nie masz jeszcze żadnych pól. Utwórz pole przed dodaniem uprawy.</p>
+            <a class="button" href="{% url 'core:field_create' %}">Utwórz pierwsze pole</a>
+        </div>
     {% else %}
         {% if not has_crops %}
-            <p>Katalog rodzajów upraw jest pusty. Dodaj rodzaj uprawy, aby móc utworzyć uprawę.</p>
-            <p><a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a></p>
-        {% else %}
-            <p>Nie widzisz potrzebnego rodzaju uprawy? <a href="{% url 'core:crop_create' %}">Dodaj brakujący rodzaj uprawy</a></p>
+            <div class="callout" role="note">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-alert"/></svg>
+                <div>
+                    <p>Katalog rodzajów upraw jest pusty. Dodaj rodzaj uprawy, aby móc utworzyć uprawę.</p>
+                    <p><a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a></p>
+                </div>
+            </div>
         {% endif %}
-        <form method="post">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            {% for form_field in form %}
-                <p>
-                    {{ form_field.label_tag }}
-                    {{ form_field }}
-                    {% if form_field.help_text %}<small>{{ form_field.help_text }}</small>{% endif %}
-                    {{ form_field.errors }}
-                </p>
-            {% endfor %}
-            <button type="submit">Zapisz</button>
-            {% if cultivation %}
-                <a href="{% url 'core:cultivation_detail' cultivation.pk %}">Anuluj</a>
-            {% else %}
-                <a href="{% url 'core:cultivation_list' %}">Anuluj</a>
-            {% endif %}
-        </form>
+        <div class="sheet app-form">
+            <form method="post" data-busy-form>
+                {% csrf_token %}
+                {% include "core/partials/form_body.html" %}
+                {% if has_crops %}
+                    <p class="note">Nie widzisz potrzebnego rodzaju uprawy? <a href="{% url 'core:crop_create' %}">Dodaj brakujący rodzaj uprawy</a></p>
+                {% endif %}
+                <div class="form-actions">
+                    <button class="button" type="submit" data-busy-label="Zapisywanie…">Zapisz</button>
+                    {% if cultivation %}
+                        <a class="button button-text" href="{% url 'core:cultivation_detail' cultivation.pk %}">Anuluj</a>
+                    {% else %}
+                        <a class="button button-text" href="{% url 'core:cultivation_list' %}">Anuluj</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
     {% endif %}
 {% endblock %}

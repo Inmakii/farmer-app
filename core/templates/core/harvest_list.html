@@ -3,18 +3,122 @@
 {% block title %}Zbiory – Farmer App{% endblock %}
 
 {% block content %}
-    <header><h1>Zbiory</h1><a href="{% url 'core:harvest_create' %}">Dodaj zbiór</a></header>
-    <form method="get" action="{% url 'core:harvest_list' %}">
-        <p><label for="id_q">Szukaj</label> <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Notatki, pole lub uprawa"></p>
-        <p><label for="id_field">Pole</label> <select id="id_field" name="field"><option value="">Wszystkie</option>{% for field in user_fields %}<option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>{% endfor %}</select></p>
-        <p><label for="id_cultivation">Uprawa</label> <select id="id_cultivation" name="cultivation"><option value="">Wszystkie</option>{% for cultivation in user_cultivations %}<option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>{% endfor %}</select></p>
-        <p><label for="id_unit">Jednostka</label> <select id="id_unit" name="unit"><option value="">Wszystkie</option>{% for value, label in unit_choices %}<option value="{{ value }}"{% if selected_unit == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></p>
-        <p><label for="id_disposition">Przeznaczenie</label> <select id="id_disposition" name="disposition"><option value="">Wszystkie</option>{% for value, label in disposition_choices %}<option value="{{ value }}"{% if selected_disposition == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></p>
-        <p><label for="id_date_from">Od</label> <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}"> <label for="id_date_to">Do</label> <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}"></p>
-        <button type="submit">Filtruj</button> <a href="{% url 'core:harvest_list' %}">Wyczyść filtry</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Zapisy</p>
+            <h1>Zbiory</h1>
+            <p class="page-head-lead">Ile zebrano, co się z tym stało i ile to dało.</p>
+        </div>
+        <div class="page-actions">
+            <a class="button" href="{% url 'core:harvest_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj zbiór
+            </a>
+        </div>
+    </header>
+
+    <form class="filters" method="get" action="{% url 'core:harvest_list' %}" role="search" aria-label="Filtruj zbiory">
+        <div class="filters-grid">
+            <div class="filter filter-wide">
+                <label for="id_q">Szukaj</label>
+                <div class="search-input">
+                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
+                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Notatki, pole lub uprawa">
+                </div>
+            </div>
+            <div class="filter">
+                <label for="id_field">Pole</label>
+                <select id="id_field" name="field">
+                    <option value="">Wszystkie</option>
+                    {% for field in user_fields %}
+                        <option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_cultivation">Uprawa</label>
+                <select id="id_cultivation" name="cultivation">
+                    <option value="">Wszystkie</option>
+                    {% for cultivation in user_cultivations %}
+                        <option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_unit">Jednostka</label>
+                <select id="id_unit" name="unit">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in unit_choices %}
+                        <option value="{{ value }}"{% if selected_unit == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_disposition">Przeznaczenie</label>
+                <select id="id_disposition" name="disposition">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in disposition_choices %}
+                        <option value="{{ value }}"{% if selected_disposition == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_date_from">Od</label>
+                <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}">
+            </div>
+            <div class="filter">
+                <label for="id_date_to">Do</label>
+                <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}">
+            </div>
+        </div>
+        <div class="filters-actions">
+            <button class="button" type="submit">Filtruj</button>
+            <a class="button button-text" href="{% url 'core:harvest_list' %}">Wyczyść filtry</a>
+        </div>
     </form>
+
     {% if harvests %}
-        <ul>{% for harvest in harvests %}<li>{{ harvest.harvest_date|date:"d.m.Y" }} – {{ harvest.quantity }} {{ harvest.get_unit_display }} – {{ harvest.get_disposition_display }} – {{ harvest.cultivation.field.name }} – {{ harvest.cultivation.crop.name }} – {{ harvest.cultivation.season_year }} – przychód {{ harvest.revenue }} zł – koszt {{ harvest.harvest_cost }} zł – wynik {{ harvest.profit }} zł <a href="{% url 'core:harvest_detail' harvest.pk %}">Szczegóły</a> <a href="{% url 'core:harvest_update' harvest.pk %}">Edytuj</a> <a href="{% url 'core:harvest_delete' harvest.pk %}">Usuń</a></li>{% endfor %}</ul>
-        {% if is_paginated %}<nav aria-label="Paginacja zbiorów">{% if page_obj.has_previous %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Poprzednia</a>{% endif %} <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span> {% if page_obj.has_next %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Następna</a>{% endif %}</nav>{% endif %}
-    {% else %}<p>Nie znaleziono zbiorów spełniających podane kryteria.</p>{% endif %}
+        <div class="sheet">
+            <ul class="records">
+                {% for harvest in harvests %}
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ harvest.harvest_date|date:'Y-m-d' }}">{{ harvest.harvest_date|date:"d.m.Y" }}</time>
+                            <a class="record-title" href="{% url 'core:harvest_detail' harvest.pk %}">{{ harvest.quantity|floatformat:"2g" }} {{ harvest.get_unit_display }} · {{ harvest.cultivation.crop.name }}</a>
+                            <p class="record-meta">
+                                <span>{{ harvest.get_disposition_display }}</span>
+                                <span>{{ harvest.cultivation.field.name }}</span>
+                                <span>sezon {{ harvest.cultivation.season_year }}</span>
+                            </p>
+                        </div>
+                        <div class="record-side">
+                            <span class="record-amount {% if harvest.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+                                {{ harvest.profit|floatformat:"2g" }} zł
+                                <small>przychód {{ harvest.revenue|floatformat:"2g" }} zł · koszt {{ harvest.harvest_cost|floatformat:"2g" }} zł</small>
+                            </span>
+                            <span class="record-actions">
+                                <a class="icon-link" href="{% url 'core:harvest_update' harvest.pk %}" title="Edytuj">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>
+                                    <span class="visually-hidden">Edytuj zbiór z dnia {{ harvest.harvest_date|date:"d.m.Y" }}</span>
+                                </a>
+                                <a class="icon-link is-danger" href="{% url 'core:harvest_delete' harvest.pk %}" title="Usuń">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>
+                                    <span class="visually-hidden">Usuń zbiór z dnia {{ harvest.harvest_date|date:"d.m.Y" }}</span>
+                                </a>
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% include "core/partials/pagination.html" with label="Paginacja zbiorów" %}
+    {% else %}
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-package"/></svg></span>
+            <strong>Brak zapisanych zbiorów</strong>
+            <p>Nie znaleziono zbiorów spełniających podane kryteria.</p>
+            <a class="button" href="{% url 'core:harvest_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj zbiór
+            </a>
+        </div>
+    {% endif %}
 {% endblock %}

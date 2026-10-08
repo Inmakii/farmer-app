@@ -3,151 +3,79 @@
 {% block title %}Raport pola {{ field.name }} – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Raport pola: {{ field.name }}</h1>
-
-    <p>
-        <a href="{% url 'core:report_dashboard' %}">
-            Wszystkie raporty
-        </a>
-
-        <a href="{% url 'core:field_detail' field.pk %}">
-            Szczegóły pola
-        </a>
-    </p>
-
-    <form method="get">
-        <p>
-            <label for="id_season_year">Rok sezonu</label>
-
-            <input
-                id="id_season_year"
-                type="number"
-                min="1980"
-                max="2100"
-                name="season_year"
-                value="{{ selected_season_year }}"
-            >
-
-            <button type="submit">Filtruj</button>
-
-            <a href="{% url 'core:field_report' field.pk %}">
-                Wyczyść filtr
+    <a class="back-link" href="{% url 'core:report_dashboard' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>Wszystkie raporty</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Raport pola</p>
+            <h1>Raport pola: {{ field.name }}</h1>
+            <p class="page-head-lead">Powierzchnia pola: {{ totals.total_area_ha|floatformat:"2g" }} ha</p>
+        </div>
+        <div class="page-actions">
+            <a class="button button-secondary" href="{% url 'core:field_detail' field.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg>Szczegóły pola
             </a>
-        </p>
+        </div>
+    </header>
+
+    <form class="filters" method="get" aria-label="Zakres raportu">
+        <div class="filters-grid">
+            <div class="filter">
+                <label for="id_season_year">Rok sezonu</label>
+                <input id="id_season_year" type="number" min="1980" max="2100" name="season_year" value="{{ selected_season_year }}" inputmode="numeric">
+            </div>
+        </div>
+        <div class="filters-actions">
+            <button class="button" type="submit">Filtruj</button>
+            <a class="button button-text" href="{% url 'core:field_report' field.pk %}">Wyczyść filtr</a>
+        </div>
     </form>
 
     {% if invalid_filter %}
-        <p>Podany rok jest nieprawidłowy.</p>
+        <div class="callout callout-error" role="alert">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-alert"/></svg>
+            <p>Podany rok jest nieprawidłowy.</p>
+        </div>
     {% endif %}
 
-    <section>
-        <h2>Podsumowanie pola</h2>
-
-        <dl>
-            <dt>Powierzchnia pola</dt>
-            <dd>{{ totals.total_area_ha|floatformat:2 }} ha</dd>
-
-            <dt>Uprawy</dt>
-            <dd>{{ totals.cultivation_count }}</dd>
-
-            <dt>Prace</dt>
-            <dd>{{ totals.work_count }}</dd>
-
-            <dt>Opryski</dt>
-            <dd>{{ totals.spraying_count }}</dd>
-
-            <dt>Zbiory</dt>
-            <dd>{{ totals.harvest_count }}</dd>
-
-            <dt>Zebrano łącznie</dt>
-            <dd>{{ totals.total_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Wydajność na hektar</dt>
-            <dd>
-                <strong>
-                    {{ totals.yield_kg_per_ha|floatformat:2 }} kg/ha
-                </strong>
-            </dd>
-
-            <dt>Sprzedano</dt>
-            <dd>{{ totals.sold_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>W magazynie</dt>
-            <dd>{{ totals.stored_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Straty / utylizacja</dt>
-            <dd>{{ totals.discarded_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Koszty prac</dt>
-            <dd>{{ totals.work_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty oprysków</dt>
-            <dd>{{ totals.spraying_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty zbiorów</dt>
-            <dd>{{ totals.harvest_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty całkowite</dt>
-            <dd>
-                <strong>
-                    {{ totals.total_costs|floatformat:2 }} zł
-                </strong>
-            </dd>
-
-            <dt>Przychód</dt>
-            <dd>
-                <strong>
-                    {{ totals.total_revenue|floatformat:2 }} zł
-                </strong>
-            </dd>
-
-            <dt>Zysk/strata</dt>
-            <dd>
-                <strong>
-                    {{ totals.profit|floatformat:2 }} zł
-                </strong>
-            </dd>
+    <section aria-labelledby="summary-title">
+        <h2 id="summary-title" class="visually-hidden">Podsumowanie pola</h2>
+        {% include "core/partials/report_summary.html" with t=totals area=totals.total_area_ha %}
+        <dl class="tally" aria-label="Liczba zapisów">
+            <div><dt>Uprawy</dt><dd>{{ totals.cultivation_count }}</dd></div>
+            <div><dt>Prace</dt><dd>{{ totals.work_count }}</dd></div>
+            <div><dt>Opryski</dt><dd>{{ totals.spraying_count }}</dd></div>
+            <div><dt>Zbiory</dt><dd>{{ totals.harvest_count }}</dd></div>
         </dl>
     </section>
 
-    <section>
-        <h2>Uprawy pola</h2>
-
+    <section class="block" aria-labelledby="field-crops-title">
+        <div class="block-head">
+            <h2 id="field-crops-title">Uprawy pola</h2>
+        </div>
         {% if cultivation_reports %}
-            <ul>
+            <ul class="records">
                 {% for item in cultivation_reports %}
-                    <li>
-                        <a href="{% url 'core:cultivation_report' item.cultivation.pk %}">
-                            {{ item.cultivation.crop.name }} –
-                            {{ item.cultivation.season_year }}
-                        </a>:
-
-                        zebrano
-                        {{ item.total_quantity_kg|floatformat:2 }} kg,
-
-                        wydajność
-                        <strong>
-                            {{ item.yield_kg_per_ha|floatformat:2 }} kg/ha
-                        </strong>,
-
-                        straty
-                        {{ item.discarded_quantity_kg|floatformat:2 }} kg,
-
-                        koszty
-                        {{ item.total_costs|floatformat:2 }} zł,
-
-                        przychód
-                        {{ item.total_revenue|floatformat:2 }} zł,
-
-                        wynik
-                        {{ item.profit|floatformat:2 }} zł
+                    <li class="record">
+                        <div class="record-main">
+                            <span class="record-date">Sezon {{ item.cultivation.season_year }}</span>
+                            <a class="record-title" href="{% url 'core:cultivation_report' item.cultivation.pk %}">{{ item.cultivation.crop.name }}</a>
+                            <p class="record-meta">
+                                <span>zebrano {{ item.total_quantity_kg|floatformat:"2g" }} kg</span>
+                                <span>wydajność <strong>{{ item.yield_kg_per_ha|floatformat:"2g" }} kg/ha</strong></span>
+                                <span>straty {{ item.discarded_quantity_kg|floatformat:"2g" }} kg</span>
+                            </p>
+                        </div>
+                        <div class="record-side">
+                            <span class="record-amount {% if item.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+                                {{ item.profit|floatformat:"2g" }} zł
+                                <small>przychód {{ item.total_revenue|floatformat:"2g" }} zł · koszty {{ item.total_costs|floatformat:"2g" }} zł</small>
+                            </span>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>
-                Pole nie ma upraw dla wybranego okresu.
-            </p>
+            <div class="empty empty-compact"><p>Pole nie ma upraw dla wybranego okresu.</p></div>
         {% endif %}
     </section>
 {% endblock %}

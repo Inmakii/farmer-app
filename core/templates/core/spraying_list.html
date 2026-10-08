@@ -3,22 +3,110 @@
 {% block title %}Opryski – Farmer App{% endblock %}
 
 {% block content %}
-    <header>
-        <h1>Opryski</h1>
-        <a href="{% url 'core:spraying_create' %}">Dodaj oprysk</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Zapisy</p>
+            <h1>Opryski</h1>
+            <p class="page-head-lead">Jakim środkiem, ile i za ile, na każdej uprawie.</p>
+        </div>
+        <div class="page-actions">
+            <a class="button" href="{% url 'core:spraying_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj oprysk
+            </a>
+        </div>
     </header>
-    <form method="get" action="{% url 'core:spraying_list' %}">
-        <p><label for="id_q">Szukaj</label> <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Preparat, opis, pole lub uprawa"></p>
-        <p><label for="id_field">Pole</label> <select id="id_field" name="field"><option value="">Wszystkie</option>{% for field in user_fields %}<option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>{% endfor %}</select></p>
-        <p><label for="id_cultivation">Uprawa</label> <select id="id_cultivation" name="cultivation"><option value="">Wszystkie</option>{% for cultivation in user_cultivations %}<option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>{% endfor %}</select></p>
-        <p><label for="id_unit">Jednostka</label> <select id="id_unit" name="unit"><option value="">Wszystkie</option>{% for value, label in unit_choices %}<option value="{{ value }}"{% if selected_unit == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></p>
-        <p><label for="id_date_from">Od</label> <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}"> <label for="id_date_to">Do</label> <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}"></p>
-        <button type="submit">Filtruj</button> <a href="{% url 'core:spraying_list' %}">Wyczyść filtry</a>
+
+    <form class="filters" method="get" action="{% url 'core:spraying_list' %}" role="search" aria-label="Filtruj opryski">
+        <div class="filters-grid">
+            <div class="filter filter-wide">
+                <label for="id_q">Szukaj</label>
+                <div class="search-input">
+                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
+                    <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Preparat, opis, pole lub uprawa">
+                </div>
+            </div>
+            <div class="filter">
+                <label for="id_field">Pole</label>
+                <select id="id_field" name="field">
+                    <option value="">Wszystkie</option>
+                    {% for field in user_fields %}
+                        <option value="{{ field.pk }}"{% if selected_field == field.pk|stringformat:"s" %} selected{% endif %}>{{ field.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_cultivation">Uprawa</label>
+                <select id="id_cultivation" name="cultivation">
+                    <option value="">Wszystkie</option>
+                    {% for cultivation in user_cultivations %}
+                        <option value="{{ cultivation.pk }}"{% if selected_cultivation == cultivation.pk|stringformat:"s" %} selected{% endif %}>{{ cultivation }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_unit">Jednostka</label>
+                <select id="id_unit" name="unit">
+                    <option value="">Wszystkie</option>
+                    {% for value, label in unit_choices %}
+                        <option value="{{ value }}"{% if selected_unit == value %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter">
+                <label for="id_date_from">Od</label>
+                <input id="id_date_from" type="date" name="date_from" value="{{ selected_date_from }}">
+            </div>
+            <div class="filter">
+                <label for="id_date_to">Do</label>
+                <input id="id_date_to" type="date" name="date_to" value="{{ selected_date_to }}">
+            </div>
+        </div>
+        <div class="filters-actions">
+            <button class="button" type="submit">Filtruj</button>
+            <a class="button button-text" href="{% url 'core:spraying_list' %}">Wyczyść filtry</a>
+        </div>
     </form>
+
     {% if sprayings %}
-        <ul>{% for spraying in sprayings %}<li>{{ spraying.spraying_date|date:"d.m.Y" }} – <strong>{{ spraying.product_name }}</strong> – {{ spraying.quantity }} {{ spraying.get_unit_display }} – {{ spraying.cultivation.field.name }} – {{ spraying.cultivation.crop.name }} – {{ spraying.cultivation.season_year }} – {{ spraying.cost }} zł <a href="{% url 'core:spraying_detail' spraying.pk %}">Szczegóły</a> <a href="{% url 'core:spraying_update' spraying.pk %}">Edytuj</a> <a href="{% url 'core:spraying_delete' spraying.pk %}">Usuń</a></li>{% endfor %}</ul>
-        {% if is_paginated %}<nav aria-label="Paginacja oprysków">{% if page_obj.has_previous %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Poprzednia</a>{% endif %} <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span> {% if page_obj.has_next %}<a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Następna</a>{% endif %}</nav>{% endif %}
+        <div class="sheet">
+            <ul class="records">
+                {% for spraying in sprayings %}
+                    <li class="record">
+                        <div class="record-main">
+                            <time class="record-date" datetime="{{ spraying.spraying_date|date:'Y-m-d' }}">{{ spraying.spraying_date|date:"d.m.Y" }}</time>
+                            <a class="record-title" href="{% url 'core:spraying_detail' spraying.pk %}">{{ spraying.product_name }}</a>
+                            <p class="record-meta">
+                                <span>{{ spraying.quantity|floatformat:"2g" }} {{ spraying.get_unit_display }}</span>
+                                <span>{{ spraying.cultivation.field.name }}</span>
+                                <span>{{ spraying.cultivation.crop.name }} {{ spraying.cultivation.season_year }}</span>
+                            </p>
+                        </div>
+                        <div class="record-side">
+                            <span class="record-amount">{{ spraying.cost|floatformat:"2g" }} zł</span>
+                            <span class="record-actions">
+                                <a class="icon-link" href="{% url 'core:spraying_update' spraying.pk %}" title="Edytuj">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>
+                                    <span class="visually-hidden">Edytuj oprysk {{ spraying.product_name }} z dnia {{ spraying.spraying_date|date:"d.m.Y" }}</span>
+                                </a>
+                                <a class="icon-link is-danger" href="{% url 'core:spraying_delete' spraying.pk %}" title="Usuń">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>
+                                    <span class="visually-hidden">Usuń oprysk {{ spraying.product_name }} z dnia {{ spraying.spraying_date|date:"d.m.Y" }}</span>
+                                </a>
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% include "core/partials/pagination.html" with label="Paginacja oprysków" %}
     {% else %}
-        <p>Nie znaleziono oprysków spełniających podane kryteria.</p>
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-droplets"/></svg></span>
+            <strong>Brak zapisanych oprysków</strong>
+            <p>Nie znaleziono oprysków spełniających podane kryteria.</p>
+            <a class="button" href="{% url 'core:spraying_create' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Dodaj oprysk
+            </a>
+        </div>
     {% endif %}
 {% endblock %}

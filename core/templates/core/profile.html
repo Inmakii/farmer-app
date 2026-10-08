@@ -3,29 +3,40 @@
 {% block title %}Profil – Farmer App{% endblock %}
 
 {% block content %}
-    <article>
-        <h1>Twój profil</h1>
-        <dl>
-            <dt>Nazwa użytkownika</dt>
-            <dd>{{ user.username }}</dd>
-            <dt>Imię</dt>
-            <dd>{{ user.first_name }}</dd>
-            <dt>Nazwisko</dt>
-            <dd>{{ user.last_name }}</dd>
-            <dt>Adres e-mail</dt>
-            <dd>{{ user.email }}</dd>
-        </dl>
-        <p>
-            <a href="{% url 'core:profile_edit' %}">Edytuj profil</a>
-            <a href="{% url 'core:password_change' %}">Zmień hasło</a>
-        </p>
-        <section>
-            <h2>Zgłoszenia błędów</h2>
-            <p>Liczba Twoich zgłoszeń: {{ error_report_count }}</p>
-            <p>
-                <a href="{% url 'core:error_report_create' %}">Utwórz zgłoszenie</a>
-                <a href="{% url 'core:error_report_list' %}">Moje zgłoszenia</a>
-            </p>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Konto</p>
+            <h1>Twój profil</h1>
+        </div>
+        <div class="page-actions">
+            <a class="button button-secondary" href="{% url 'core:profile_edit' %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>Edytuj profil
+            </a>
+        </div>
+    </header>
+
+    <div class="profile-grid">
+        <article class="sheet" aria-labelledby="profile-data-title">
+            <div class="sheet-title">
+                <h2 id="profile-data-title">Dane konta</h2>
+            </div>
+            <dl class="facts">
+                <div><dt>Nazwa użytkownika</dt><dd>{{ user.username }}</dd></div>
+                <div><dt>Adres e-mail</dt><dd>{{ user.email|default:"—" }}</dd></div>
+                <div><dt>Imię</dt><dd>{{ user.first_name|default:"—" }}</dd></div>
+                <div><dt>Nazwisko</dt><dd>{{ user.last_name|default:"—" }}</dd></div>
+            </dl>
+        </article>
+
+        <section aria-labelledby="profile-links-title">
+            <h2 id="profile-links-title">Ustawienia i pomoc</h2>
+            <ul class="side-links">
+                <li><a href="{% url 'core:profile_edit' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-user"/></svg>Edytuj profil<svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+                <li><a href="{% url 'core:password_change' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-key"/></svg>Zmień hasło<svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+                <li><a href="{% url 'core:error_report_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bug"/></svg>Moje zgłoszenia<span class="side-count">{{ error_report_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+                <li><a href="{% url 'core:error_report_create' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Utwórz zgłoszenie<svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            </ul>
+            <p class="note">Liczba Twoich zgłoszeń: {{ error_report_count }}</p>
         </section>
-    </article>
+    </div>
 {% endblock %}

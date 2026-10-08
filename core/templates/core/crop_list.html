@@ -3,23 +3,33 @@
 {% block title %}Rodzaje upraw – Farmer App{% endblock %}
 
 {% block content %}
-    <header>
-        <h1>Rodzaje upraw</h1>
-        <a class="button" href="{% url 'core:crop_create' %}">Dodaj rodzaj uprawy</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">Katalog</p>
+            <h1>Rodzaje upraw</h1>
+            <p class="page-head-lead">Katalog rodzajów upraw jest wspólny dla wszystkich użytkowników. Jeżeli brakuje potrzebnego rodzaju, możesz go dodać.</p>
+        </div>
+        <div class="page-actions">
+            <a class="button" href="{% url 'core:crop_create' %}">Dodaj rodzaj uprawy</a>
+        </div>
     </header>
 
-    <p>Katalog rodzajów upraw jest wspólny dla wszystkich użytkowników. Jeżeli brakuje potrzebnego rodzaju, możesz go dodać.</p>
-
     {% if crops %}
-        <ul>
+        <p class="result-count">{{ crops|length }} w katalogu</p>
+        <ul class="catalog">
             {% for crop in crops %}
                 <li>
-                    <strong>{{ crop.name }}</strong>{% if crop.description %} – {{ crop.description }}{% endif %}
+                    <strong>{{ crop.name }}</strong>
+                    {% if crop.description %}<span>{{ crop.description }}</span>{% endif %}
                 </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>Katalog rodzajów upraw jest pusty.</p>
-        <p><a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a></p>
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
+            <strong>Katalog rodzajów upraw jest pusty.</strong>
+            <p>Bez rodzajów upraw nie da się zapisać uprawy na polu.</p>
+            <a class="button button-secondary" href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a>
+        </div>
     {% endif %}
 {% endblock %}

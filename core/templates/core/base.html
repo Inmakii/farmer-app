@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap">
     <link rel="stylesheet" href="{% static 'core/styles.css' %}">
     <script src="{% static 'core/theme.js' %}" defer></script>
+    <script src="{% static 'core/forms.js' %}" defer></script>
 </head>
 <body class="{% block body_class %}{% endblock %}">
     {# Ikony Lucide (licencja ISC), używane na stronach przez <use href="#i-…">. #}
@@ -23,44 +24,74 @@
         <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></symbol>
         <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
         <symbol id="i-snowflake" viewBox="0 0 24 24"><path d="m10 20-1.25-2.5L6 18"/><path d="M10 4 8.75 6.5 6 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6h-4"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h6.5L10 9"/><path d="m20 10-1.5 2 1.5 2"/><path d="M22 12h-6.5L14 15"/><path d="m4 10 1.5 2L4 14"/><path d="m7 21 3-6-1.5-3"/><path d="m7 3 3 6h4"/></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+        <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></symbol>
+        <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+        <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></symbol>
+        <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+        <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+        <symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></symbol>
+        <symbol id="i-shovel" viewBox="0 0 24 24"><path d="M2 22v-5l5-5 5 5-5 5z"/><path d="M9.5 14.5 16 8"/><path d="m17 2 5 5-.5.5a3.53 3.53 0 0 1-5 0a3.53 3.53 0 0 1 0-5L17 2"/></symbol>
+        <symbol id="i-droplets" viewBox="0 0 24 24"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></symbol>
+        <symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+        <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+        <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+        <symbol id="i-key" viewBox="0 0 24 24"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></symbol>
+        <symbol id="i-bug" viewBox="0 0 24 24"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></symbol>
+        <symbol id="i-log-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></symbol>
+        <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
     </svg>
     <a class="skip-link" href="#main-content">Przejdź do treści</a>
-    <header class="site-header">
+    <header class="site-header{% if user.is_authenticated %} is-app{% endif %}">
         <div class="container nav-shell">
             <a class="brand" href="{% url 'core:home' %}">
                 <svg class="brand-mark" aria-hidden="true" focusable="false"><use href="#i-wheat"/></svg>
                 <span translate="no">Farmer App</span>
             </a>
             <nav class="main-nav" aria-label="Główna nawigacja">
-            {% if user.is_authenticated %}
-                <a href="{% url 'core:home' %}">Pulpit</a>
-                <a href="{% url 'core:field_list' %}">Moje pola</a>
-                <a href="{% url 'core:cultivation_list' %}">Uprawy</a>
-                <a href="{% url 'core:crop_list' %}">Rodzaje upraw</a>
-                <a href="{% url 'core:fieldwork_list' %}">Prace</a>
-                <a href="{% url 'core:spraying_list' %}">Opryski</a>
-                <a href="{% url 'core:harvest_list' %}">Zbiory</a>
-                <a href="{% url 'core:report_dashboard' %}">Raporty</a>
-                <a href="{% url 'core:profile' %}">Profil</a>
-                <form class="logout-form" method="post" action="{% url 'core:logout' %}">
-                    {% csrf_token %}
-                    <button class="button button-ghost" type="submit">Wyloguj się</button>
-                </form>
-            {% else %}
-                <a href="{% url 'core:login' %}">Logowanie</a>
-                <a class="button button-header" href="{% url 'core:register' %}">Rejestracja</a>
-            {% endif %}
-                <button class="theme-toggle" id="theme-toggle" type="button"
-                        aria-label="Włącz tryb ciemny" title="Włącz tryb ciemny">
-                    <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
-                    </svg>
-                    <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <circle cx="12" cy="12" r="4.5"/>
-                        <path d="M12 1.5v2.5M12 20v2.5M1.5 12H4M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/>
-                    </svg>
-                </button>
-                <span class="visually-hidden" id="theme-status" role="status" aria-live="polite"></span>
+                {% if user.is_authenticated %}
+                <div class="nav-links">
+                    <a href="{% url 'core:home' %}"{% if nav_section == "home" %} aria-current="page"{% endif %}>Pulpit</a>
+                    <a href="{% url 'core:field_list' %}"{% if nav_section == "field" %} aria-current="page"{% endif %}>Moje pola</a>
+                    <a href="{% url 'core:cultivation_list' %}"{% if nav_section == "cultivation" %} aria-current="page"{% endif %}>Uprawy</a>
+                    <a href="{% url 'core:crop_list' %}"{% if nav_section == "crop" %} aria-current="page"{% endif %}>Rodzaje upraw</a>
+                    <a href="{% url 'core:fieldwork_list' %}"{% if nav_section == "fieldwork" %} aria-current="page"{% endif %}>Prace</a>
+                    <a href="{% url 'core:spraying_list' %}"{% if nav_section == "spraying" %} aria-current="page"{% endif %}>Opryski</a>
+                    <a href="{% url 'core:harvest_list' %}"{% if nav_section == "harvest" %} aria-current="page"{% endif %}>Zbiory</a>
+                    <a href="{% url 'core:report_dashboard' %}"{% if nav_section == "report" %} aria-current="page"{% endif %}>Raporty</a>
+                </div>
+                {% endif %}
+                <div class="nav-tools">
+                {% if user.is_authenticated %}
+                    <a class="nav-profile" href="{% url 'core:profile' %}"{% if nav_section == "profile" %} aria-current="page"{% endif %}>
+                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-user"/></svg>
+                        <span>Profil</span>
+                    </a>
+                    <form class="logout-form" method="post" action="{% url 'core:logout' %}">
+                        {% csrf_token %}
+                        <button class="button button-ghost button-logout" type="submit">
+                                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-log-out"/></svg>
+                                <span>Wyloguj się</span>
+                            </button>
+                    </form>
+                {% else %}
+                    <a class="nav-login" href="{% url 'core:login' %}">Logowanie</a>
+                    <a class="button button-header" href="{% url 'core:register' %}">Rejestracja</a>
+                {% endif %}
+                    <button class="theme-toggle" id="theme-toggle" type="button"
+                            aria-label="Włącz tryb ciemny" title="Włącz tryb ciemny">
+                        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+                        </svg>
+                        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <circle cx="12" cy="12" r="4.5"/>
+                            <path d="M12 1.5v2.5M12 20v2.5M1.5 12H4M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/>
+                        </svg>
+                    </button>
+                    <span class="visually-hidden" id="theme-status" role="status" aria-live="polite"></span>
+                </div>
             </nav>
         </div>
     </header>
@@ -69,7 +100,7 @@
         <section class="container messages" aria-label="Komunikaty">
             <ul class="message-list">
                 {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}{% if message.level_tag == "error" %} role="alert"{% else %} role="status"{% endif %}>{{ message }}</li>
                 {% endfor %}
             </ul>
         </section>
