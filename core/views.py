@@ -14,6 +14,7 @@ from django.db.models.functions import Lower
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.dateparse import parse_date
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -883,6 +884,27 @@ class ErrorReportCreateView(LoginRequiredMixin, CreateView):
     model = ErrorReport
     form_class = ErrorReportForm
     template_name = "core/error_report_form.html"
+
+    def get_source_page(self):
+        """Adres strony, z której otwarto zgłoszenie (tylko ścieżka w obrębie aplikacji)."""
+        source = self.request.GET.get("from", "")
+        if source.startswith("/") and url_has_allowed_host_and_scheme(
+            source, allowed_hosts={self.request.get_host()}
+        ):
+            return source
+        return ""
+
+    def get_initial(self):
+        initial = super().get_initial()
+        source = self.get_source_page()
+        if source:
+            initial["description"] = f"Strona: {source}\n\n"
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["source_page"] = self.get_source_page()
+        return context
 
     def form_valid(self, form):
         form.instance.user = self.request.user

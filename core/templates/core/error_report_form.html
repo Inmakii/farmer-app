@@ -8,7 +8,7 @@
         <div>
             <p class="kicker">Pomoc</p>
             <h1>Zgłoś błąd</h1>
-            <p class="page-head-lead">Opisz, co się stało i na której stronie. Po wysłaniu zgłoszenia jego status będzie zmieniany przez administratora.</p>
+            <p class="page-head-lead">{% if source_page %}Adres strony, na której był problem, jest już wpisany w opisie. Dopisz, co się stało i co powinno było się wydarzyć.{% else %}Opisz, co się stało i na której stronie.{% endif %} Po wysłaniu zgłoszenia jego status będzie zmieniany przez administratora.</p>
         </div>
     </header>
 
@@ -18,7 +18,7 @@
             {% include "core/partials/form_body.html" %}
             <div class="form-actions">
                 <button class="button" type="submit" data-busy-label="Wysyłanie…">Wyślij zgłoszenie</button>
-                <a class="button button-text" href="{% url 'core:error_report_list' %}">Anuluj</a>
+                <a class="button button-text" href="{% if source_page %}{{ source_page }}{% else %}{% url 'core:error_report_list' %}{% endif %}">Anuluj</a>
             </div>
         </form>
     </div>

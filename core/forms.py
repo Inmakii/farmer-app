@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -759,7 +761,9 @@ class ErrorReportForm(forms.ModelForm):
 
     def clean_description(self):
         description = self.cleaned_data["description"].strip()
-        if len(description) < 10:
+        # Sam wpisany automatycznie adres strony nie jest jeszcze opisem problemu.
+        own_text = re.sub(r"^Strona: \S*", "", description).strip()
+        if len(own_text) < 10:
             raise ValidationError("Opis musi zawierać co najmniej 10 znaków.")
         if len(description) > 5000:
             raise ValidationError("Opis nie może zawierać więcej niż 5000 znaków.")

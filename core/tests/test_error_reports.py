@@ -96,6 +96,37 @@ class ErrorReportTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn("description", form.errors)
 
+    def test_page_address_alone_is_not_a_description(self):
+        form = ErrorReportForm(data=self.valid_data(description="Strona: /fields/12/edit/\n\n"))
+        self.assertFalse(form.is_valid())
+        self.assertIn("description", form.errors)
+
+    def test_report_button_links_current_page(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("core:field_list"))
+        self.assertContains(response, 'class="report-fab"')
+        self.assertContains(response, "/error-reports/add/?from=/fields/")
+
+    def test_report_button_hidden_for_anonymous_user(self):
+        response = self.client.get(reverse("core:login"))
+        self.assertNotContains(response, 'class="report-fab"')
+
+    def test_create_prefills_source_page(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("core:error_report_create"), {"from": "/fields/?q=pole"})
+        self.assertEqual(
+            response.context["form"].initial["description"], "Strona: /fields/?q=pole\n\n"
+        )
+        self.assertNotContains(response, 'class="report-fab"')
+
+    def test_create_ignores_external_source(self):
+        self.client.force_login(self.user)
+        for source in ["https://evil.example/", "//evil.example/", "fields/"]:
+            with self.subTest(source=source):
+                response = self.client.get(reverse("core:error_report_create"), {"from": source})
+                self.assertNotIn("description", response.context["form"].initial)
+                self.assertEqual(response.context["source_page"], "")
+
     def test_long_description_is_rejected(self):
         form = ErrorReportForm(data=self.valid_data(description="a" * 5001))
         self.assertFalse(form.is_valid())

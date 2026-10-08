@@ -121,6 +121,12 @@
             </p>
         </div>
     </footer>
+    {% if user.is_authenticated and request.resolver_match.url_name != "error_report_create" %}
+        <a class="report-fab" href="{% url 'core:error_report_create' %}?from={{ request.get_full_path|urlencode }}">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bug"/></svg>
+            <span>Zgłoś problem</span>
+        </a>
+    {% endif %}
     {% block scripts %}{% endblock %}
 </body>
 </html>
