@@ -1,0 +1,1114 @@
+# Farmer App translations.
+# Generated from the English strings in the code.
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: uk\n"
+
+#: core\models.py:143
+#, python-format
+msgid "%(crop)s on field %(field)s (%(year)s)"
+msgstr "%(crop)s на полі %(field)s (%(year)s)"
+
+#: core\forms.py:728
+#: core\forms.py:742
+msgid "A crop type with this name already exists."
+msgstr "Вид культури з такою назвою вже існує."
+
+#: core\views.py:72
+msgid "A field is the starting point: on it you record cultivations, works, sprayings and harvests."
+msgstr "Поле — це основа: на ньому ви записуєте посіви, роботи, обприскування та збори."
+
+#: core\forms.py:106
+#: core\forms.py:150
+msgid "A user with this email address already exists."
+msgstr "Користувач із цією адресою електронної пошти вже існує."
+
+#: core\forms.py:59
+msgid "A user with this name already exists."
+msgstr "Користувач із таким ім'ям уже існує."
+
+#: core\models.py:95
+msgid "Active"
+msgstr "Активний"
+
+#: core\views.py:86
+msgid "Add a completed work, spraying or harvest and the report will calculate costs and profit."
+msgstr "Додайте виконану роботу, обприскування або збір, і звіт порахує витрати та прибуток."
+
+#: core\views.py:78
+msgid "Add a cultivation to your field"
+msgstr "Додайте посів на своєму полі"
+
+#: core\views.py:80
+msgid "Add cultivation"
+msgstr "Додати посів"
+
+#: core\views.py:73
+msgid "Add field"
+msgstr "Додати поле"
+
+#: core\views.py:71
+msgid "Add your first field"
+msgstr "Додайте своє перше поле"
+
+#: core\forms.py:174
+#: core\models.py:39
+msgid "Address"
+msgstr "Адреса"
+
+#: core\forms.py:229
+msgid "Address is required for this location method."
+msgstr "Для цього способу розташування потрібна адреса."
+
+#: core\forms.py:280
+msgid "Allowed years: {min}–{max}."
+msgstr "Допустимі роки: {min}–{max}."
+
+#: core\forms.py:170
+msgid "Area (ha)"
+msgstr "Площа (га)"
+
+#: core\forms.py:97
+msgid "At least 8 characters. The password cannot be all digits, resemble your username or name, or be a common password like “qwerty123”."
+msgstr "Щонайменше 8 символів. Пароль не може складатися лише з цифр, бути схожим на логін чи ім'я або бути поширеним паролем на кшталт «qwerty123»."
+
+#: core\forms.py:283
+msgid "Cannot be earlier than the sowing date."
+msgstr "Не може бути раніше за дату сівби."
+
+#: core\views.py:92
+msgid "Check your farm results"
+msgstr "Перевірте результати господарства"
+
+#: core\views.py:79
+msgid "Choose a crop and a season year to start recording treatments and harvests."
+msgstr "Виберіть культуру та рік сезону, щоб почати записувати обробки та збори."
+
+#: core\forms.py:291
+msgid "Choose a crop type."
+msgstr "Виберіть вид культури."
+
+#: core\forms.py:407
+#: core\forms.py:511
+#: core\forms.py:597
+msgid "Choose a cultivation grown on one of your fields."
+msgstr "Виберіть посів на одному зі своїх полів."
+
+#: core\forms.py:409
+#: core\forms.py:513
+#: core\forms.py:599
+msgid "Choose a cultivation."
+msgstr "Виберіть посів."
+
+#: core\forms.py:287
+msgid "Choose a field."
+msgstr "Виберіть поле."
+
+#: core\forms.py:557
+#: core\forms.py:645
+msgid "Choose a unit."
+msgstr "Виберіть одиницю."
+
+#: core\forms.py:194
+msgid "Choose how the location is given."
+msgstr "Виберіть спосіб визначення розташування."
+
+#: core\forms.py:300
+msgid "Choose the cultivation status."
+msgstr "Виберіть статус посіву."
+
+#: core\forms.py:646
+msgid "Choose the harvest disposition."
+msgstr "Виберіть призначення врожаю."
+
+#: core\forms.py:768
+msgid "Choose the report category."
+msgstr "Виберіть категорію звернення."
+
+#: core\forms.py:398
+msgid "Choose the season that matches the chosen cultivation."
+msgstr "Виберіть сезон, що відповідає вибраному посіву."
+
+#: core\forms.py:400
+msgid "Choose the season year."
+msgstr "Виберіть рік сезону."
+
+#: core\forms.py:193
+msgid "Choose the soil type."
+msgstr "Виберіть тип ґрунту."
+
+#: core\forms.py:436
+msgid "Choose the work type."
+msgstr "Виберіть вид роботи."
+
+#: core\models.py:32
+msgid "Clay soil"
+msgstr "Глинистий ґрунт"
+
+#: core\models.py:96
+msgid "Completed"
+msgstr "Завершений"
+
+#: core\forms.py:427
+#: core\forms.py:534
+msgid "Cost"
+msgstr "Вартість"
+
+#: core\forms.py:432
+#: core\forms.py:503
+#: core\forms.py:541
+#: core\forms.py:589
+msgid "Cost cannot be negative."
+msgstr "Вартість не може бути від'ємною."
+
+#: core\forms.py:442
+#: core\forms.py:559
+msgid "Cost is required."
+msgstr "Вартість обов'язкова."
+
+#: core\forms.py:270
+msgid "Crop type"
+msgstr "Вид культури"
+
+#: core\forms.py:714
+msgid "Crop type name"
+msgstr "Назва виду культури"
+
+#: core\forms.py:726
+#: core\forms.py:736
+msgid "Crop type name is required."
+msgstr "Назва виду культури обов'язкова."
+
+#: core\views.py:378
+#, python-format
+msgid "Crop type “%(name)s” has been added."
+msgstr "Вид культури «%(name)s» додано."
+
+#: core\forms.py:718
+msgid "Crop types are shared by all users. The name cannot be repeated."
+msgstr "Види культур спільні для всіх користувачів. Назва не може повторюватися."
+
+#: core\forms.py:406
+#: core\forms.py:510
+#: core\forms.py:596
+msgid "Cultivation"
+msgstr "Посів"
+
+#: core\management\commands\seed_demo_data.py:141
+#, python-format
+msgid "Cultivations created or updated: %(count)s"
+msgstr "Посівів створено або оновлено: %(count)s"
+
+#: core\models.py:310
+msgid "Data problem"
+msgstr "Проблема з даними"
+
+#: core\management\commands\seed_demo_data.py:149
+msgid "Demo data is ready."
+msgstr "Демонстраційні дані підготовлено."
+
+#: core\forms.py:765
+msgid "Describe the problem in at least 10 and at most 5000 characters."
+msgstr "Опишіть проблему щонайменше 10 і не більше ніж 5000 символами."
+
+#: core\forms.py:177
+#: core\forms.py:428
+#: core\forms.py:535
+#: core\forms.py:715
+msgid "Description"
+msgstr "Опис"
+
+#: core\forms.py:131
+#: core\forms.py:54
+#: core\forms.py:75
+msgid "Email address"
+msgstr "Електронна пошта"
+
+#: core\forms.py:135
+#: core\forms.py:64
+msgid "Email address is required."
+msgstr "Електронна пошта обов'язкова."
+
+#: core\forms.py:181
+msgid "Enter a positive area in hectares."
+msgstr "Введіть додатну площу в гектарах."
+
+#: core\forms.py:443
+#: core\forms.py:560
+msgid "Enter a valid cost."
+msgstr "Введіть правильну вартість."
+
+#: core\forms.py:136
+#: core\forms.py:65
+msgid "Enter a valid email address."
+msgstr "Введіть правильну адресу електронної пошти."
+
+#: core\forms.py:191
+msgid "Enter a valid field area."
+msgstr "Введіть правильну площу поля."
+
+#: core\forms.py:653
+msgid "Enter a valid harvest cost."
+msgstr "Введіть правильну вартість збору."
+
+#: core\forms.py:639
+msgid "Enter a valid harvest date."
+msgstr "Введіть правильну дату збору."
+
+#: core\forms.py:643
+msgid "Enter a valid harvest quantity."
+msgstr "Введіть правильну кількість врожаю."
+
+#: core\forms.py:195
+msgid "Enter a valid latitude."
+msgstr "Введіть правильну широту."
+
+#: core\forms.py:196
+msgid "Enter a valid longitude."
+msgstr "Введіть правильну довготу."
+
+#: core\forms.py:303
+msgid "Enter a valid planned harvest date."
+msgstr "Введіть правильну заплановану дату збору."
+
+#: core\forms.py:555
+msgid "Enter a valid product quantity."
+msgstr "Введіть правильну кількість препарату."
+
+#: core\forms.py:649
+msgid "Enter a valid revenue."
+msgstr "Введіть правильний дохід."
+
+#: core\forms.py:296
+msgid "Enter a valid season year."
+msgstr "Введіть правильний рік сезону."
+
+#: core\forms.py:301
+msgid "Enter a valid sowing date."
+msgstr "Введіть правильну дату сівби."
+
+#: core\forms.py:547
+msgid "Enter a valid spraying date."
+msgstr "Введіть правильну дату обприскування."
+
+#: core\forms.py:439
+msgid "Enter a valid work date."
+msgstr "Введіть правильну дату виконання."
+
+#: core\forms.py:626
+msgid "Enter the date of the harvest."
+msgstr "Введіть дату збору."
+
+#: core\forms.py:538
+msgid "Enter the date of the spraying."
+msgstr "Введіть дату обприскування."
+
+#: core\forms.py:431
+msgid "Enter the date the work was done."
+msgstr "Введіть дату виконання роботи."
+
+#: core\models.py:152
+msgid "Fertilizing"
+msgstr "Удобрення"
+
+#: core\forms.py:269
+msgid "Field"
+msgstr "Поле"
+
+#: core\forms.py:190
+msgid "Field area is required."
+msgstr "Площа поля обов'язкова."
+
+#: core\forms.py:216
+msgid "Field area must be greater than zero."
+msgstr "Площа поля має бути більшою за нуль."
+
+#: core\forms.py:169
+msgid "Field name"
+msgstr "Назва поля"
+
+#: core\forms.py:188
+msgid "Field name is required."
+msgstr "Назва поля обов'язкова."
+
+#: core\management\commands\seed_demo_data.py:140
+#, python-format
+msgid "Fields created or updated: %(count)s"
+msgstr "Полів створено або оновлено: %(count)s"
+
+#: core\forms.py:129
+#: core\forms.py:52
+#: core\forms.py:73
+msgid "First name"
+msgstr "Ім'я"
+
+#: core\forms.py:61
+msgid "First name is required."
+msgstr "Ім'я обов'язкове."
+
+#: core\models.py:40
+msgid "GPS coordinates"
+msgstr "GPS-координати"
+
+#: core\models.py:302
+#, python-format
+msgid "Harvest %(cultivation)s — %(date)s"
+msgstr "Збір %(cultivation)s — %(date)s"
+
+#: core\forms.py:622
+msgid "Harvest cost"
+msgstr "Вартість збору"
+
+#: core\forms.py:633
+#: core\forms.py:688
+msgid "Harvest cost cannot be negative."
+msgstr "Вартість збору не може бути від'ємною."
+
+#: core\forms.py:652
+msgid "Harvest cost is required."
+msgstr "Вартість збору обов'язкова."
+
+#: core\forms.py:617
+msgid "Harvest date"
+msgstr "Дата збору"
+
+#: core\forms.py:638
+msgid "Harvest date is required."
+msgstr "Дата збору обов'язкова."
+
+#: core\forms.py:620
+msgid "Harvest disposition"
+msgstr "Призначення врожаю"
+
+#: core\forms.py:642
+msgid "Harvest quantity is required."
+msgstr "Кількість врожаю обов'язкова."
+
+#: core\forms.py:676
+msgid "Harvest quantity must be greater than zero."
+msgstr "Кількість врожаю має бути більшою за нуль."
+
+#: core\management\commands\seed_demo_data.py:147
+#, python-format
+msgid "Harvests created or updated: %(count)s"
+msgstr "Зборів створено або оновлено: %(count)s"
+
+#: core\forms.py:173
+msgid "How the location is given"
+msgstr "Спосіб визначення розташування"
+
+#: core\models.py:316
+msgid "In progress"
+msgstr "В роботі"
+
+#: core\models.py:311
+msgid "Interface problem"
+msgstr "Проблема з інтерфейсом"
+
+#: core\models.py:238
+msgid "Kept in storage"
+msgstr "Залишено на складі"
+
+#: core\forms.py:130
+#: core\forms.py:53
+#: core\forms.py:74
+msgid "Last name"
+msgstr "Прізвище"
+
+#: core\forms.py:62
+msgid "Last name is required."
+msgstr "Прізвище обов'язкове."
+
+#: core\forms.py:175
+msgid "Latitude"
+msgstr "Широта"
+
+#: core\forms.py:234
+msgid "Latitude is required for this location."
+msgstr "Для цього розташування потрібна широта."
+
+#: core\models.py:33
+msgid "Loamy soil"
+msgstr "Суглинистий ґрунт"
+
+#: core\forms.py:176
+msgid "Longitude"
+msgstr "Довгота"
+
+#: core\forms.py:238
+msgid "Longitude is required for this location."
+msgstr "Для цього розташування потрібна довгота."
+
+#: core\models.py:239
+msgid "Loss / discarded"
+msgstr "Втрати / утилізовано"
+
+#: core\forms.py:539
+msgid "Name of the product used, up to 150 characters."
+msgstr "Назва використаного препарату, до 150 символів."
+
+#: core\models.py:315
+msgid "New"
+msgstr "Нове"
+
+#: core\forms.py:275
+#: core\forms.py:623
+msgid "Notes"
+msgstr "Нотатки"
+
+#: core\forms.py:282
+msgid "Optional date when sowing started."
+msgstr "Необов'язкова дата початку сівби."
+
+#: core\forms.py:542
+msgid "Optional description of the spraying."
+msgstr "Необов'язковий опис обприскування."
+
+#: core\forms.py:433
+msgid "Optional description of the work."
+msgstr "Необов'язковий опис виконаної роботи."
+
+#: core\forms.py:634
+msgid "Optional notes about the harvest."
+msgstr "Необов'язкові нотатки про збір."
+
+#: core\forms.py:722
+msgid "Optional short description (up to 1000 characters)."
+msgstr "Необов'язковий короткий опис (до 1000 символів)."
+
+#: core\models.py:312
+msgctxt "report category"
+msgid "Other"
+msgstr "Інше"
+
+#: core\models.py:36
+msgctxt "soil type"
+msgid "Other"
+msgstr "Інший"
+
+#: core\models.py:155
+msgctxt "work type"
+msgid "Other"
+msgstr "Інша"
+
+#: core\views.py:904
+#, python-format
+msgid "Page: %(path)s"
+msgstr "Сторінка: %(path)s"
+
+#: core\forms.py:172
+#: core\models.py:42
+msgid "Parcel identifier"
+msgstr "Ідентифікатор ділянки"
+
+#: core\forms.py:243
+msgid "Parcel identifier is required for this location method."
+msgstr "Для цього способу розташування потрібен ідентифікатор ділянки."
+
+#: core\forms.py:76
+msgid "Password"
+msgstr "Пароль"
+
+#: core\models.py:35
+msgid "Peat soil"
+msgstr "Торф'яний ґрунт"
+
+#: core\models.py:94
+msgid "Planned"
+msgstr "Запланований"
+
+#: core\forms.py:274
+msgid "Planned harvest date"
+msgstr "Запланована дата збору"
+
+#: core\models.py:150
+msgid "Plowing"
+msgstr "Оранка"
+
+#: core\models.py:41
+msgid "Point on a map"
+msgstr "Точка на мапі"
+
+#: core\forms.py:762
+msgid "Problem description"
+msgstr "Опис проблеми"
+
+#: core\forms.py:769
+msgid "Problem description is required."
+msgstr "Опис проблеми обов'язковий."
+
+#: core\forms.py:531
+msgid "Product name"
+msgstr "Назва препарату"
+
+#: core\forms.py:551
+msgid "Product name can have at most 150 characters."
+msgstr "Назва препарату може мати щонайбільше 150 символів."
+
+#: core\forms.py:550
+msgid "Product name is required."
+msgstr "Назва препарату обов'язкова."
+
+#: core\forms.py:554
+msgid "Product quantity is required."
+msgstr "Кількість препарату обов'язкова."
+
+#: core\forms.py:583
+msgid "Product quantity must be greater than zero."
+msgstr "Кількість препарату має бути більшою за нуль."
+
+#: core\forms.py:532
+#: core\forms.py:618
+msgid "Quantity"
+msgstr "Кількість"
+
+#: core\forms.py:540
+#: core\forms.py:627
+msgid "Quantity must be greater than zero."
+msgstr "Кількість має бути більшою за нуль."
+
+#: core\views.py:87
+msgid "Record work"
+msgstr "Записати роботу"
+
+#: core\views.py:85
+msgid "Record your first work or harvest"
+msgstr "Запишіть першу роботу або збір"
+
+#: core\forms.py:77
+msgid "Repeat password"
+msgstr "Повторіть пароль"
+
+#: core\models.py:335
+#, python-format
+msgid "Report #%(number)s — %(category)s"
+msgstr "Звернення #%(number)s — %(category)s"
+
+#: core\forms.py:761
+msgid "Report category"
+msgstr "Категорія звернення"
+
+#: core\forms.py:185
+msgid "Required for GPS and a point on a map; range -180 to 180."
+msgstr "Обов'язково для GPS і точки на мапі; діапазон від -180 до 180."
+
+#: core\forms.py:184
+msgid "Required for GPS and a point on a map; range -90 to 90."
+msgstr "Обов'язково для GPS і точки на мапі; діапазон від -90 до 90."
+
+#: core\forms.py:182
+msgid "Required when the location is a parcel."
+msgstr "Обов'язково, якщо розташування визначається за ділянкою."
+
+#: core\forms.py:183
+msgid "Required when the location is an address."
+msgstr "Обов'язково, якщо розташування визначається за адресою."
+
+#: core\models.py:317
+msgid "Resolved"
+msgstr "Вирішено"
+
+#: core\forms.py:621
+msgid "Revenue"
+msgstr "Дохід"
+
+#: core\forms.py:632
+#: core\forms.py:682
+msgid "Revenue cannot be negative."
+msgstr "Дохід не може бути від'ємним."
+
+#: core\forms.py:648
+msgid "Revenue is required."
+msgstr "Дохід обов'язковий."
+
+#: core\forms.py:702
+#: core\models.py:294
+msgid "Revenue must be 0 if the harvest was not sold."
+msgstr "Дохід має дорівнювати 0, якщо врожай не продано."
+
+#: core\models.py:31
+msgid "Sandy soil"
+msgstr "Піщаний ґрунт"
+
+#: core\forms.py:628
+msgid "Say whether the harvest was sold, put into storage or discarded as a loss."
+msgstr "Вкажіть, чи врожай продано, покладено на склад чи утилізовано як втрати."
+
+#: core\forms.py:271
+#: core\forms.py:394
+msgid "Season year"
+msgstr "Рік сезону"
+
+#: core\forms.py:295
+msgid "Season year is required."
+msgstr "Рік сезону обов'язковий."
+
+#: core\models.py:34
+msgid "Silt soil"
+msgstr "Пилуватий ґрунт"
+
+#: core\forms.py:171
+msgid "Soil type"
+msgstr "Тип ґрунту"
+
+#: core\models.py:237
+msgid "Sold"
+msgstr "Продано"
+
+#: core\models.py:151
+msgid "Sowing"
+msgstr "Сівба"
+
+#: core\forms.py:273
+msgid "Sowing date"
+msgstr "Дата сівби"
+
+#: core\forms.py:530
+msgid "Spraying date"
+msgstr "Дата обприскування"
+
+#: core\forms.py:546
+msgid "Spraying date is required."
+msgstr "Дата обприскування обов'язкова."
+
+#: core\management\commands\seed_demo_data.py:144
+#, python-format
+msgid "Sprayings created or updated: %(count)s"
+msgstr "Обприскувань створено або оновлено: %(count)s"
+
+#: core\forms.py:272
+msgid "Status"
+msgstr "Статус"
+
+#: core\models.py:309
+msgid "Technical problem"
+msgstr "Технічна проблема"
+
+#: core\forms.py:292
+msgid "The chosen crop type is not available."
+msgstr "Вибраний вид культури недоступний."
+
+#: core\forms.py:410
+#: core\forms.py:514
+#: core\forms.py:600
+msgid "The chosen cultivation is not available."
+msgstr "Вибраний посів недоступний."
+
+#: core\forms.py:288
+msgid "The chosen field is not available."
+msgstr "Вибране поле недоступне."
+
+#: core\forms.py:484
+msgid "The chosen season does not match the season of the chosen cultivation."
+msgstr "Вибраний сезон не збігається із сезоном вибраного посіву."
+
+#: core\forms.py:401
+msgid "The chosen season is not available."
+msgstr "Вибраний сезон недоступний."
+
+#: core\views.py:466
+msgid "The cultivation has been created."
+msgstr "Посів створено."
+
+#: core\views.py:495
+msgid "The cultivation has been deleted."
+msgstr "Посів видалено."
+
+#: core\views.py:481
+msgid "The cultivation has been updated."
+msgstr "Посів оновлено."
+
+#: core\forms.py:748
+msgid "The description can have at most 1000 characters."
+msgstr "Опис може мати щонайбільше 1000 символів."
+
+#: core\forms.py:780
+msgid "The description cannot have more than 5000 characters."
+msgstr "Опис не може містити більше ніж 5000 символів."
+
+#: core\forms.py:778
+msgid "The description must have at least 10 characters."
+msgstr "Опис має містити щонайменше 10 символів."
+
+#: core\views.py:916
+msgid "The error report has been created."
+msgstr "Звернення про помилку створено."
+
+#: core\views.py:302
+msgid "The field has been created."
+msgstr "Поле створено."
+
+#: core\views.py:330
+msgid "The field has been deleted."
+msgstr "Поле видалено."
+
+#: core\views.py:316
+msgid "The field has been updated."
+msgstr "Поле оновлено."
+
+#: core\forms.py:82
+#, python-format
+msgid "The field “%(label)s” is required."
+msgstr "Поле «%(label)s» обов'язкове."
+
+#: core\views.py:738
+msgid "The harvest has been created."
+msgstr "Збір створено."
+
+#: core\views.py:754
+msgid "The harvest has been deleted."
+msgstr "Збір видалено."
+
+#: core\views.py:747
+msgid "The harvest has been updated."
+msgstr "Збір оновлено."
+
+#: core\forms.py:727
+msgid "The name can have at most 100 characters."
+msgstr "Назва може мати щонайбільше 100 символів."
+
+#: core\forms.py:180
+msgid "The name must be unique among your fields."
+msgstr "Назва має бути унікальною серед ваших полів."
+
+#: core\forms.py:44
+msgid "The passwords do not match."
+msgstr "Паролі не збігаються."
+
+#: core\forms.py:367
+#: core\models.py:136
+msgid "The planned harvest date cannot be earlier than the sowing date."
+msgstr "Запланована дата збору не може бути раніше за дату сівби."
+
+#: core\views.py:93
+msgid "The report shows costs, revenue and profit for fields and cultivations."
+msgstr "Звіт показує витрати, дохід і прибуток для полів і посівів."
+
+#: core\forms.py:250
+msgid "The season year must be between {min} and {max}."
+msgstr "Рік сезону має бути в межах {min}–{max}."
+
+#: core\forms.py:496
+#: core\models.py:183
+msgid "The sowing date year must match the cultivation season year."
+msgstr "Рік дати сівби має збігатися з роком сезону посіву."
+
+#: core\forms.py:357
+#: core\models.py:133
+msgid "The sowing date year must match the season year."
+msgstr "Рік дати сівби має збігатися з роком сезону."
+
+#: core\views.py:696
+msgid "The spraying has been created."
+msgstr "Обприскування створено."
+
+#: core\views.py:712
+msgid "The spraying has been deleted."
+msgstr "Обприскування видалено."
+
+#: core\views.py:705
+msgid "The spraying has been updated."
+msgstr "Обприскування оновлено."
+
+#: core\forms.py:113
+msgid "The username or password is incorrect. Check that Caps Lock is off, because letter case matters."
+msgstr "Неправильний логін або пароль. Перевірте, чи не ввімкнено Caps Lock, бо регістр літер має значення."
+
+#: core\views.py:657
+msgid "The work has been created."
+msgstr "Роботу створено."
+
+#: core\views.py:673
+msgid "The work has been deleted."
+msgstr "Роботу видалено."
+
+#: core\views.py:666
+msgid "The work has been updated."
+msgstr "Роботу оновлено."
+
+#: core\forms.py:378
+msgid "This crop is already assigned to this field and season."
+msgstr "Цю культуру вже призначено цьому полю в цьому сезоні."
+
+#: core\views.py:166
+msgid "Too many failed login attempts. Try again in a few minutes."
+msgstr "Забагато невдалих спроб входу. Спробуйте ще раз за кілька хвилин."
+
+#: core\forms.py:533
+#: core\forms.py:619
+msgid "Unit"
+msgstr "Одиниця"
+
+#: core\management\commands\seed_demo_data.py:31
+#, python-format
+msgid "User \"%(username)s\" does not exist."
+msgstr "Користувача \"%(username)s\" не існує."
+
+#: core\forms.py:51
+#: core\forms.py:72
+msgid "Username"
+msgstr "Ім'я користувача"
+
+#: core\forms.py:58
+msgid "Username is required."
+msgstr "Ім'я користувача обов'язкове."
+
+#: core\views.py:94
+msgid "View report"
+msgstr "Переглянути звіт"
+
+#: core\models.py:153
+msgid "Watering"
+msgstr "Зрошення"
+
+#: core\models.py:154
+msgid "Weeding"
+msgstr "Прополювання"
+
+#: core\forms.py:426
+msgid "Work date"
+msgstr "Дата виконання"
+
+#: core\forms.py:438
+msgid "Work date is required."
+msgstr "Дата виконання обов'язкова."
+
+#: core\forms.py:425
+msgid "Work type"
+msgstr "Вид роботи"
+
+#: core\management\commands\seed_demo_data.py:142
+#, python-format
+msgid "Works created or updated: %(count)s"
+msgstr "Робіт створено або оновлено: %(count)s"
+
+#: core\forms.py:210
+msgid "You already have a field with this name."
+msgstr "У вас уже є поле з такою назвою."
+
+#: core\forms.py:278
+msgid "You can only choose one of your own fields."
+msgstr "Можна вибрати лише одне зі своїх полів."
+
+#: core\forms.py:88
+msgid "You will use it to log in, e.g. jan.kowalski. Letters, digits and @ . + - _ characters, no spaces."
+msgstr "З ним ви входитимете, напр. jan.kowalski. Літери, цифри та символи @ . + - _, без пробілів."
+
+#: core\views.py:136
+msgid "Your account has been created. You can log in now."
+msgstr "Обліковий запис створено. Тепер можна увійти."
+
+#: core\views.py:228
+msgid "Your password has been changed."
+msgstr "Пароль змінено."
+
+#: core\views.py:211
+msgid "Your profile has been updated."
+msgstr "Дані профілю оновлено."
+
+#: core\models.py:60
+msgid "address"
+msgstr "адреса"
+
+#: core\models.py:52
+msgid "area (ha)"
+msgstr "площа (га)"
+
+#: core\models.py:323
+msgid "category"
+msgstr "категорія"
+
+#: core\models.py:163
+#: core\models.py:208
+msgid "cost"
+msgstr "вартість"
+
+#: core\models.py:115
+#: core\models.py:167
+#: core\models.py:18
+#: core\models.py:212
+#: core\models.py:265
+msgid "created at"
+msgstr "дата створення"
+
+#: core\models.py:103
+#: core\models.py:21
+msgid "crop type"
+msgstr "вид культури"
+
+#: core\models.py:22
+msgid "crop types"
+msgstr "види культур"
+
+#: core\models.py:118
+#: core\models.py:158
+#: core\models.py:198
+#: core\models.py:242
+msgid "cultivation"
+msgstr "посів"
+
+#: core\models.py:119
+msgid "cultivations"
+msgstr "посіви"
+
+#: core\models.py:166
+#: core\models.py:17
+#: core\models.py:211
+#: core\models.py:324
+#: core\models.py:71
+msgid "description"
+msgstr "опис"
+
+#: core\models.py:330
+msgid "error report"
+msgstr "повідомлення про помилку"
+
+#: core\models.py:331
+msgid "error reports"
+msgstr "повідомлення про помилки"
+
+#: core\models.py:99
+msgid "field"
+msgstr "поле"
+
+#: core\models.py:76
+msgctxt "model name"
+msgid "field"
+msgstr "поле"
+
+#: core\models.py:170
+msgid "field work"
+msgstr "виконана робота"
+
+#: core\models.py:171
+msgid "field works"
+msgstr "виконані роботи"
+
+#: core\models.py:77
+msgctxt "model name"
+msgid "fields"
+msgstr "поля"
+
+#: core\models.py:268
+msgid "harvest"
+msgstr "збір"
+
+#: core\models.py:261
+msgid "harvest cost"
+msgstr "вартість збору"
+
+#: core\models.py:244
+msgid "harvest date"
+msgstr "дата збору"
+
+#: core\models.py:251
+msgid "harvest disposition"
+msgstr "призначення врожаю"
+
+#: core\models.py:269
+msgid "harvests"
+msgstr "збори"
+
+#: core\models.py:62
+msgid "latitude"
+msgstr "широта"
+
+#: core\models.py:58
+msgid "location method"
+msgstr "спосіб визначення розташування"
+
+#: core\models.py:67
+msgid "longitude"
+msgstr "довгота"
+
+#: core\models.py:16
+#: core\models.py:50
+msgid "name"
+msgstr "назва"
+
+#: core\models.py:336
+msgid "new"
+msgstr "нове"
+
+#: core\models.py:114
+#: core\models.py:264
+msgid "notes"
+msgstr "нотатки"
+
+#: core\models.py:48
+msgid "owner"
+msgstr "власник"
+
+#: core\models.py:56
+msgid "parcel identifier"
+msgstr "ідентифікатор ділянки"
+
+#: core\models.py:113
+msgid "planned harvest date"
+msgstr "запланована дата збору"
+
+#: core\models.py:201
+msgid "product name"
+msgstr "назва засобу"
+
+#: core\models.py:203
+#: core\models.py:246
+msgid "quantity"
+msgstr "кількість"
+
+#: core\models.py:257
+msgid "revenue"
+msgstr "дохід"
+
+#: core\models.py:106
+msgid "season year"
+msgstr "рік сезону"
+
+#: core\models.py:55
+msgid "soil type"
+msgstr "тип ґрунту"
+
+#: core\models.py:112
+msgid "sowing date"
+msgstr "дата сівби"
+
+#: core\models.py:215
+msgid "spraying"
+msgstr "обприскування"
+
+#: core\models.py:200
+msgid "spraying date"
+msgstr "дата обприскування"
+
+#: core\models.py:216
+msgid "sprayings"
+msgstr "обприскування"
+
+#: core\models.py:111
+#: core\models.py:325
+msgid "status"
+msgstr "статус"
+
+#: core\models.py:206
+#: core\models.py:249
+msgid "unit"
+msgstr "одиниця"
+
+#: core\models.py:327
+#: core\models.py:73
+msgid "updated at"
+msgstr "дата оновлення"
+
+#: core\models.py:321
+msgid "user"
+msgstr "користувач"
+
+#: core\models.py:161
+msgid "work date"
+msgstr "дата виконання"
+
+#: core\models.py:160
+msgid "work type"
+msgstr "вид роботи"

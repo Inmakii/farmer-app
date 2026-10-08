@@ -15,6 +15,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.dateparse import parse_date
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -66,30 +68,30 @@ def home(request):
     no_crops = not Crop.objects.exists()
     if totals["field_count"] == 0:
         next_step = {
-            "title": "Dodaj swoje pierwsze pole",
-            "text": "Pole to podstawa: na nim zapiszesz uprawy, prace, opryski i zbiory.",
-            "button": "Dodaj pole",
+            "title": gettext("Add your first field"),
+            "text": gettext("A field is the starting point: on it you record cultivations, works, sprayings and harvests."),
+            "button": gettext("Add field"),
             "url": reverse("core:field_create"),
         }
     elif totals["cultivation_count"] == 0:
         next_step = {
-            "title": "Dodaj uprawę na swoim polu",
-            "text": "Wybierz roślinę i rok sezonu, aby zacząć zapisywać zabiegi i zbiory.",
-            "button": "Dodaj uprawę",
+            "title": gettext("Add a cultivation to your field"),
+            "text": gettext("Choose a crop and a season year to start recording treatments and harvests."),
+            "button": gettext("Add cultivation"),
             "url": reverse("core:cultivation_create"),
         }
     elif totals["work_count"] + totals["spraying_count"] + totals["harvest_count"] == 0:
         next_step = {
-            "title": "Zapisz pierwszą pracę lub zbiór",
-            "text": "Dodaj wykonaną pracę, oprysk albo zbiór, a raport policzy koszty i zysk.",
-            "button": "Zapisz pracę",
+            "title": gettext("Record your first work or harvest"),
+            "text": gettext("Add a completed work, spraying or harvest and the report will calculate costs and profit."),
+            "button": gettext("Record work"),
             "url": reverse("core:fieldwork_create"),
         }
     else:
         next_step = {
-            "title": "Sprawdź wyniki gospodarstwa",
-            "text": "Raport pokazuje koszty, przychody i zysk dla pól oraz upraw.",
-            "button": "Zobacz raport",
+            "title": gettext("Check your farm results"),
+            "text": gettext("The report shows costs, revenue and profit for fields and cultivations."),
+            "button": gettext("View report"),
             "url": reverse("core:report_dashboard"),
         }
     return render(
@@ -131,7 +133,7 @@ class RegisterView(FormView):
         form.save()
         messages.success(
             self.request,
-            "Konto zostało utworzone. Możesz się teraz zalogować.",
+            gettext("Your account has been created. You can log in now."),
         )
         return super().form_valid(form)
 
@@ -161,7 +163,7 @@ class LoginView(DjangoLoginView):
             form = self.get_form()
             form.add_error(
                 None,
-                "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za kilka minut.",
+                gettext("Too many failed login attempts. Try again in a few minutes."),
             )
             return self.form_invalid(form)
         return super().post(request, *args, **kwargs)
@@ -206,7 +208,7 @@ class ProfileEditView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Dane profilu zostały zaktualizowane.")
+        messages.success(self.request, gettext("Your profile has been updated."))
         return super().form_valid(form)
 
 
@@ -223,7 +225,7 @@ class PasswordChangeView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         user = form.save()
         update_session_auth_hash(self.request, user)
-        messages.success(self.request, "Hasło zostało zmienione.")
+        messages.success(self.request, gettext("Your password has been changed."))
         return super().form_valid(form)
 
 
@@ -297,7 +299,7 @@ class FieldCreateView(LoginRequiredMixin, FieldFormUserMixin, CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         response = super().form_valid(form)
-        messages.success(self.request, "Pole zostało utworzone.")
+        messages.success(self.request, gettext("The field has been created."))
         return response
 
     def get_success_url(self):
@@ -311,7 +313,7 @@ class FieldUpdateView(FieldOwnerQuerysetMixin, FieldFormUserMixin, UpdateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         response = super().form_valid(form)
-        messages.success(self.request, "Pole zostało zaktualizowane.")
+        messages.success(self.request, gettext("The field has been updated."))
         return response
 
     def get_success_url(self):
@@ -325,7 +327,7 @@ class FieldDeleteView(FieldOwnerQuerysetMixin, DeleteView):
     http_method_names = ["get", "post", "head", "options"]
 
     def form_valid(self, form):
-        messages.success(self.request, "Pole zostało usunięte.")
+        messages.success(self.request, gettext("The field has been deleted."))
         return super().form_valid(form)
 
 
@@ -372,7 +374,8 @@ class CropCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(
-            self.request, f"Rodzaj uprawy „{self.object.name}” został dodany."
+            self.request,
+            gettext("Crop type “%(name)s” has been added.") % {"name": self.object.name},
         )
         return response
 
@@ -460,7 +463,7 @@ class CultivationCreateView(LoginRequiredMixin, CultivationFormUserMixin, Create
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, "Uprawa została utworzona.")
+        messages.success(self.request, gettext("The cultivation has been created."))
         return response
 
     def get_success_url(self):
@@ -475,7 +478,7 @@ class CultivationUpdateView(
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, "Uprawa została zaktualizowana.")
+        messages.success(self.request, gettext("The cultivation has been updated."))
         return response
 
     def get_success_url(self):
@@ -489,7 +492,7 @@ class CultivationDeleteView(CultivationOwnerQuerysetMixin, DeleteView):
     http_method_names = ["get", "post", "head", "options"]
 
     def form_valid(self, form):
-        messages.success(self.request, "Uprawa została usunięta.")
+        messages.success(self.request, gettext("The cultivation has been deleted."))
         return super().form_valid(form)
 
 
@@ -651,7 +654,7 @@ class FieldWorkCreateView(CultivationEventCreateView):
     form_class = FieldWorkForm
     template_name = "core/fieldwork_form.html"
     detail_url_name = "core:fieldwork_detail"
-    success_message = "Praca została utworzona."
+    success_message = _("The work has been created.")
 
 
 class FieldWorkUpdateView(CultivationEventUpdateView):
@@ -660,14 +663,14 @@ class FieldWorkUpdateView(CultivationEventUpdateView):
     template_name = "core/fieldwork_form.html"
     context_object_name = "work"
     detail_url_name = "core:fieldwork_detail"
-    success_message = "Praca została zaktualizowana."
+    success_message = _("The work has been updated.")
 
 
 class FieldWorkDeleteView(CultivationEventDeleteView):
     model = FieldWork
     template_name = "core/fieldwork_confirm_delete.html"
     context_object_name = "work"
-    success_message = "Praca została usunięta."
+    success_message = _("The work has been deleted.")
 
 
 class SprayingListView(CultivationEventListView):
@@ -690,7 +693,7 @@ class SprayingCreateView(CultivationEventCreateView):
     form_class = SprayingForm
     template_name = "core/spraying_form.html"
     detail_url_name = "core:spraying_detail"
-    success_message = "Oprysk został utworzony."
+    success_message = _("The spraying has been created.")
 
 
 class SprayingUpdateView(CultivationEventUpdateView):
@@ -699,14 +702,14 @@ class SprayingUpdateView(CultivationEventUpdateView):
     template_name = "core/spraying_form.html"
     context_object_name = "spraying"
     detail_url_name = "core:spraying_detail"
-    success_message = "Oprysk został zaktualizowany."
+    success_message = _("The spraying has been updated.")
 
 
 class SprayingDeleteView(CultivationEventDeleteView):
     model = Spraying
     template_name = "core/spraying_confirm_delete.html"
     context_object_name = "spraying"
-    success_message = "Oprysk został usunięty."
+    success_message = _("The spraying has been deleted.")
 
 
 class HarvestListView(CultivationEventListView):
@@ -732,7 +735,7 @@ class HarvestCreateView(CultivationEventCreateView):
     form_class = HarvestForm
     template_name = "core/harvest_form.html"
     detail_url_name = "core:harvest_detail"
-    success_message = "Zbiór został utworzony."
+    success_message = _("The harvest has been created.")
 
 
 class HarvestUpdateView(CultivationEventUpdateView):
@@ -741,14 +744,14 @@ class HarvestUpdateView(CultivationEventUpdateView):
     template_name = "core/harvest_form.html"
     context_object_name = "harvest"
     detail_url_name = "core:harvest_detail"
-    success_message = "Zbiór został zaktualizowany."
+    success_message = _("The harvest has been updated.")
 
 
 class HarvestDeleteView(CultivationEventDeleteView):
     model = Harvest
     template_name = "core/harvest_confirm_delete.html"
     context_object_name = "harvest"
-    success_message = "Zbiór został usunięty."
+    success_message = _("The harvest has been deleted.")
 
 
 class ReportDashboardView(LoginRequiredMixin, TemplateView):
@@ -898,7 +901,7 @@ class ErrorReportCreateView(LoginRequiredMixin, CreateView):
         initial = super().get_initial()
         source = self.get_source_page()
         if source:
-            initial["description"] = f"Strona: {source}\n\n"
+            initial["description"] = gettext("Page: %(path)s") % {"path": source} + "\n\n"
         return initial
 
     def get_context_data(self, **kwargs):
@@ -910,7 +913,7 @@ class ErrorReportCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         form.instance.status = ErrorReport.Status.NEW
         response = super().form_valid(form)
-        messages.success(self.request, "Zgłoszenie błędu zostało utworzone.")
+        messages.success(self.request, gettext("The error report has been created."))
         return response
 
     def get_success_url(self):

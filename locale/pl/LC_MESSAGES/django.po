@@ -1,0 +1,1114 @@
+# Farmer App translations.
+# Generated from the English strings in the code.
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pl\n"
+
+#: core\models.py:143
+#, python-format
+msgid "%(crop)s on field %(field)s (%(year)s)"
+msgstr "%(crop)s na polu %(field)s (%(year)s)"
+
+#: core\forms.py:728
+#: core\forms.py:742
+msgid "A crop type with this name already exists."
+msgstr "Rodzaj uprawy o tej nazwie już istnieje."
+
+#: core\views.py:72
+msgid "A field is the starting point: on it you record cultivations, works, sprayings and harvests."
+msgstr "Pole to podstawa: na nim zapiszesz uprawy, prace, opryski i zbiory."
+
+#: core\forms.py:106
+#: core\forms.py:150
+msgid "A user with this email address already exists."
+msgstr "Użytkownik z tym adresem e-mail już istnieje."
+
+#: core\forms.py:59
+msgid "A user with this name already exists."
+msgstr "Użytkownik o tej nazwie już istnieje."
+
+#: core\models.py:95
+msgid "Active"
+msgstr "Aktywna"
+
+#: core\views.py:86
+msgid "Add a completed work, spraying or harvest and the report will calculate costs and profit."
+msgstr "Dodaj wykonaną pracę, oprysk albo zbiór, a raport policzy koszty i zysk."
+
+#: core\views.py:78
+msgid "Add a cultivation to your field"
+msgstr "Dodaj uprawę na swoim polu"
+
+#: core\views.py:80
+msgid "Add cultivation"
+msgstr "Dodaj uprawę"
+
+#: core\views.py:73
+msgid "Add field"
+msgstr "Dodaj pole"
+
+#: core\views.py:71
+msgid "Add your first field"
+msgstr "Dodaj swoje pierwsze pole"
+
+#: core\forms.py:174
+#: core\models.py:39
+msgid "Address"
+msgstr "Adres"
+
+#: core\forms.py:229
+msgid "Address is required for this location method."
+msgstr "Adres jest wymagany dla tej metody lokalizacji."
+
+#: core\forms.py:280
+msgid "Allowed years: {min}–{max}."
+msgstr "Dozwolony zakres lat: {min}–{max}."
+
+#: core\forms.py:170
+msgid "Area (ha)"
+msgstr "Powierzchnia (ha)"
+
+#: core\forms.py:97
+msgid "At least 8 characters. The password cannot be all digits, resemble your username or name, or be a common password like “qwerty123”."
+msgstr "Co najmniej 8 znaków. Hasło nie może składać się z samych cyfr, przypominać loginu ani imienia, ani być popularnym hasłem w rodzaju „qwerty123”."
+
+#: core\forms.py:283
+msgid "Cannot be earlier than the sowing date."
+msgstr "Nie może być wcześniejsza od daty siewu."
+
+#: core\views.py:92
+msgid "Check your farm results"
+msgstr "Sprawdź wyniki gospodarstwa"
+
+#: core\views.py:79
+msgid "Choose a crop and a season year to start recording treatments and harvests."
+msgstr "Wybierz roślinę i rok sezonu, aby zacząć zapisywać zabiegi i zbiory."
+
+#: core\forms.py:291
+msgid "Choose a crop type."
+msgstr "Wybierz rodzaj uprawy."
+
+#: core\forms.py:407
+#: core\forms.py:511
+#: core\forms.py:597
+msgid "Choose a cultivation grown on one of your fields."
+msgstr "Wybierz uprawę prowadzoną na jednym ze swoich pól."
+
+#: core\forms.py:409
+#: core\forms.py:513
+#: core\forms.py:599
+msgid "Choose a cultivation."
+msgstr "Wybierz uprawę."
+
+#: core\forms.py:287
+msgid "Choose a field."
+msgstr "Wybierz pole."
+
+#: core\forms.py:557
+#: core\forms.py:645
+msgid "Choose a unit."
+msgstr "Wybierz jednostkę."
+
+#: core\forms.py:194
+msgid "Choose how the location is given."
+msgstr "Wybierz sposób lokalizacji."
+
+#: core\forms.py:300
+msgid "Choose the cultivation status."
+msgstr "Wybierz status uprawy."
+
+#: core\forms.py:646
+msgid "Choose the harvest disposition."
+msgstr "Wybierz przeznaczenie zbioru."
+
+#: core\forms.py:768
+msgid "Choose the report category."
+msgstr "Wybierz kategorię zgłoszenia."
+
+#: core\forms.py:398
+msgid "Choose the season that matches the chosen cultivation."
+msgstr "Wybierz sezon zgodny z wybraną uprawą."
+
+#: core\forms.py:400
+msgid "Choose the season year."
+msgstr "Wybierz rok sezonu."
+
+#: core\forms.py:193
+msgid "Choose the soil type."
+msgstr "Wybierz rodzaj gleby."
+
+#: core\forms.py:436
+msgid "Choose the work type."
+msgstr "Wybierz rodzaj pracy."
+
+#: core\models.py:32
+msgid "Clay soil"
+msgstr "Gleba gliniasta"
+
+#: core\models.py:96
+msgid "Completed"
+msgstr "Zakończona"
+
+#: core\forms.py:427
+#: core\forms.py:534
+msgid "Cost"
+msgstr "Koszt"
+
+#: core\forms.py:432
+#: core\forms.py:503
+#: core\forms.py:541
+#: core\forms.py:589
+msgid "Cost cannot be negative."
+msgstr "Koszt nie może być ujemny."
+
+#: core\forms.py:442
+#: core\forms.py:559
+msgid "Cost is required."
+msgstr "Koszt jest wymagany."
+
+#: core\forms.py:270
+msgid "Crop type"
+msgstr "Rodzaj uprawy"
+
+#: core\forms.py:714
+msgid "Crop type name"
+msgstr "Nazwa rodzaju uprawy"
+
+#: core\forms.py:726
+#: core\forms.py:736
+msgid "Crop type name is required."
+msgstr "Nazwa rodzaju uprawy jest wymagana."
+
+#: core\views.py:378
+#, python-format
+msgid "Crop type “%(name)s” has been added."
+msgstr "Rodzaj uprawy „%(name)s” został dodany."
+
+#: core\forms.py:718
+msgid "Crop types are shared by all users. The name cannot be repeated."
+msgstr "Rodzaj uprawy jest wspólny dla wszystkich użytkowników. Nazwa nie może się powtarzać."
+
+#: core\forms.py:406
+#: core\forms.py:510
+#: core\forms.py:596
+msgid "Cultivation"
+msgstr "Uprawa"
+
+#: core\management\commands\seed_demo_data.py:141
+#, python-format
+msgid "Cultivations created or updated: %(count)s"
+msgstr "Uprawy utworzone lub zaktualizowane: %(count)s"
+
+#: core\models.py:310
+msgid "Data problem"
+msgstr "Problem z danymi"
+
+#: core\management\commands\seed_demo_data.py:149
+msgid "Demo data is ready."
+msgstr "Dane demonstracyjne zostały przygotowane."
+
+#: core\forms.py:765
+msgid "Describe the problem in at least 10 and at most 5000 characters."
+msgstr "Opisz problem w co najmniej 10 i nie więcej niż 5000 znakach."
+
+#: core\forms.py:177
+#: core\forms.py:428
+#: core\forms.py:535
+#: core\forms.py:715
+msgid "Description"
+msgstr "Opis"
+
+#: core\forms.py:131
+#: core\forms.py:54
+#: core\forms.py:75
+msgid "Email address"
+msgstr "Adres e-mail"
+
+#: core\forms.py:135
+#: core\forms.py:64
+msgid "Email address is required."
+msgstr "Adres e-mail jest wymagany."
+
+#: core\forms.py:181
+msgid "Enter a positive area in hectares."
+msgstr "Podaj dodatnią powierzchnię w hektarach."
+
+#: core\forms.py:443
+#: core\forms.py:560
+msgid "Enter a valid cost."
+msgstr "Podaj poprawny koszt."
+
+#: core\forms.py:136
+#: core\forms.py:65
+msgid "Enter a valid email address."
+msgstr "Podaj poprawny adres e-mail."
+
+#: core\forms.py:191
+msgid "Enter a valid field area."
+msgstr "Podaj poprawną powierzchnię pola."
+
+#: core\forms.py:653
+msgid "Enter a valid harvest cost."
+msgstr "Podaj poprawny koszt zbioru."
+
+#: core\forms.py:639
+msgid "Enter a valid harvest date."
+msgstr "Podaj poprawną datę zbioru."
+
+#: core\forms.py:643
+msgid "Enter a valid harvest quantity."
+msgstr "Podaj poprawną ilość zbioru."
+
+#: core\forms.py:195
+msgid "Enter a valid latitude."
+msgstr "Podaj poprawną szerokość geograficzną."
+
+#: core\forms.py:196
+msgid "Enter a valid longitude."
+msgstr "Podaj poprawną długość geograficzną."
+
+#: core\forms.py:303
+msgid "Enter a valid planned harvest date."
+msgstr "Podaj poprawną planowaną datę zbioru."
+
+#: core\forms.py:555
+msgid "Enter a valid product quantity."
+msgstr "Podaj poprawną ilość preparatu."
+
+#: core\forms.py:649
+msgid "Enter a valid revenue."
+msgstr "Podaj poprawny przychód."
+
+#: core\forms.py:296
+msgid "Enter a valid season year."
+msgstr "Podaj poprawny rok sezonu."
+
+#: core\forms.py:301
+msgid "Enter a valid sowing date."
+msgstr "Podaj poprawną datę siewu."
+
+#: core\forms.py:547
+msgid "Enter a valid spraying date."
+msgstr "Podaj poprawną datę oprysku."
+
+#: core\forms.py:439
+msgid "Enter a valid work date."
+msgstr "Podaj poprawną datę wykonania."
+
+#: core\forms.py:626
+msgid "Enter the date of the harvest."
+msgstr "Podaj datę przeprowadzenia zbioru."
+
+#: core\forms.py:538
+msgid "Enter the date of the spraying."
+msgstr "Podaj datę wykonania oprysku."
+
+#: core\forms.py:431
+msgid "Enter the date the work was done."
+msgstr "Podaj datę wykonania pracy."
+
+#: core\models.py:152
+msgid "Fertilizing"
+msgstr "Nawożenie"
+
+#: core\forms.py:269
+msgid "Field"
+msgstr "Pole"
+
+#: core\forms.py:190
+msgid "Field area is required."
+msgstr "Powierzchnia pola jest wymagana."
+
+#: core\forms.py:216
+msgid "Field area must be greater than zero."
+msgstr "Powierzchnia pola musi być większa od zera."
+
+#: core\forms.py:169
+msgid "Field name"
+msgstr "Nazwa pola"
+
+#: core\forms.py:188
+msgid "Field name is required."
+msgstr "Nazwa pola jest wymagana."
+
+#: core\management\commands\seed_demo_data.py:140
+#, python-format
+msgid "Fields created or updated: %(count)s"
+msgstr "Pola utworzone lub zaktualizowane: %(count)s"
+
+#: core\forms.py:129
+#: core\forms.py:52
+#: core\forms.py:73
+msgid "First name"
+msgstr "Imię"
+
+#: core\forms.py:61
+msgid "First name is required."
+msgstr "Imię jest wymagane."
+
+#: core\models.py:40
+msgid "GPS coordinates"
+msgstr "Współrzędne GPS"
+
+#: core\models.py:302
+#, python-format
+msgid "Harvest %(cultivation)s — %(date)s"
+msgstr "Zbiór %(cultivation)s — %(date)s"
+
+#: core\forms.py:622
+msgid "Harvest cost"
+msgstr "Koszt zbioru"
+
+#: core\forms.py:633
+#: core\forms.py:688
+msgid "Harvest cost cannot be negative."
+msgstr "Koszt zbioru nie może być ujemny."
+
+#: core\forms.py:652
+msgid "Harvest cost is required."
+msgstr "Koszt zbioru jest wymagany."
+
+#: core\forms.py:617
+msgid "Harvest date"
+msgstr "Data zbioru"
+
+#: core\forms.py:638
+msgid "Harvest date is required."
+msgstr "Data zbioru jest wymagana."
+
+#: core\forms.py:620
+msgid "Harvest disposition"
+msgstr "Przeznaczenie zbioru"
+
+#: core\forms.py:642
+msgid "Harvest quantity is required."
+msgstr "Ilość zbioru jest wymagana."
+
+#: core\forms.py:676
+msgid "Harvest quantity must be greater than zero."
+msgstr "Ilość zbioru musi być większa od zera."
+
+#: core\management\commands\seed_demo_data.py:147
+#, python-format
+msgid "Harvests created or updated: %(count)s"
+msgstr "Zbiory utworzone lub zaktualizowane: %(count)s"
+
+#: core\forms.py:173
+msgid "How the location is given"
+msgstr "Sposób określenia lokalizacji"
+
+#: core\models.py:316
+msgid "In progress"
+msgstr "W trakcie"
+
+#: core\models.py:311
+msgid "Interface problem"
+msgstr "Problem z interfejsem"
+
+#: core\models.py:238
+msgid "Kept in storage"
+msgstr "Pozostawiony w magazynie"
+
+#: core\forms.py:130
+#: core\forms.py:53
+#: core\forms.py:74
+msgid "Last name"
+msgstr "Nazwisko"
+
+#: core\forms.py:62
+msgid "Last name is required."
+msgstr "Nazwisko jest wymagane."
+
+#: core\forms.py:175
+msgid "Latitude"
+msgstr "Szerokość geograficzna"
+
+#: core\forms.py:234
+msgid "Latitude is required for this location."
+msgstr "Szerokość geograficzna jest wymagana dla tej lokalizacji."
+
+#: core\models.py:33
+msgid "Loamy soil"
+msgstr "Gleba ilasta"
+
+#: core\forms.py:176
+msgid "Longitude"
+msgstr "Długość geograficzna"
+
+#: core\forms.py:238
+msgid "Longitude is required for this location."
+msgstr "Długość geograficzna jest wymagana dla tej lokalizacji."
+
+#: core\models.py:239
+msgid "Loss / discarded"
+msgstr "Strata / zutylizowany"
+
+#: core\forms.py:539
+msgid "Name of the product used, up to 150 characters."
+msgstr "Nazwa zastosowanego preparatu, maksymalnie 150 znaków."
+
+#: core\models.py:315
+msgid "New"
+msgstr "Nowe"
+
+#: core\forms.py:275
+#: core\forms.py:623
+msgid "Notes"
+msgstr "Notatki"
+
+#: core\forms.py:282
+msgid "Optional date when sowing started."
+msgstr "Opcjonalna data rozpoczęcia siewu."
+
+#: core\forms.py:542
+msgid "Optional description of the spraying."
+msgstr "Opcjonalny opis oprysku."
+
+#: core\forms.py:433
+msgid "Optional description of the work."
+msgstr "Opcjonalny opis wykonanej pracy."
+
+#: core\forms.py:634
+msgid "Optional notes about the harvest."
+msgstr "Opcjonalne informacje o zbiorze."
+
+#: core\forms.py:722
+msgid "Optional short description (up to 1000 characters)."
+msgstr "Opcjonalny krótki opis (maksymalnie 1000 znaków)."
+
+#: core\models.py:312
+msgctxt "report category"
+msgid "Other"
+msgstr "Inny"
+
+#: core\models.py:36
+msgctxt "soil type"
+msgid "Other"
+msgstr "Inna"
+
+#: core\models.py:155
+msgctxt "work type"
+msgid "Other"
+msgstr "Inna"
+
+#: core\views.py:904
+#, python-format
+msgid "Page: %(path)s"
+msgstr "Strona: %(path)s"
+
+#: core\forms.py:172
+#: core\models.py:42
+msgid "Parcel identifier"
+msgstr "Identyfikator działki"
+
+#: core\forms.py:243
+msgid "Parcel identifier is required for this location method."
+msgstr "Identyfikator działki jest wymagany dla tej metody lokalizacji."
+
+#: core\forms.py:76
+msgid "Password"
+msgstr "Hasło"
+
+#: core\models.py:35
+msgid "Peat soil"
+msgstr "Gleba torfowa"
+
+#: core\models.py:94
+msgid "Planned"
+msgstr "Planowana"
+
+#: core\forms.py:274
+msgid "Planned harvest date"
+msgstr "Planowana data zbioru"
+
+#: core\models.py:150
+msgid "Plowing"
+msgstr "Orka"
+
+#: core\models.py:41
+msgid "Point on a map"
+msgstr "Punkt na mapie"
+
+#: core\forms.py:762
+msgid "Problem description"
+msgstr "Opis problemu"
+
+#: core\forms.py:769
+msgid "Problem description is required."
+msgstr "Opis problemu jest wymagany."
+
+#: core\forms.py:531
+msgid "Product name"
+msgstr "Nazwa preparatu"
+
+#: core\forms.py:551
+msgid "Product name can have at most 150 characters."
+msgstr "Nazwa preparatu może mieć najwyżej 150 znaków."
+
+#: core\forms.py:550
+msgid "Product name is required."
+msgstr "Nazwa preparatu jest wymagana."
+
+#: core\forms.py:554
+msgid "Product quantity is required."
+msgstr "Ilość preparatu jest wymagana."
+
+#: core\forms.py:583
+msgid "Product quantity must be greater than zero."
+msgstr "Ilość preparatu musi być większa od zera."
+
+#: core\forms.py:532
+#: core\forms.py:618
+msgid "Quantity"
+msgstr "Ilość"
+
+#: core\forms.py:540
+#: core\forms.py:627
+msgid "Quantity must be greater than zero."
+msgstr "Ilość musi być większa od zera."
+
+#: core\views.py:87
+msgid "Record work"
+msgstr "Zapisz pracę"
+
+#: core\views.py:85
+msgid "Record your first work or harvest"
+msgstr "Zapisz pierwszą pracę lub zbiór"
+
+#: core\forms.py:77
+msgid "Repeat password"
+msgstr "Powtórz hasło"
+
+#: core\models.py:335
+#, python-format
+msgid "Report #%(number)s — %(category)s"
+msgstr "Zgłoszenie #%(number)s — %(category)s"
+
+#: core\forms.py:761
+msgid "Report category"
+msgstr "Kategoria zgłoszenia"
+
+#: core\forms.py:185
+msgid "Required for GPS and a point on a map; range -180 to 180."
+msgstr "Wymagana dla GPS i punktu na mapie; zakres od -180 do 180."
+
+#: core\forms.py:184
+msgid "Required for GPS and a point on a map; range -90 to 90."
+msgstr "Wymagana dla GPS i punktu na mapie; zakres od -90 do 90."
+
+#: core\forms.py:182
+msgid "Required when the location is a parcel."
+msgstr "Wymagany przy lokalizacji według działki."
+
+#: core\forms.py:183
+msgid "Required when the location is an address."
+msgstr "Wymagany przy lokalizacji według adresu."
+
+#: core\models.py:317
+msgid "Resolved"
+msgstr "Rozwiązane"
+
+#: core\forms.py:621
+msgid "Revenue"
+msgstr "Przychód"
+
+#: core\forms.py:632
+#: core\forms.py:682
+msgid "Revenue cannot be negative."
+msgstr "Przychód nie może być ujemny."
+
+#: core\forms.py:648
+msgid "Revenue is required."
+msgstr "Przychód jest wymagany."
+
+#: core\forms.py:702
+#: core\models.py:294
+msgid "Revenue must be 0 if the harvest was not sold."
+msgstr "Przychód musi wynosić 0, jeśli zbiór nie został sprzedany."
+
+#: core\models.py:31
+msgid "Sandy soil"
+msgstr "Gleba piaszczysta"
+
+#: core\forms.py:628
+msgid "Say whether the harvest was sold, put into storage or discarded as a loss."
+msgstr "Określ, czy zbiór został sprzedany, trafił do magazynu, czy został zutylizowany jako strata."
+
+#: core\forms.py:271
+#: core\forms.py:394
+msgid "Season year"
+msgstr "Rok sezonu"
+
+#: core\forms.py:295
+msgid "Season year is required."
+msgstr "Rok sezonu jest wymagany."
+
+#: core\models.py:34
+msgid "Silt soil"
+msgstr "Gleba pyłowa"
+
+#: core\forms.py:171
+msgid "Soil type"
+msgstr "Rodzaj gleby"
+
+#: core\models.py:237
+msgid "Sold"
+msgstr "Sprzedany"
+
+#: core\models.py:151
+msgid "Sowing"
+msgstr "Siew"
+
+#: core\forms.py:273
+msgid "Sowing date"
+msgstr "Data siewu"
+
+#: core\forms.py:530
+msgid "Spraying date"
+msgstr "Data oprysku"
+
+#: core\forms.py:546
+msgid "Spraying date is required."
+msgstr "Data oprysku jest wymagana."
+
+#: core\management\commands\seed_demo_data.py:144
+#, python-format
+msgid "Sprayings created or updated: %(count)s"
+msgstr "Opryski utworzone lub zaktualizowane: %(count)s"
+
+#: core\forms.py:272
+msgid "Status"
+msgstr "Status"
+
+#: core\models.py:309
+msgid "Technical problem"
+msgstr "Problem techniczny"
+
+#: core\forms.py:292
+msgid "The chosen crop type is not available."
+msgstr "Wybrany rodzaj uprawy jest niedostępny."
+
+#: core\forms.py:410
+#: core\forms.py:514
+#: core\forms.py:600
+msgid "The chosen cultivation is not available."
+msgstr "Wybrana uprawa jest niedostępna."
+
+#: core\forms.py:288
+msgid "The chosen field is not available."
+msgstr "Wybrane pole jest niedostępne."
+
+#: core\forms.py:484
+msgid "The chosen season does not match the season of the chosen cultivation."
+msgstr "Wybrany sezon nie jest zgodny z sezonem wybranej uprawy."
+
+#: core\forms.py:401
+msgid "The chosen season is not available."
+msgstr "Wybrany sezon jest niedostępny."
+
+#: core\views.py:466
+msgid "The cultivation has been created."
+msgstr "Uprawa została utworzona."
+
+#: core\views.py:495
+msgid "The cultivation has been deleted."
+msgstr "Uprawa została usunięta."
+
+#: core\views.py:481
+msgid "The cultivation has been updated."
+msgstr "Uprawa została zaktualizowana."
+
+#: core\forms.py:748
+msgid "The description can have at most 1000 characters."
+msgstr "Opis może mieć maksymalnie 1000 znaków."
+
+#: core\forms.py:780
+msgid "The description cannot have more than 5000 characters."
+msgstr "Opis nie może zawierać więcej niż 5000 znaków."
+
+#: core\forms.py:778
+msgid "The description must have at least 10 characters."
+msgstr "Opis musi zawierać co najmniej 10 znaków."
+
+#: core\views.py:916
+msgid "The error report has been created."
+msgstr "Zgłoszenie błędu zostało utworzone."
+
+#: core\views.py:302
+msgid "The field has been created."
+msgstr "Pole zostało utworzone."
+
+#: core\views.py:330
+msgid "The field has been deleted."
+msgstr "Pole zostało usunięte."
+
+#: core\views.py:316
+msgid "The field has been updated."
+msgstr "Pole zostało zaktualizowane."
+
+#: core\forms.py:82
+#, python-format
+msgid "The field “%(label)s” is required."
+msgstr "Pole „%(label)s” jest wymagane."
+
+#: core\views.py:738
+msgid "The harvest has been created."
+msgstr "Zbiór został utworzony."
+
+#: core\views.py:754
+msgid "The harvest has been deleted."
+msgstr "Zbiór został usunięty."
+
+#: core\views.py:747
+msgid "The harvest has been updated."
+msgstr "Zbiór został zaktualizowany."
+
+#: core\forms.py:727
+msgid "The name can have at most 100 characters."
+msgstr "Nazwa może mieć maksymalnie 100 znaków."
+
+#: core\forms.py:180
+msgid "The name must be unique among your fields."
+msgstr "Nazwa musi być unikalna wśród Twoich pól."
+
+#: core\forms.py:44
+msgid "The passwords do not match."
+msgstr "Podane hasła nie są takie same."
+
+#: core\forms.py:367
+#: core\models.py:136
+msgid "The planned harvest date cannot be earlier than the sowing date."
+msgstr "Planowana data zbioru nie może być wcześniejsza od daty siewu."
+
+#: core\views.py:93
+msgid "The report shows costs, revenue and profit for fields and cultivations."
+msgstr "Raport pokazuje koszty, przychody i zysk dla pól oraz upraw."
+
+#: core\forms.py:250
+msgid "The season year must be between {min} and {max}."
+msgstr "Rok sezonu musi mieścić się w zakresie {min}–{max}."
+
+#: core\forms.py:496
+#: core\models.py:183
+msgid "The sowing date year must match the cultivation season year."
+msgstr "Rok daty siewu musi być zgodny z rokiem sezonu uprawy."
+
+#: core\forms.py:357
+#: core\models.py:133
+msgid "The sowing date year must match the season year."
+msgstr "Rok daty siewu musi być zgodny z rokiem sezonu."
+
+#: core\views.py:696
+msgid "The spraying has been created."
+msgstr "Oprysk został utworzony."
+
+#: core\views.py:712
+msgid "The spraying has been deleted."
+msgstr "Oprysk został usunięty."
+
+#: core\views.py:705
+msgid "The spraying has been updated."
+msgstr "Oprysk został zaktualizowany."
+
+#: core\forms.py:113
+msgid "The username or password is incorrect. Check that Caps Lock is off, because letter case matters."
+msgstr "Login albo hasło są nieprawidłowe. Sprawdź, czy nie jest włączony Caps Lock, bo wielkość liter ma znaczenie."
+
+#: core\views.py:657
+msgid "The work has been created."
+msgstr "Praca została utworzona."
+
+#: core\views.py:673
+msgid "The work has been deleted."
+msgstr "Praca została usunięta."
+
+#: core\views.py:666
+msgid "The work has been updated."
+msgstr "Praca została zaktualizowana."
+
+#: core\forms.py:378
+msgid "This crop is already assigned to this field and season."
+msgstr "Taka uprawa jest już przypisana do tego pola i sezonu."
+
+#: core\views.py:166
+msgid "Too many failed login attempts. Try again in a few minutes."
+msgstr "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za kilka minut."
+
+#: core\forms.py:533
+#: core\forms.py:619
+msgid "Unit"
+msgstr "Jednostka"
+
+#: core\management\commands\seed_demo_data.py:31
+#, python-format
+msgid "User \"%(username)s\" does not exist."
+msgstr "Użytkownik o nazwie \"%(username)s\" nie istnieje."
+
+#: core\forms.py:51
+#: core\forms.py:72
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+#: core\forms.py:58
+msgid "Username is required."
+msgstr "Nazwa użytkownika jest wymagana."
+
+#: core\views.py:94
+msgid "View report"
+msgstr "Zobacz raport"
+
+#: core\models.py:153
+msgid "Watering"
+msgstr "Nawadnianie"
+
+#: core\models.py:154
+msgid "Weeding"
+msgstr "Odchwaszczanie"
+
+#: core\forms.py:426
+msgid "Work date"
+msgstr "Data wykonania"
+
+#: core\forms.py:438
+msgid "Work date is required."
+msgstr "Data wykonania jest wymagana."
+
+#: core\forms.py:425
+msgid "Work type"
+msgstr "Rodzaj pracy"
+
+#: core\management\commands\seed_demo_data.py:142
+#, python-format
+msgid "Works created or updated: %(count)s"
+msgstr "Prace utworzone lub zaktualizowane: %(count)s"
+
+#: core\forms.py:210
+msgid "You already have a field with this name."
+msgstr "Masz już pole o tej nazwie."
+
+#: core\forms.py:278
+msgid "You can only choose one of your own fields."
+msgstr "Możesz wybrać wyłącznie jedno ze swoich pól."
+
+#: core\forms.py:88
+msgid "You will use it to log in, e.g. jan.kowalski. Letters, digits and @ . + - _ characters, no spaces."
+msgstr "Tym będziesz się logować, np. jan.kowalski. Litery, cyfry i znaki @ . + - _, bez spacji."
+
+#: core\views.py:136
+msgid "Your account has been created. You can log in now."
+msgstr "Konto zostało utworzone. Możesz się teraz zalogować."
+
+#: core\views.py:228
+msgid "Your password has been changed."
+msgstr "Hasło zostało zmienione."
+
+#: core\views.py:211
+msgid "Your profile has been updated."
+msgstr "Dane profilu zostały zaktualizowane."
+
+#: core\models.py:60
+msgid "address"
+msgstr "adres"
+
+#: core\models.py:52
+msgid "area (ha)"
+msgstr "powierzchnia (ha)"
+
+#: core\models.py:323
+msgid "category"
+msgstr "kategoria"
+
+#: core\models.py:163
+#: core\models.py:208
+msgid "cost"
+msgstr "koszt"
+
+#: core\models.py:115
+#: core\models.py:167
+#: core\models.py:18
+#: core\models.py:212
+#: core\models.py:265
+msgid "created at"
+msgstr "data utworzenia"
+
+#: core\models.py:103
+#: core\models.py:21
+msgid "crop type"
+msgstr "rodzaj uprawy"
+
+#: core\models.py:22
+msgid "crop types"
+msgstr "rodzaje upraw"
+
+#: core\models.py:118
+#: core\models.py:158
+#: core\models.py:198
+#: core\models.py:242
+msgid "cultivation"
+msgstr "uprawa"
+
+#: core\models.py:119
+msgid "cultivations"
+msgstr "uprawy"
+
+#: core\models.py:166
+#: core\models.py:17
+#: core\models.py:211
+#: core\models.py:324
+#: core\models.py:71
+msgid "description"
+msgstr "opis"
+
+#: core\models.py:330
+msgid "error report"
+msgstr "zgłoszenie błędu"
+
+#: core\models.py:331
+msgid "error reports"
+msgstr "zgłoszenia błędów"
+
+#: core\models.py:99
+msgid "field"
+msgstr "pole"
+
+#: core\models.py:76
+msgctxt "model name"
+msgid "field"
+msgstr "pole rolne"
+
+#: core\models.py:170
+msgid "field work"
+msgstr "wykonana praca"
+
+#: core\models.py:171
+msgid "field works"
+msgstr "wykonane prace"
+
+#: core\models.py:77
+msgctxt "model name"
+msgid "fields"
+msgstr "pola rolne"
+
+#: core\models.py:268
+msgid "harvest"
+msgstr "zbiór"
+
+#: core\models.py:261
+msgid "harvest cost"
+msgstr "koszt zbioru"
+
+#: core\models.py:244
+msgid "harvest date"
+msgstr "data zbioru"
+
+#: core\models.py:251
+msgid "harvest disposition"
+msgstr "przeznaczenie zbioru"
+
+#: core\models.py:269
+msgid "harvests"
+msgstr "zbiory"
+
+#: core\models.py:62
+msgid "latitude"
+msgstr "szerokość geograficzna"
+
+#: core\models.py:58
+msgid "location method"
+msgstr "metoda lokalizacji"
+
+#: core\models.py:67
+msgid "longitude"
+msgstr "długość geograficzna"
+
+#: core\models.py:16
+#: core\models.py:50
+msgid "name"
+msgstr "nazwa"
+
+#: core\models.py:336
+msgid "new"
+msgstr "nowe"
+
+#: core\models.py:114
+#: core\models.py:264
+msgid "notes"
+msgstr "notatki"
+
+#: core\models.py:48
+msgid "owner"
+msgstr "właściciel"
+
+#: core\models.py:56
+msgid "parcel identifier"
+msgstr "identyfikator działki"
+
+#: core\models.py:113
+msgid "planned harvest date"
+msgstr "planowana data zbioru"
+
+#: core\models.py:201
+msgid "product name"
+msgstr "nazwa środka"
+
+#: core\models.py:203
+#: core\models.py:246
+msgid "quantity"
+msgstr "ilość"
+
+#: core\models.py:257
+msgid "revenue"
+msgstr "przychód"
+
+#: core\models.py:106
+msgid "season year"
+msgstr "rok sezonu"
+
+#: core\models.py:55
+msgid "soil type"
+msgstr "rodzaj gleby"
+
+#: core\models.py:112
+msgid "sowing date"
+msgstr "data siewu"
+
+#: core\models.py:215
+msgid "spraying"
+msgstr "oprysk"
+
+#: core\models.py:200
+msgid "spraying date"
+msgstr "data oprysku"
+
+#: core\models.py:216
+msgid "sprayings"
+msgstr "opryski"
+
+#: core\models.py:111
+#: core\models.py:325
+msgid "status"
+msgstr "status"
+
+#: core\models.py:206
+#: core\models.py:249
+msgid "unit"
+msgstr "jednostka"
+
+#: core\models.py:327
+#: core\models.py:73
+msgid "updated at"
+msgstr "data aktualizacji"
+
+#: core\models.py:321
+msgid "user"
+msgstr "użytkownik"
+
+#: core\models.py:161
+msgid "work date"
+msgstr "data wykonania"
+
+#: core\models.py:160
+msgid "work type"
+msgstr "rodzaj pracy"
