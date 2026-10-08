@@ -1,26 +1,72 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}Rejestracja – Farmer App{% endblock %}
+{% block title %}Rejestracja · Farmer App{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+{% block main_class %}auth-main{% endblock %}
 
 {% block content %}
-<div class="auth-layout">
-    <div class="auth-card">
-        <h1>Utwórz konto</h1>
-        <p class="auth-lead">Po założeniu konta zalogujesz się i od razu dostaniesz podpowiedź, od czego zacząć.</p>
-        <form method="post">
+<div class="wrap auth-grid">
+    <section class="sheet auth-sheet" aria-labelledby="auth-title">
+        <p class="kicker">Rejestracja</p>
+        <h1 id="auth-title">Utwórz konto</h1>
+        <p class="auth-lead">Konto jest bezpłatne. Wypełnienie formularza zajmie chwilę.</p>
+
+        <form method="post" class="auth-form" data-busy-form novalidate>
             {% csrf_token %}
-            {{ form.non_field_errors }}
-            {% for field in form %}
-                <p>
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}
-                    {{ field.errors }}
-                </p>
-            {% endfor %}
-            <button class="button-block" type="submit">Zarejestruj się</button>
+            {% if form.non_field_errors %}
+                <div class="form-alert" role="alert">
+                    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+            {% endif %}
+
+            <fieldset>
+                <legend>O&nbsp;Tobie</legend>
+                <div class="field-row">
+                    {% with field=form.first_name %}{% include "core/partials/form_field.html" %}{% endwith %}
+                    {% with field=form.last_name %}{% include "core/partials/form_field.html" %}{% endwith %}
+                </div>
+                {% with field=form.email %}{% include "core/partials/form_field.html" %}{% endwith %}
+            </fieldset>
+
+            <fieldset>
+                <legend>Dane do logowania</legend>
+                {% with field=form.username %}{% include "core/partials/form_field.html" %}{% endwith %}
+                {% with field=form.password1 %}{% include "core/partials/form_field.html" %}{% endwith %}
+                {% with field=form.password2 %}{% include "core/partials/form_field.html" %}{% endwith %}
+            </fieldset>
+
+            <button class="button button-large button-block" type="submit" data-busy-label="Zakładanie konta…">Utwórz konto</button>
         </form>
-        <p class="auth-switch">Masz już konto? <a href="{% url 'core:login' %}">Zaloguj się</a>.</p>
-    </div>
+
+        <p class="auth-switch">
+            Masz już konto?
+            <a class="link-quiet" href="{% url 'core:login' %}">Zaloguj się</a>
+        </p>
+    </section>
+
+    <aside class="auth-aside" aria-labelledby="next-title">
+        <p class="kicker">Co dalej</p>
+        <h2 id="next-title">Trzy kroki do pierwszego wyniku</h2>
+        <ol class="next-steps">
+            <li>
+                <strong>Zalogujesz się</strong>
+                <span>Loginem i&nbsp;hasłem, które ustawisz w&nbsp;tym formularzu.</span>
+            </li>
+            <li>
+                <strong>Dodasz pierwsze pole</strong>
+                <span>Na początek wystarczy nazwa i&nbsp;powierzchnia.</span>
+            </li>
+            <li>
+                <strong>Aplikacja podpowie resztę</strong>
+                <span>Na pulpicie zawsze widać następny krok.</span>
+            </li>
+        </ol>
+        <p class="auth-note">Twoje pola i&nbsp;zapisy widzisz tylko Ty.</p>
+    </aside>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'core/auth.js' %}" defer></script>
 {% endblock %}

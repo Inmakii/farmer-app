@@ -1,0 +1,20 @@
+{# Jedno pole formularza: etykieta, kontrolka, podpowiedź i błędy pod polem. #}
+<div class="field{% if field.errors %} has-error{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% if field.field.widget.input_type == "password" %}
+        <div class="password-wrap">
+            {{ field }}
+            <button class="password-toggle" type="button" data-password-toggle aria-controls="{{ field.id_for_label }}" aria-pressed="false">Pokaż</button>
+        </div>
+    {% else %}
+        {{ field }}
+    {% endif %}
+    {% if field.help_text %}
+        <div class="field-hint" id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</div>
+    {% endif %}
+    {% if field.errors %}
+        <ul class="field-errors" id="{{ field.auto_id }}_error">
+            {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+    {% endif %}
+</div>

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
 
 from .models import (
@@ -77,6 +77,23 @@ class RegistrationForm(UserCreationForm):
             self.fields[field_name].error_messages["required"] = (
                 f"Pole „{label}” jest wymagane."
             )
+        # Imię jest pierwszym polem formularza, więc kursor nie skacze do loginu.
+        self.fields["username"].widget.attrs.pop("autofocus", None)
+        self.fields["username"].widget.attrs["spellcheck"] = "false"
+        self.fields["username"].help_text = (
+            "Tym będziesz się logować, np. jan.kowalski. "
+            "Litery, cyfry i znaki @ . + - _, bez spacji."
+        )
+        self.fields["first_name"].widget.attrs["autocomplete"] = "given-name"
+        self.fields["last_name"].widget.attrs["autocomplete"] = "family-name"
+        self.fields["email"].widget.attrs.update(
+            {"autocomplete": "email", "autocapitalize": "none", "spellcheck": "false"}
+        )
+        self.fields["password1"].help_text = (
+            "Co najmniej 8 znaków. Hasło nie może składać się z samych cyfr, "
+            "przypominać loginu ani imienia, ani być popularnym hasłem "
+            "w rodzaju „qwerty123”."
+        )
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip()
@@ -86,6 +103,20 @@ class RegistrationForm(UserCreationForm):
                 "Użytkownik z tym adresem e-mail już istnieje."
             )
         return email
+
+
+class LoginForm(AuthenticationForm):
+    error_messages = {
+        **AuthenticationForm.error_messages,
+        "invalid_login": (
+            "Login albo hasło są nieprawidłowe. Sprawdź, czy nie jest włączony "
+            "Caps Lock, bo wielkość liter ma znaczenie."
+        ),
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs["spellcheck"] = "false"
 
 
 class ProfileEditForm(forms.ModelForm):

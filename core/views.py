@@ -31,6 +31,7 @@ from .forms import (
     FieldForm,
     FieldWorkForm,
     HarvestForm,
+    LoginForm,
     ProfileEditForm,
     RegistrationForm,
     SprayingForm,
@@ -142,6 +143,7 @@ class LoginView(DjangoLoginView):
     """Logowanie z blokadą po serii nieudanych prób (per adres IP i nazwa użytkownika)."""
 
     template_name = "core/login.html"
+    authentication_form = LoginForm
     redirect_authenticated_user = True
 
     def _failure_cache_key(self):

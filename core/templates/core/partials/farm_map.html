@@ -1,0 +1,32 @@
+{# Widok pól z góry, wspólny dla strony głównej i logowania. #}
+<div class="farm-map-frame">
+    <svg viewBox="0 0 560 460" role="img" aria-labelledby="map-title" focusable="false">
+        <title id="map-title">Widok pól z góry: pszenica, rzepak, kukurydza, łąka i ugór</title>
+        <defs>
+            <pattern id="rows-a" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(-4)"><path class="map-row" d="M0 6h12"/></pattern>
+            <pattern id="rows-b" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(10)"><path class="map-row" d="M0 5h10"/></pattern>
+            <pattern id="rows-c" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(88)"><path class="map-row" d="M0 7h14"/></pattern>
+            <polygon id="p-wheat" points="16,18 296,10 312,204 24,224"/>
+            <polygon id="p-rape" points="312,10 544,20 538,166 326,188"/>
+            <polygon id="p-corn" points="24,242 312,220 306,448 14,448"/>
+            <polygon id="p-grass" points="326,206 538,184 544,316 330,334"/>
+            <polygon id="p-fallow" points="330,352 544,334 546,448 322,448"/>
+        </defs>
+        <rect class="map-ground" width="560" height="460"/>
+        <use href="#p-wheat" class="pc-wheat"/><use href="#p-wheat" fill="url(#rows-a)"/>
+        <use href="#p-rape" class="pc-rape"/><use href="#p-rape" fill="url(#rows-b)"/>
+        <use href="#p-corn" class="pc-corn"/><use href="#p-corn" fill="url(#rows-c)"/>
+        <use href="#p-grass" class="pc-grass"/>
+        <use href="#p-fallow" class="pc-fallow"/><use href="#p-fallow" fill="url(#rows-b)"/>
+        <g class="map-tree">
+            <circle cx="486" cy="262" r="17"/>
+            <circle cx="508" cy="282" r="14"/>
+            <circle cx="468" cy="286" r="13"/>
+            <circle cx="356" cy="236" r="11"/>
+        </g>
+        <g class="map-barn">
+            <rect x="470" y="372" width="54" height="40" rx="2"/>
+            <path class="map-barn-ridge" d="M470 392h54"/>
+        </g>
+    </svg>
+</div>

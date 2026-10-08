@@ -1,26 +1,47 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}Logowanie – Farmer App{% endblock %}
+{% block title %}Logowanie · Farmer App{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+{% block main_class %}auth-main{% endblock %}
 
 {% block content %}
-<div class="auth-layout">
-    <div class="auth-card">
-        <h1>Logowanie</h1>
-        <p class="auth-lead">Zaloguj się, aby wrócić do swoich pól, upraw i raportów.</p>
-        <form method="post">
+<div class="wrap auth-grid">
+    <section class="sheet auth-sheet" aria-labelledby="auth-title">
+        <p class="kicker">Logowanie</p>
+        <h1 id="auth-title">Zaloguj się</h1>
+        <p class="auth-lead">Twoje pola, uprawy i&nbsp;raporty są tam, gdzie je zostawiłeś.</p>
+
+        <form method="post" class="auth-form" data-busy-form novalidate>
             {% csrf_token %}
-            {{ form.non_field_errors }}
+            {% if form.non_field_errors %}
+                <div class="form-alert" role="alert">
+                    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+            {% endif %}
             {% for field in form %}
-                <p>
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {{ field.errors }}
-                </p>
+                {% include "core/partials/form_field.html" %}
             {% endfor %}
             {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-            <button class="button-block" type="submit">Zaloguj się</button>
+            <button class="button button-large button-block" type="submit" data-busy-label="Logowanie…">Zaloguj się</button>
         </form>
-        <p class="auth-switch">Nie masz konta? <a href="{% url 'core:register' %}">Zarejestruj się</a>.</p>
-    </div>
+
+        <p class="auth-switch">
+            Nie masz jeszcze konta?
+            <a class="link-quiet" href="{% url 'core:register' %}">Załóż je za darmo</a>
+        </p>
+    </section>
+
+    <aside class="auth-aside auth-aside-optional" aria-label="Co zobaczysz po zalogowaniu">
+        <p class="kicker">Po zalogowaniu</p>
+        <h2>Zobaczysz swoje pola i&nbsp;to, ile każde z&nbsp;nich zarobiło.</h2>
+        <div class="auth-map">
+            {% include "core/partials/farm_map.html" %}
+        </div>
+    </aside>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'core/auth.js' %}" defer></script>
 {% endblock %}

@@ -1,62 +1,195 @@
 {% extends "core/base.html" %}
 
-{% block title %}Farmer App – ewidencja gospodarstwa rolnego{% endblock %}
+{% block title %}Farmer App · zeszyt gospodarstwa w internecie{% endblock %}
+{% block body_class %}page-home{% endblock %}
+{% block main_class %}landing{% endblock %}
 
 {% block content %}
-<div class="landing">
-    <section class="hero">
-        <p class="eyebrow">Aplikacja dla rolników</p>
-        <h1>Cała ewidencja gospodarstwa w jednym miejscu</h1>
-        <p class="hero-lead">
-            Farmer App pomaga prowadzić pola, uprawy, prace, opryski i zbiory,
-            a potem sam liczy koszty, przychody i zysk. Bez arkuszy i notatników.
-        </p>
-        <div class="hero-actions">
-            <a class="button button-large" href="{% url 'core:register' %}">Załóż darmowe konto</a>
-            <a class="button button-outline button-large" href="{% url 'core:login' %}">Mam już konto</a>
-        </div>
-    </section>
 
-    <section class="landing-section">
-        <h2>Co zrobisz w aplikacji?</h2>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <span class="feature-icon" aria-hidden="true">🌾</span>
-                <h3>Pola i uprawy</h3>
-                <p>Zapisz swoje pola z powierzchnią i rodzajem gleby, a na nich sezonowe uprawy.</p>
+{# ---------- Pierwszy ekran ---------- #}
+<section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+        <div class="hero-copy">
+            <p class="kicker">Zeszyt gospodarstwa</p>
+            <h1 id="hero-title">Wiesz, ile zarobiło <em>każde pole</em>.</h1>
+            <p class="hero-lead">
+                Zapisujesz siew, opryski i&nbsp;zbiory, a&nbsp;Farmer App liczy koszty,
+                przychód i&nbsp;zysk osobno dla każdego pola i&nbsp;każdej uprawy.
+            </p>
+            <div class="hero-actions">
+                <a class="button button-large" href="{% url 'core:register' %}">
+                    Załóż darmowe konto
+                    <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+                </a>
+                <a class="link-quiet" href="{% url 'core:login' %}">Mam już konto</a>
             </div>
-            <div class="feature-card">
-                <span class="feature-icon" aria-hidden="true">🚜</span>
-                <h3>Prace i opryski</h3>
-                <p>Notuj orkę, siew, nawożenie i opryski razem z kosztami każdego zabiegu.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon" aria-hidden="true">📦</span>
-                <h3>Zbiory</h3>
-                <p>Rejestruj ilość plonów i oznaczaj, co sprzedałeś, co leży w magazynie, a co przepadło.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon" aria-hidden="true">📊</span>
-                <h3>Raporty finansowe</h3>
-                <p>Zobacz koszty, przychód i zysk dla całego gospodarstwa, pola albo pojedynczej uprawy.</p>
-            </div>
+            <p class="hero-note">Konto jest bezpłatne, nic nie trzeba instalować. Działa na telefonie i&nbsp;na komputerze.</p>
         </div>
-    </section>
 
-    <section class="landing-section">
-        <h2>Jak zacząć? To cztery proste kroki</h2>
-        <ol class="steps">
-            <li><strong>Załóż konto</strong><span>Wystarczy imię, e-mail i hasło.</span></li>
-            <li><strong>Dodaj pole</strong><span>Podaj nazwę, powierzchnię i lokalizację.</span></li>
-            <li><strong>Dodaj uprawę</strong><span>Wybierz roślinę i rok sezonu.</span></li>
-            <li><strong>Zapisuj i sprawdzaj wynik</strong><span>Dodawaj prace, opryski i zbiory, a raport policzy zysk.</span></li>
+        <figure class="farm-map">
+            {% include "core/partials/farm_map.html" %}
+            <ul class="map-tags" aria-label="Wyniki pól w przykładowym gospodarstwie">
+                <li class="map-tag">
+                    <span class="map-tag-name">Pole przy lesie</span>
+                    <span class="map-tag-crop">pszenica</span>
+                    <span class="map-tag-value">+3&nbsp;700&nbsp;zł</span>
+                </li>
+                <li class="map-tag">
+                    <span class="map-tag-name">Działka za stodołą</span>
+                    <span class="map-tag-crop">rzepak</span>
+                    <span class="map-tag-value">+1&nbsp;250&nbsp;zł</span>
+                </li>
+                <li class="map-tag is-loss">
+                    <span class="map-tag-name">Pole przy drodze</span>
+                    <span class="map-tag-crop">kukurydza</span>
+                    <span class="map-tag-value">−480&nbsp;zł</span>
+                </li>
+            </ul>
+            <figcaption>Przykładowe gospodarstwo, sezon 2026</figcaption>
+        </figure>
+    </div>
+</section>
+
+{# ---------- Jak wygląda zapis ---------- #}
+<section class="landing-section" id="zapisy" aria-labelledby="ledger-title">
+    <div class="wrap ledger-grid">
+        <div class="section-copy">
+            <p class="kicker">Zamiast zeszytu i&nbsp;kalkulatora</p>
+            <h2 id="ledger-title">Wpisujesz to, co zrobiłeś. Rachunek robi się sam.</h2>
+            <p>
+                Każdy zabieg i&nbsp;każdy zbiór to jedna linijka: data, co zrobiono
+                i&nbsp;ile to kosztowało albo ile wpłynęło. Na koniec sezonu widzisz
+                wynik pola bez liczenia na kartce.
+            </p>
+        </div>
+
+        <figure class="sheet">
+            <div class="sheet-head">
+                <strong>Pole przy lesie</strong>
+                <span>Pszenica · 2026</span>
+            </div>
+            <table class="sheet-table">
+                <caption class="visually-hidden">Przykładowe zapisy dla pola przy lesie w&nbsp;sezonie 2026</caption>
+                <thead>
+                    <tr><th scope="col">Data</th><th scope="col">Zapis</th><th scope="col" class="num">Kwota</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>08.04</td><td>Orka</td><td class="num">−620&nbsp;zł</td></tr>
+                    <tr><td>15.04</td><td>Siew pszenicy</td><td class="num">−1&nbsp;450&nbsp;zł</td></tr>
+                    <tr><td>05.05</td><td>Nawożenie</td><td class="num">−1&nbsp;350&nbsp;zł</td></tr>
+                    <tr><td>02.06</td><td>Oprysk</td><td class="num">−780&nbsp;zł</td></tr>
+                    <tr><td>28.07</td><td>Zbiór i&nbsp;sprzedaż ziarna</td><td class="num is-in">+7&nbsp;900&nbsp;zł</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr><th scope="row" colspan="2">Koszty razem</th><td class="num">−4&nbsp;200&nbsp;zł</td></tr>
+                    <tr><th scope="row" colspan="2">Przychód</th><td class="num">+7&nbsp;900&nbsp;zł</td></tr>
+                    <tr class="sheet-result">
+                        <th scope="row" colspan="2">Wynik</th>
+                        <td class="num">
+                            <span class="circled">+3&nbsp;700&nbsp;zł<svg class="circle-mark" viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M34 14C86 2 176 6 191 32c12 24-44 42-106 40C30 70 6 56 11 35 17 16 64 7 128 11"/></svg></span>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <figcaption class="sheet-note">Przykład. Tak aplikacja zbiera zapisy jednego pola.</figcaption>
+        </figure>
+    </div>
+</section>
+
+{# ---------- Sezon ---------- #}
+<section class="landing-section" id="sezon" aria-labelledby="season-title">
+    <div class="wrap">
+        <p class="kicker">Jak to działa</p>
+        <h2 id="season-title">Jeden sezon w&nbsp;Farmer App</h2>
+        <ol class="season-list">
+            <li>
+                <span class="season-icon" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-sprout"/></svg></span>
+                <h3>Wiosna</h3>
+                <p>Dodajesz pola i&nbsp;uprawy, zapisujesz orkę i&nbsp;siew.</p>
+            </li>
+            <li>
+                <span class="season-icon" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-sun"/></svg></span>
+                <h3>Lato</h3>
+                <p>Notujesz nawożenie i&nbsp;opryski razem z&nbsp;kosztami.</p>
+            </li>
+            <li>
+                <span class="season-icon" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-wheat"/></svg></span>
+                <h3>Jesień</h3>
+                <p>Wpisujesz zbiory i&nbsp;to, co się z&nbsp;nimi stało: sprzedaż, magazyn albo straty.</p>
+            </li>
+            <li>
+                <span class="season-icon" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-snowflake"/></svg></span>
+                <h3>Zima</h3>
+                <p>Otwierasz raport i&nbsp;widzisz, które pole zarobiło, a&nbsp;które nie.</p>
+            </li>
         </ol>
-    </section>
+    </div>
+</section>
 
-    <section class="cta-band">
-        <h2>Gotowy, żeby uporządkować gospodarstwo?</h2>
-        <p>Twoje dane są prywatne – każdy użytkownik widzi wyłącznie własne pola i zapisy.</p>
-        <a class="button button-light button-large" href="{% url 'core:register' %}">Zacznij teraz</a>
-    </section>
-</div>
+{# ---------- Dla kogo ---------- #}
+<section class="landing-section" id="dla-kogo" aria-labelledby="audience-title">
+    <div class="wrap split">
+        <div>
+            <p class="kicker">Dla kogo</p>
+            <h2 id="audience-title">Dla tych, którzy wolą wiedzieć niż zgadywać.</h2>
+        </div>
+        <dl class="row-list">
+            <div>
+                <dt>Małe i&nbsp;średnie gospodarstwa</dt>
+                <dd>Kilka pól, kilka upraw i&nbsp;potrzeba porządku w&nbsp;zapiskach.</dd>
+            </div>
+            <div>
+                <dt>Gospodarstwa rodzinne</dt>
+                <dd>Prace, opryski i&nbsp;zbiory są w&nbsp;jednym miejscu, więc łatwo sprawdzić, co już zrobiono.</dd>
+            </div>
+            <div>
+                <dt>Osoby, które nie lubią komputerów</dt>
+                <dd>Duży tekst, proste słowa, a&nbsp;po zalogowaniu aplikacja podpowiada następny krok.</dd>
+            </div>
+        </dl>
+    </div>
+</section>
+
+{# ---------- Pytania ---------- #}
+<section class="landing-section" id="pytania" aria-labelledby="faq-title">
+    <div class="wrap split">
+        <div>
+            <p class="kicker">Pytania</p>
+            <h2 id="faq-title">Zanim założysz konto</h2>
+        </div>
+        <dl class="row-list">
+            <div>
+                <dt>Czy to coś kosztuje?</dt>
+                <dd>Nie. Konto i&nbsp;korzystanie z&nbsp;aplikacji są bezpłatne.</dd>
+            </div>
+            <div>
+                <dt>Czy muszę coś instalować?</dt>
+                <dd>Nie. Aplikację otwierasz w&nbsp;przeglądarce, jak zwykłą stronę internetową.</dd>
+            </div>
+            <div>
+                <dt>Czy ktoś zobaczy moje dane?</dt>
+                <dd>Nie. Każdy użytkownik widzi tylko swoje pola, uprawy i&nbsp;zapisy.</dd>
+            </div>
+            <div>
+                <dt>Co, jeśli coś wpiszę źle?</dt>
+                <dd>Każdy wpis możesz później poprawić albo usunąć.</dd>
+            </div>
+        </dl>
+    </div>
+</section>
+
+{# ---------- Zachęta ---------- #}
+<section class="closing" aria-labelledby="closing-title">
+    <div class="wrap">
+        <h2 id="closing-title">Zacznij od jednego pola.</h2>
+        <p>Załóż konto, dodaj pole i&nbsp;pierwszą uprawę. Resztę dopiszesz, kiedy przyjdzie pora.</p>
+        <div class="hero-actions">
+            <a class="button button-large button-wheat" href="{% url 'core:register' %}">
+                Załóż darmowe konto
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+            <a class="link-quiet" href="{% url 'core:login' %}">Zaloguj się</a>
+        </div>
+    </div>
+</section>
 {% endblock %}
