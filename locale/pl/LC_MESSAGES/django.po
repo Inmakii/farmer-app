@@ -1,0 +1,3022 @@
+# Farmer App translations.
+# Generated from the English strings in the code.
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pl\n"
+
+#: core\models.py:143
+#, python-format
+msgid "%(crop)s on field %(field)s (%(year)s)"
+msgstr "%(crop)s na polu %(field)s (%(year)s)"
+
+#: core\templates\core\fieldwork_detail.html:12
+#: core\templates\core\spraying_detail.html:12
+#, python-format
+msgid "%(crop)s on the field %(field)s, season %(year)s"
+msgstr "%(crop)s na polu %(field)s, sezon %(year)s"
+
+#: core\templates\core\harvest_detail.html:12
+#, python-format
+msgid "%(quantity)s %(unit)s from the field %(field)s, season %(year)s"
+msgstr "%(quantity)s %(unit)s z pola %(field)s, sezon %(year)s"
+
+#: core\templates\core\dashboard.html:74
+msgid "A crop and season on the chosen field."
+msgstr "Roślina i sezon na wybranym polu."
+
+#: core\forms.py:728
+#: core\forms.py:742
+msgid "A crop type with this name already exists."
+msgstr "Rodzaj uprawy o tej nazwie już istnieje."
+
+#: core\templates\core\fieldwork_form.html:38
+#: core\templates\core\harvest_form.html:38
+#: core\templates\core\spraying_form.html:38
+msgid "A cultivation is needed first"
+msgstr "Najpierw potrzebna jest uprawa"
+
+#: core\templates\core\home.html:137
+msgid "A few fields, a few crops and a need for tidy records."
+msgstr "Kilka pól, kilka upraw i&nbsp;potrzeba porządku w&nbsp;zapiskach."
+
+#: core\templates\core\cultivation_form.html:23
+#: core\templates\core\cultivation_list.html:25
+msgid "A field is needed first"
+msgstr "Najpierw potrzebne jest pole"
+
+#: core\views.py:72
+msgid "A field is the starting point: on it you record cultivations, works, sprayings and harvests."
+msgstr "Pole to podstawa: na nim zapiszesz uprawy, prace, opryski i zbiory."
+
+#: core\templates\core\field_form.html:16
+msgid "A name, area and soil are enough. Add a parcel, address or coordinates if you want to find the field more easily."
+msgstr "Wystarczy nazwa, powierzchnia i gleba. Działkę, adres lub współrzędne podaj, jeśli chcesz łatwiej odnaleźć pole."
+
+#: core\forms.py:106
+#: core\forms.py:150
+msgid "A user with this email address already exists."
+msgstr "Użytkownik z tym adresem e-mail już istnieje."
+
+#: core\forms.py:59
+msgid "A user with this name already exists."
+msgstr "Użytkownik o tej nazwie już istnieje."
+
+#: core\templates\core\register.html:24
+msgid "About you"
+msgstr "O&nbsp;Tobie"
+
+#: core\templates\core\password_change.html:10
+#: core\templates\core\profile.html:9
+#: core\templates\core\profile_edit.html:10
+msgid "Account"
+msgstr "Konto"
+
+#: core\templates\core\profile.html:22
+msgid "Account details"
+msgstr "Dane konta"
+
+#: core\models.py:95
+msgid "Active"
+msgstr "Aktywna"
+
+#: core\views.py:86
+msgid "Add a completed work, spraying or harvest and the report will calculate costs and profit."
+msgstr "Dodaj wykonaną pracę, oprysk albo zbiór, a raport policzy koszty i zysk."
+
+#: core\views.py:78
+msgid "Add a cultivation to your field"
+msgstr "Dodaj uprawę na swoim polu"
+
+#: core\templates\core\crop_form.html:11
+#: core\templates\core\crop_list.html:14
+msgid "Add crop type"
+msgstr "Dodaj rodzaj uprawy"
+
+#: core\templates\core\crop_form.html:4
+msgctxt "page title"
+msgid "Add crop type"
+msgstr "Dodawanie rodzaju uprawy"
+
+#: core\templates\core\cultivation_form.html:15
+#: core\templates\core\cultivation_list.html:107
+#: core\templates\core\cultivation_list.html:16
+#: core\templates\core\dashboard.html:73
+#: core\templates\core\field_detail.html:47
+msgid "Add cultivation"
+msgstr "Dodaj uprawę"
+
+#: core\templates\core\cultivation_form.html:4
+msgctxt "page title"
+msgid "Add cultivation"
+msgstr "Dodawanie uprawy"
+
+#: core\templates\core\dashboard.html:65
+#: core\templates\core\field_form.html:15
+#: core\templates\core\field_list.html:15
+#: core\templates\core\field_list.html:91
+#: core\views.py:73
+msgid "Add field"
+msgstr "Dodaj pole"
+
+#: core\templates\core\field_form.html:4
+msgctxt "page title"
+msgid "Add field"
+msgstr "Dodawanie pola"
+
+#: core\templates\core\cultivation_detail.html:97
+#: core\templates\core\harvest_form.html:15
+#: core\templates\core\harvest_list.html:121
+#: core\templates\core\harvest_list.html:15
+msgid "Add harvest"
+msgstr "Dodaj zbiór"
+
+#: core\templates\core\harvest_form.html:4
+msgctxt "page title"
+msgid "Add harvest"
+msgstr "Dodawanie zbioru"
+
+#: core\templates\core\cultivation_detail.html:72
+#: core\templates\core\spraying_form.html:15
+#: core\templates\core\spraying_list.html:109
+#: core\templates\core\spraying_list.html:15
+msgid "Add spraying"
+msgstr "Dodaj oprysk"
+
+#: core\templates\core\spraying_form.html:4
+msgctxt "page title"
+msgid "Add spraying"
+msgstr "Dodawanie oprysku"
+
+#: core\templates\core\crop_list.html:33
+#: core\templates\core\cultivation_form.html:33
+#: core\templates\core\dashboard.html:31
+msgid "Add the first crop type"
+msgstr "Dodaj pierwszy rodzaj uprawy"
+
+#: core\templates\core\cultivation_form.html:42
+msgid "Add the missing crop type"
+msgstr "Dodaj brakujący rodzaj uprawy"
+
+#: core\templates\core\cultivation_detail.html:48
+#: core\templates\core\fieldwork_form.html:15
+#: core\templates\core\fieldwork_list.html:108
+#: core\templates\core\fieldwork_list.html:15
+msgid "Add work"
+msgstr "Dodaj pracę"
+
+#: core\templates\core\fieldwork_form.html:4
+msgctxt "page title"
+msgid "Add work"
+msgstr "Dodawanie pracy"
+
+#: core\views.py:71
+msgid "Add your first field"
+msgstr "Dodaj swoje pierwsze pole"
+
+#: core\forms.py:174
+#: core\models.py:39
+#: core\templates\core\field_detail.html:36
+msgid "Address"
+msgstr "Adres"
+
+#: core\forms.py:229
+msgid "Address is required for this location method."
+msgstr "Adres jest wymagany dla tej metody lokalizacji."
+
+#: core\templates\core\login.html:36
+msgid "After you log in"
+msgstr "Po zalogowaniu"
+
+#: core\templates\core\error_report_form.html:12
+msgid "After you send the report, its status will be changed by an administrator."
+msgstr "Po wysłaniu zgłoszenia jego status będzie zmieniany przez administratora."
+
+#: core\templates\core\cultivation_list.html:35
+#: core\templates\core\cultivation_list.html:44
+#: core\templates\core\cultivation_list.html:53
+#: core\templates\core\error_report_list.html:26
+#: core\templates\core\error_report_list.html:35
+msgid "All"
+msgstr "Wszystkie"
+
+#: core\templates\core\report_dashboard.html:20
+msgid "All fields"
+msgstr "Wszystkie pola"
+
+#: core\templates\core\cultivation_report.html:7
+#: core\templates\core\field_report.html:7
+msgid "All reports"
+msgstr "Wszystkie raporty"
+
+#: core\templates\core\dashboard.html:117
+msgid "All seasons"
+msgstr "Wszystkie sezony"
+
+#: core\forms.py:280
+msgid "Allowed years: {min}–{max}."
+msgstr "Dozwolony zakres lat: {min}–{max}."
+
+#: core\templates\core\register.html:43
+msgid "Already have an account?"
+msgstr "Masz już konto?"
+
+#: core\templates\core\dashboard.html:121
+#: core\templates\core\harvest_detail.html:48
+#: core\templates\core\home.html:72
+#: core\templates\core\partials\report_summary.html:30
+msgid "Amount"
+msgstr "Kwota"
+
+#: core\templates\core\home.html:92
+msgid "An example. This is how the app collects the records of one field."
+msgstr "Przykład. Tak aplikacja zbiera zapisy jednego pola."
+
+#: core\templates\core\cultivation_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to delete the cultivation “%(crop)s” on the field “%(field)s” in the %(year)s season?"
+msgstr "Czy na pewno chcesz usunąć uprawę „%(crop)s” z pola „%(field)s” w sezonie %(year)s?"
+
+#: core\templates\core\field_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to delete the field “%(name)s”?"
+msgstr "Czy na pewno chcesz usunąć pole „%(name)s”?"
+
+#: core\templates\core\harvest_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to delete the harvest from %(date)s?"
+msgstr "Czy na pewno chcesz usunąć zbiór z dnia %(date)s?"
+
+#: core\templates\core\spraying_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to delete the spraying “%(product)s” from %(date)s?"
+msgstr "Czy na pewno chcesz usunąć oprysk „%(product)s” z dnia %(date)s?"
+
+#: core\templates\core\field_detail.html:32
+#: core\templates\core\partials\report_summary.html:59
+msgid "Area"
+msgstr "Powierzchnia"
+
+#: core\forms.py:170
+msgid "Area (ha)"
+msgstr "Powierzchnia (ha)"
+
+#: core\templates\core\dashboard.html:66
+msgid "Area, soil and location."
+msgstr "Powierzchnia, gleba i lokalizacja."
+
+#: core\forms.py:97
+msgid "At least 8 characters. The password cannot be all digits, resemble your username or name, or be a common password like “qwerty123”."
+msgstr "Co najmniej 8 znaków. Hasło nie może składać się z samych cyfr, przypominać loginu ani imienia, ani być popularnym hasłem w rodzaju „qwerty123”."
+
+#: core\templates\core\home.html:115
+msgid "Autumn"
+msgstr "Jesień"
+
+#: core\templates\core\cultivation_confirm_delete.html:7
+#: core\templates\core\field_confirm_delete.html:7
+#: core\templates\core\fieldwork_confirm_delete.html:7
+#: core\templates\core\harvest_confirm_delete.html:7
+#: core\templates\core\spraying_confirm_delete.html:7
+msgid "Back"
+msgstr "Wróć"
+
+#: core\templates\core\error_report_detail.html:7
+msgid "Back to my reports"
+msgstr "Wróć do moich zgłoszeń"
+
+#: core\templates\core\password_change.html:7
+#: core\templates\core\profile_edit.html:7
+msgid "Back to profile"
+msgstr "Wróć do profilu"
+
+#: core\templates\core\cultivation_detail.html:7
+#: core\templates\core\field_detail.html:7
+#: core\templates\core\fieldwork_detail.html:7
+#: core\templates\core\harvest_detail.html:7
+#: core\templates\core\spraying_detail.html:7
+msgid "Back to the list"
+msgstr "Wróć do listy"
+
+#: core\templates\core\partials\report_summary.html:25
+msgid "Balance"
+msgstr "Rachunek"
+
+#: core\templates\core\home.html:156
+msgid "Before you create an account"
+msgstr "Zanim założysz konto"
+
+#: core\templates\core\crop_form.html:22
+#: core\templates\core\cultivation_confirm_delete.html:16
+#: core\templates\core\cultivation_form.html:47
+#: core\templates\core\cultivation_form.html:49
+#: core\templates\core\error_report_form.html:22
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: core\forms.py:283
+msgid "Cannot be earlier than the sowing date."
+msgstr "Nie może być wcześniejsza od daty siewu."
+
+#: core\templates\core\cultivation_form.html:42
+msgid "Cannot see the crop type you need?"
+msgstr "Nie widzisz potrzebnego rodzaju uprawy?"
+
+#: core\templates\core\crop_form.html:10
+#: core\templates\core\crop_list.html:9
+msgid "Catalogue"
+msgstr "Katalog"
+
+#: core\templates\core\error_report_detail.html:21
+#: core\templates\core\error_report_list.html:24
+msgid "Category"
+msgstr "Kategoria"
+
+#: core\templates\core\password_change.html:11
+#: core\templates\core\password_change.html:21
+#: core\templates\core\profile.html:36
+msgid "Change password"
+msgstr "Zmień hasło"
+
+#: core\templates\core\password_change.html:4
+msgctxt "page title"
+msgid "Change password"
+msgstr "Zmiana hasła"
+
+#: core\templates\core\password_change.html:21
+msgid "Changing…"
+msgstr "Zmienianie…"
+
+#: core\views.py:92
+msgid "Check your farm results"
+msgstr "Sprawdź wyniki gospodarstwa"
+
+#: core\views.py:79
+msgid "Choose a crop and a season year to start recording treatments and harvests."
+msgstr "Wybierz roślinę i rok sezonu, aby zacząć zapisywać zabiegi i zbiory."
+
+#: core\forms.py:291
+msgid "Choose a crop type."
+msgstr "Wybierz rodzaj uprawy."
+
+#: core\forms.py:407
+#: core\forms.py:511
+#: core\forms.py:597
+msgid "Choose a cultivation grown on one of your fields."
+msgstr "Wybierz uprawę prowadzoną na jednym ze swoich pól."
+
+#: core\forms.py:409
+#: core\forms.py:513
+#: core\forms.py:599
+msgid "Choose a cultivation."
+msgstr "Wybierz uprawę."
+
+#: core\templates\core\cultivation_form.html:16
+msgid "Choose a field, a crop and a season year. You can add the sowing and harvest dates later."
+msgstr "Wybierz pole, roślinę i rok sezonu. Daty siewu i zbioru możesz uzupełnić później."
+
+#: core\forms.py:287
+msgid "Choose a field."
+msgstr "Wybierz pole."
+
+#: core\forms.py:557
+#: core\forms.py:645
+msgid "Choose a unit."
+msgstr "Wybierz jednostkę."
+
+#: core\forms.py:194
+msgid "Choose how the location is given."
+msgstr "Wybierz sposób lokalizacji."
+
+#: core\forms.py:300
+msgid "Choose the cultivation status."
+msgstr "Wybierz status uprawy."
+
+#: core\forms.py:646
+msgid "Choose the harvest disposition."
+msgstr "Wybierz przeznaczenie zbioru."
+
+#: core\forms.py:768
+msgid "Choose the report category."
+msgstr "Wybierz kategorię zgłoszenia."
+
+#: core\forms.py:398
+msgid "Choose the season that matches the chosen cultivation."
+msgstr "Wybierz sezon zgodny z wybraną uprawą."
+
+#: core\forms.py:400
+msgid "Choose the season year."
+msgstr "Wybierz rok sezonu."
+
+#: core\forms.py:193
+msgid "Choose the soil type."
+msgstr "Wybierz rodzaj gleby."
+
+#: core\forms.py:436
+msgid "Choose the work type."
+msgstr "Wybierz rodzaj pracy."
+
+#: core\models.py:32
+msgid "Clay soil"
+msgstr "Gleba gliniasta"
+
+#: core\templates\core\field_report.html:30
+msgid "Clear filter"
+msgstr "Wyczyść filtr"
+
+#: core\templates\core\cultivation_list.html:66
+#: core\templates\core\error_report_list.html:44
+#: core\templates\core\field_list.html:50
+#: core\templates\core\fieldwork_list.html:67
+#: core\templates\core\harvest_list.html:76
+msgid "Clear filters"
+msgstr "Wyczyść filtry"
+
+#: core\models.py:96
+msgid "Completed"
+msgstr "Zakończona"
+
+#: core\templates\core\cultivation_detail.html:46
+#: core\templates\core\fieldwork_list.html:10
+msgid "Completed works"
+msgstr "Wykonane prace"
+
+#: core\forms.py:427
+#: core\forms.py:534
+#: core\templates\core\fieldwork_detail.html:30
+#: core\templates\core\spraying_detail.html:30
+msgid "Cost"
+msgstr "Koszt"
+
+#: core\forms.py:432
+#: core\forms.py:503
+#: core\forms.py:541
+#: core\forms.py:589
+msgid "Cost cannot be negative."
+msgstr "Koszt nie może być ujemny."
+
+#: core\forms.py:442
+#: core\forms.py:559
+msgid "Cost is required."
+msgstr "Koszt jest wymagany."
+
+#: core\templates\core\dashboard.html:50
+msgid "Costs"
+msgstr "Koszty"
+
+#: core\templates\core\home.html:82
+#: core\templates\core\report_dashboard.html:77
+msgid "Costs in total"
+msgstr "Koszty razem"
+
+#: core\templates\core\dashboard.html:106
+msgid "Costs, revenue and profit from fields."
+msgstr "Koszty, przychody i zysk z pól."
+
+#: core\templates\core\report_dashboard.html:11
+msgid "Costs, revenue and yields for the whole farm or a chosen field and season."
+msgstr "Koszty, przychody i plony dla całego gospodarstwa albo wybranego pola i sezonu."
+
+#: core\templates\core\home.html:186
+#: core\templates\core\home.html:21
+msgid "Create a free account"
+msgstr "Załóż darmowe konto"
+
+#: core\templates\core\error_report_list.html:16
+msgid "Create a new report"
+msgstr "Utwórz nowe zgłoszenie"
+
+#: core\templates\core\profile.html:38
+msgid "Create a report"
+msgstr "Utwórz zgłoszenie"
+
+#: core\templates\core\register.html:12
+#: core\templates\core\register.html:39
+msgid "Create account"
+msgstr "Utwórz konto"
+
+#: core\templates\core\home.html:183
+msgid "Create an account, add a field and the first cultivation. Add the rest when the time comes."
+msgstr "Załóż konto, dodaj pole i&nbsp;pierwszą uprawę. Resztę dopiszesz, kiedy przyjdzie pora."
+
+#: core\templates\core\login.html:31
+msgid "Create one for free"
+msgstr "Załóż je za darmo"
+
+#: core\templates\core\cultivation_form.html:25
+#: core\templates\core\cultivation_list.html:27
+msgid "Create your first field"
+msgstr "Utwórz pierwsze pole"
+
+#: core\templates\core\error_report_detail.html:23
+msgid "Created at"
+msgstr "Data utworzenia"
+
+#: core\templates\core\register.html:39
+msgid "Creating account…"
+msgstr "Zakładanie konta…"
+
+#: core\forms.py:270
+#: core\templates\core\cultivation_list.html:42
+msgid "Crop type"
+msgstr "Rodzaj uprawy"
+
+#: core\forms.py:714
+msgid "Crop type name"
+msgstr "Nazwa rodzaju uprawy"
+
+#: core\forms.py:726
+#: core\forms.py:736
+msgid "Crop type name is required."
+msgstr "Nazwa rodzaju uprawy jest wymagana."
+
+#: core\views.py:378
+#, python-format
+msgid "Crop type “%(name)s” has been added."
+msgstr "Rodzaj uprawy „%(name)s” został dodany."
+
+#: core\templates\core\base.html:65
+#: core\templates\core\crop_form.html:7
+#: core\templates\core\crop_list.html:10
+msgid "Crop types"
+msgstr "Rodzaje upraw"
+
+#: core\templates\core\crop_list.html:4
+msgctxt "page title"
+msgid "Crop types"
+msgstr "Rodzaje upraw"
+
+#: core\forms.py:718
+msgid "Crop types are shared by all users. The name cannot be repeated."
+msgstr "Rodzaj uprawy jest wspólny dla wszystkich użytkowników. Nazwa nie może się powtarzać."
+
+#: core\forms.py:406
+#: core\forms.py:510
+#: core\forms.py:596
+#: core\templates\core\cultivation_form.html:14
+#: core\templates\core\fieldwork_detail.html:33
+msgid "Cultivation"
+msgstr "Uprawa"
+
+#: core\templates\core\cultivation_detail.html:29
+msgid "Cultivation data"
+msgstr "Dane uprawy"
+
+#: core\templates\core\cultivation_report.html:18
+msgid "Cultivation details"
+msgstr "Szczegóły uprawy"
+
+#: core\templates\core\cultivation_list.html:100
+msgid "Cultivation pages"
+msgstr "Paginacja upraw"
+
+#: core\templates\core\cultivation_detail.html:16
+msgid "Cultivation report"
+msgstr "Raport uprawy"
+
+#: core\templates\core\cultivation_report.html:4
+msgctxt "page title"
+msgid "Cultivation report"
+msgstr "Raport uprawy"
+
+#: core\templates\core\cultivation_report.html:10
+#, python-format
+msgid "Cultivation report · season %(year)s"
+msgstr "Raport uprawy · sezon %(year)s"
+
+#: core\templates\core\report_dashboard.html:58
+msgid "Cultivation results"
+msgstr "Wyniki upraw"
+
+#: core\templates\core\cultivation_detail.html:10
+#, python-format
+msgid "Cultivation · season %(year)s"
+msgstr "Uprawa · sezon %(year)s"
+
+#: core\templates\core\base.html:64
+#: core\templates\core\cultivation_form.html:10
+#: core\templates\core\dashboard.html:142
+#: core\templates\core\dashboard.html:42
+#: core\templates\core\field_report.html:45
+msgid "Cultivations"
+msgstr "Uprawy"
+
+#: core\templates\core\cultivation_list.html:4
+msgctxt "page title"
+msgid "Cultivations"
+msgstr "Uprawy"
+
+#: core\management\commands\seed_demo_data.py:141
+#, python-format
+msgid "Cultivations created or updated: %(count)s"
+msgstr "Uprawy utworzone lub zaktualizowane: %(count)s"
+
+#: core\templates\core\field_report.html:54
+msgid "Cultivations of the field"
+msgstr "Uprawy pola"
+
+#: core\templates\core\field_detail.html:45
+msgid "Cultivations on this field"
+msgstr "Uprawy na tym polu"
+
+#: core\templates\core\base.html:106
+msgid "Dark mode is on."
+msgstr "Włączono tryb ciemny."
+
+#: core\templates\core\base.html:62
+#: core\templates\core\dashboard.html:4
+#: core\templates\core\dashboard.html:9
+msgid "Dashboard"
+msgstr "Pulpit"
+
+#: core\models.py:310
+msgid "Data problem"
+msgstr "Problem z danymi"
+
+#: core\templates\core\fieldwork_detail.html:31
+#: core\templates\core\home.html:72
+msgid "Date"
+msgstr "Data"
+
+#: core\templates\core\cultivation_detail.html:22
+#: core\templates\core\cultivation_list.html:90
+#: core\templates\core\field_detail.html:22
+#: core\templates\core\field_list.html:74
+#: core\templates\core\fieldwork_detail.html:19
+msgid "Delete"
+msgstr "Usuń"
+
+#: core\templates\core\cultivation_confirm_delete.html:10
+msgid "Delete cultivation"
+msgstr "Usuń uprawę"
+
+#: core\templates\core\cultivation_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete cultivation"
+msgstr "Usuwanie uprawy"
+
+#: core\templates\core\cultivation_list.html:92
+#, python-format
+msgid "Delete cultivation %(crop)s, %(field)s"
+msgstr "Usuń uprawę %(crop)s, %(field)s"
+
+#: core\templates\core\field_confirm_delete.html:10
+msgid "Delete field"
+msgstr "Usuń pole"
+
+#: core\templates\core\field_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete field"
+msgstr "Usuwanie pola"
+
+#: core\templates\core\field_list.html:76
+#, python-format
+msgid "Delete field %(name)s"
+msgstr "Usuń pole %(name)s"
+
+#: core\templates\core\harvest_confirm_delete.html:10
+msgid "Delete harvest"
+msgstr "Usuń zbiór"
+
+#: core\templates\core\harvest_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete harvest"
+msgstr "Usuń zbiór"
+
+#: core\templates\core\harvest_list.html:106
+#, python-format
+msgid "Delete harvest from %(date)s"
+msgstr "Usuń zbiór z dnia %(date)s"
+
+#: core\templates\core\spraying_confirm_delete.html:10
+msgid "Delete spraying"
+msgstr "Usuń oprysk"
+
+#: core\templates\core\spraying_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete spraying"
+msgstr "Usuń oprysk"
+
+#: core\templates\core\spraying_list.html:94
+#, python-format
+msgid "Delete spraying %(product)s from %(date)s"
+msgstr "Usuń oprysk %(product)s z dnia %(date)s"
+
+#: core\templates\core\fieldwork_confirm_delete.html:11
+#, python-format
+msgid "Delete the work “%(type)s” from %(date)s?"
+msgstr "Czy usunąć pracę „%(type)s” z dnia %(date)s?"
+
+#: core\templates\core\fieldwork_confirm_delete.html:10
+msgid "Delete work"
+msgstr "Usuń pracę"
+
+#: core\templates\core\fieldwork_confirm_delete.html:4
+msgctxt "page title"
+msgid "Delete work"
+msgstr "Usuń pracę"
+
+#: core\templates\core\fieldwork_list.html:93
+#, python-format
+msgid "Delete work %(type)s from %(date)s"
+msgstr "Usuń pracę %(type)s z dnia %(date)s"
+
+#: core\templates\core\cultivation_confirm_delete.html:15
+#: core\templates\core\field_confirm_delete.html:15
+#: core\templates\core\fieldwork_confirm_delete.html:15
+#: core\templates\core\harvest_confirm_delete.html:15
+#: core\templates\core\spraying_confirm_delete.html:15
+msgid "Deleting…"
+msgstr "Usuwanie…"
+
+#: core\management\commands\seed_demo_data.py:149
+msgid "Demo data is ready."
+msgstr "Dane demonstracyjne zostały przygotowane."
+
+#: core\forms.py:765
+msgid "Describe the problem in at least 10 and at most 5000 characters."
+msgstr "Opisz problem w co najmniej 10 i nie więcej niż 5000 znakach."
+
+#: core\templates\core\error_report_form.html:12
+msgid "Describe what happened and on which page."
+msgstr "Opisz, co się stało i na której stronie."
+
+#: core\forms.py:177
+#: core\forms.py:428
+#: core\forms.py:535
+#: core\forms.py:715
+#: core\templates\core\error_report_detail.html:25
+msgid "Description"
+msgstr "Opis"
+
+#: core\templates\core\fieldwork_list.html:26
+msgid "Description, field or cultivation"
+msgstr "Opis, pole lub uprawa"
+
+#: core\templates\core\error_report_detail.html:18
+msgid "Details"
+msgstr "Szczegóły"
+
+#: core\templates\core\harvest_detail.html:32
+#: core\templates\core\harvest_list.html:57
+msgid "Disposition"
+msgstr "Przeznaczenie"
+
+#: core\templates\core\home.html:164
+msgid "Do I need to install anything?"
+msgstr "Czy muszę coś instalować?"
+
+#: core\templates\core\login.html:30
+msgid "Do not have an account yet?"
+msgstr "Nie masz jeszcze konta?"
+
+#: core\templates\core\home.html:160
+msgid "Does it cost anything?"
+msgstr "Czy to coś kosztuje?"
+
+#: core\templates\core\cultivation_detail.html:19
+#: core\templates\core\cultivation_list.html:86
+#: core\templates\core\field_detail.html:19
+#: core\templates\core\field_list.html:70
+#: core\templates\core\fieldwork_detail.html:16
+msgid "Edit"
+msgstr "Edytuj"
+
+#: core\templates\core\cultivation_form.html:15
+msgid "Edit cultivation"
+msgstr "Edytuj uprawę"
+
+#: core\templates\core\cultivation_form.html:4
+msgctxt "page title"
+msgid "Edit cultivation"
+msgstr "Edycja uprawy"
+
+#: core\templates\core\cultivation_list.html:88
+#, python-format
+msgid "Edit cultivation %(crop)s, %(field)s"
+msgstr "Edytuj uprawę %(crop)s, %(field)s"
+
+#: core\templates\core\field_form.html:15
+msgid "Edit field"
+msgstr "Edytuj pole"
+
+#: core\templates\core\field_form.html:4
+msgctxt "page title"
+msgid "Edit field"
+msgstr "Edycja pola"
+
+#: core\templates\core\field_list.html:72
+#, python-format
+msgid "Edit field %(name)s"
+msgstr "Edytuj pole %(name)s"
+
+#: core\templates\core\harvest_form.html:15
+msgid "Edit harvest"
+msgstr "Edytuj zbiór"
+
+#: core\templates\core\harvest_form.html:4
+msgctxt "page title"
+msgid "Edit harvest"
+msgstr "Edycja zbioru"
+
+#: core\templates\core\harvest_list.html:102
+#, python-format
+msgid "Edit harvest from %(date)s"
+msgstr "Edytuj zbiór z dnia %(date)s"
+
+#: core\templates\core\profile.html:14
+#: core\templates\core\profile.html:35
+#: core\templates\core\profile_edit.html:11
+msgid "Edit profile"
+msgstr "Edytuj profil"
+
+#: core\templates\core\profile_edit.html:4
+msgctxt "page title"
+msgid "Edit profile"
+msgstr "Edycja profilu"
+
+#: core\templates\core\spraying_form.html:15
+msgid "Edit spraying"
+msgstr "Edytuj oprysk"
+
+#: core\templates\core\spraying_form.html:4
+msgctxt "page title"
+msgid "Edit spraying"
+msgstr "Edycja oprysku"
+
+#: core\templates\core\spraying_list.html:90
+#, python-format
+msgid "Edit spraying %(product)s from %(date)s"
+msgstr "Edytuj oprysk %(product)s z dnia %(date)s"
+
+#: core\templates\core\fieldwork_form.html:15
+msgid "Edit work"
+msgstr "Edytuj pracę"
+
+#: core\templates\core\fieldwork_form.html:4
+msgctxt "page title"
+msgid "Edit work"
+msgstr "Edycja pracy"
+
+#: core\templates\core\fieldwork_list.html:89
+#, python-format
+msgid "Edit work %(type)s from %(date)s"
+msgstr "Edytuj pracę %(type)s z dnia %(date)s"
+
+#: core\forms.py:131
+#: core\forms.py:54
+#: core\forms.py:75
+#: core\templates\core\profile.html:26
+msgid "Email address"
+msgstr "Adres e-mail"
+
+#: core\forms.py:135
+#: core\forms.py:64
+msgid "Email address is required."
+msgstr "Adres e-mail jest wymagany."
+
+#: core\forms.py:181
+msgid "Enter a positive area in hectares."
+msgstr "Podaj dodatnią powierzchnię w hektarach."
+
+#: core\forms.py:443
+#: core\forms.py:560
+msgid "Enter a valid cost."
+msgstr "Podaj poprawny koszt."
+
+#: core\forms.py:136
+#: core\forms.py:65
+msgid "Enter a valid email address."
+msgstr "Podaj poprawny adres e-mail."
+
+#: core\forms.py:191
+msgid "Enter a valid field area."
+msgstr "Podaj poprawną powierzchnię pola."
+
+#: core\forms.py:653
+msgid "Enter a valid harvest cost."
+msgstr "Podaj poprawny koszt zbioru."
+
+#: core\forms.py:639
+msgid "Enter a valid harvest date."
+msgstr "Podaj poprawną datę zbioru."
+
+#: core\forms.py:643
+msgid "Enter a valid harvest quantity."
+msgstr "Podaj poprawną ilość zbioru."
+
+#: core\forms.py:195
+msgid "Enter a valid latitude."
+msgstr "Podaj poprawną szerokość geograficzną."
+
+#: core\forms.py:196
+msgid "Enter a valid longitude."
+msgstr "Podaj poprawną długość geograficzną."
+
+#: core\forms.py:303
+msgid "Enter a valid planned harvest date."
+msgstr "Podaj poprawną planowaną datę zbioru."
+
+#: core\forms.py:555
+msgid "Enter a valid product quantity."
+msgstr "Podaj poprawną ilość preparatu."
+
+#: core\forms.py:649
+msgid "Enter a valid revenue."
+msgstr "Podaj poprawny przychód."
+
+#: core\forms.py:296
+msgid "Enter a valid season year."
+msgstr "Podaj poprawny rok sezonu."
+
+#: core\forms.py:301
+msgid "Enter a valid sowing date."
+msgstr "Podaj poprawną datę siewu."
+
+#: core\forms.py:547
+msgid "Enter a valid spraying date."
+msgstr "Podaj poprawną datę oprysku."
+
+#: core\forms.py:439
+msgid "Enter a valid work date."
+msgstr "Podaj poprawną datę wykonania."
+
+#: core\forms.py:626
+msgid "Enter the date of the harvest."
+msgstr "Podaj datę przeprowadzenia zbioru."
+
+#: core\forms.py:538
+msgid "Enter the date of the spraying."
+msgstr "Podaj datę wykonania oprysku."
+
+#: core\forms.py:431
+msgid "Enter the date the work was done."
+msgstr "Podaj datę wykonania pracy."
+
+#: core\templates\core\error_report_detail.html:10
+msgid "Error report"
+msgstr "Zgłoszenie błędu"
+
+#: core\templates\core\field_list.html:11
+msgid "Every field with its area, soil and the cultivations you grow on it."
+msgstr "Każde pole z powierzchnią, glebą i uprawami, które na nim prowadzisz."
+
+#: core\templates\core\home.html:60
+msgid "Every treatment and every harvest is one line: the date, what was done and what it cost or brought in. At the end of the season you see the field result without counting on paper."
+msgstr "Każdy zabieg i&nbsp;każdy zbiór to jedna linijka: data, co zrobiono i&nbsp;ile to kosztowało albo ile wpłynęło. Na koniec sezonu widzisz wynik pola bez liczenia na kartce."
+
+#: core\templates\core\home.html:140
+msgid "Family farms"
+msgstr "Gospodarstwa rodzinne"
+
+#: core\templates\core\field_list.html:9
+msgid "Farm"
+msgstr "Gospodarstwo"
+
+#: core\templates\core\dashboard.html:116
+msgid "Farm balance"
+msgstr "Bilans gospodarstwa"
+
+#: core\templates\core\home.html:14
+msgid "Farm notebook"
+msgstr "Zeszyt gospodarstwa"
+
+#: core\templates\core\dashboard.html:36
+msgid "Farm summary"
+msgstr "Podsumowanie gospodarstwa"
+
+#: core\templates\core\base.html:9
+msgid "Farmer App – simple management of fields, cultivations, works and harvests."
+msgstr "Farmer App – proste zarządzanie polami, uprawami, pracami i zbiorami."
+
+#: core\models.py:152
+#: core\templates\core\home.html:77
+msgid "Fertilizing"
+msgstr "Nawożenie"
+
+#: core\forms.py:269
+#: core\templates\core\cultivation_list.html:33
+#: core\templates\core\field_detail.html:10
+#: core\templates\core\field_form.html:14
+#: core\templates\core\fieldwork_detail.html:32
+msgid "Field"
+msgstr "Pole"
+
+#: core\forms.py:190
+msgid "Field area is required."
+msgstr "Powierzchnia pola jest wymagana."
+
+#: core\forms.py:216
+msgid "Field area must be greater than zero."
+msgstr "Powierzchnia pola musi być większa od zera."
+
+#: core\templates\core\field_report.html:12
+#, python-format
+msgid "Field area: %(area)s ha"
+msgstr "Powierzchnia pola: %(area)s ha"
+
+#: core\templates\core\home.html:33
+#: core\templates\core\home.html:66
+msgid "Field by the forest"
+msgstr "Pole przy lesie"
+
+#: core\templates\core\home.html:43
+msgid "Field by the road"
+msgstr "Pole przy drodze"
+
+#: core\templates\core\field_detail.html:29
+msgid "Field data"
+msgstr "Dane pola"
+
+#: core\templates\core\field_report.html:16
+msgid "Field details"
+msgstr "Szczegóły pola"
+
+#: core\forms.py:169
+msgid "Field name"
+msgstr "Nazwa pola"
+
+#: core\forms.py:188
+msgid "Field name is required."
+msgstr "Nazwa pola jest wymagana."
+
+#: core\templates\core\field_list.html:84
+msgid "Field pages"
+msgstr "Paginacja pól"
+
+#: core\templates\core\cultivation_report.html:15
+#: core\templates\core\field_detail.html:16
+#: core\templates\core\field_report.html:10
+msgid "Field report"
+msgstr "Raport pola"
+
+#: core\templates\core\field_report.html:4
+#, python-format
+msgid "Field report %(name)s"
+msgstr "Raport pola %(name)s"
+
+#: core\templates\core\field_report.html:11
+#, python-format
+msgid "Field report: %(name)s"
+msgstr "Raport pola: %(name)s"
+
+#: core\templates\core\home.html:31
+msgid "Field results on a sample farm"
+msgstr "Wyniki pól w przykładowym gospodarstwie"
+
+#: core\templates\core\field_report.html:42
+msgid "Field summary"
+msgstr "Podsumowanie pola"
+
+#: core\templates\core\dashboard.html:38
+msgid "Fields"
+msgstr "Pola"
+
+#: core\management\commands\seed_demo_data.py:140
+#, python-format
+msgid "Fields created or updated: %(count)s"
+msgstr "Pola utworzone lub zaktualizowane: %(count)s"
+
+#: core\templates\core\partials\farm_map.html:5
+msgid "Fields seen from above: wheat, rapeseed, maize, meadow and fallow land"
+msgstr "Widok pól z góry: pszenica, rzepak, kukurydza, łąka i ugór"
+
+#: core\templates\core\cultivation_list.html:65
+#: core\templates\core\error_report_list.html:43
+#: core\templates\core\field_list.html:49
+#: core\templates\core\field_report.html:29
+#: core\templates\core\fieldwork_list.html:66
+msgid "Filter"
+msgstr "Filtruj"
+
+#: core\templates\core\cultivation_list.html:30
+msgid "Filter cultivations"
+msgstr "Filtruj uprawy"
+
+#: core\templates\core\field_list.html:20
+msgid "Filter fields"
+msgstr "Filtruj pola"
+
+#: core\templates\core\harvest_list.html:20
+msgid "Filter harvests"
+msgstr "Filtruj zbiory"
+
+#: core\templates\core\error_report_list.html:21
+msgid "Filter reports"
+msgstr "Filtruj zgłoszenia"
+
+#: core\templates\core\spraying_list.html:20
+msgid "Filter sprayings"
+msgstr "Filtruj opryski"
+
+#: core\templates\core\fieldwork_list.html:20
+msgid "Filter works"
+msgstr "Filtruj prace"
+
+#: core\templates\core\report_dashboard.html:10
+msgid "Financial reports"
+msgstr "Raporty finansowe"
+
+#: core\templates\core\report_dashboard.html:4
+msgctxt "page title"
+msgid "Financial reports"
+msgstr "Raporty finansowe"
+
+#: core\forms.py:129
+#: core\forms.py:52
+#: core\forms.py:73
+#: core\templates\core\profile.html:27
+msgid "First name"
+msgstr "Imię"
+
+#: core\forms.py:61
+msgid "First name is required."
+msgstr "Imię jest wymagane."
+
+#: core\templates\core\home.html:132
+msgid "For those who would rather know than guess."
+msgstr "Dla tych, którzy wolą wiedzieć niż zgadywać."
+
+#: core\templates\core\fieldwork_list.html:57
+#: core\templates\core\harvest_list.html:66
+#: core\templates\core\spraying_list.html:57
+msgid "From"
+msgstr "Od"
+
+#: core\models.py:40
+msgid "GPS coordinates"
+msgstr "Współrzędne GPS"
+
+#: core\templates\core\harvest_form.html:14
+msgid "Harvest"
+msgstr "Zbiór"
+
+#: core\models.py:302
+#, python-format
+msgid "Harvest %(cultivation)s — %(date)s"
+msgstr "Zbiór %(cultivation)s — %(date)s"
+
+#: core\templates\core\home.html:79
+msgid "Harvest and grain sale"
+msgstr "Zbiór i&nbsp;sprzedaż ziarna"
+
+#: core\forms.py:622
+#: core\templates\core\harvest_detail.html:52
+msgid "Harvest cost"
+msgstr "Koszt zbioru"
+
+#: core\forms.py:633
+#: core\forms.py:688
+msgid "Harvest cost cannot be negative."
+msgstr "Koszt zbioru nie może być ujemny."
+
+#: core\forms.py:652
+msgid "Harvest cost is required."
+msgstr "Koszt zbioru jest wymagany."
+
+#: core\templates\core\dashboard.html:127
+#: core\templates\core\partials\report_summary.html:36
+msgid "Harvest costs"
+msgstr "Koszty zbiorów"
+
+#: core\forms.py:617
+#: core\templates\core\harvest_detail.html:33
+msgid "Harvest date"
+msgstr "Data zbioru"
+
+#: core\forms.py:638
+msgid "Harvest date is required."
+msgstr "Data zbioru jest wymagana."
+
+#: core\templates\core\harvest_detail.html:27
+msgid "Harvest details"
+msgstr "Dane zbioru"
+
+#: core\templates\core\harvest_detail.html:4
+msgctxt "page title"
+msgid "Harvest details"
+msgstr "Szczegóły zbioru"
+
+#: core\forms.py:620
+msgid "Harvest disposition"
+msgstr "Przeznaczenie zbioru"
+
+#: core\templates\core\harvest_form.html:8
+#, python-format
+msgid "Harvest from %(date)s"
+msgstr "Zbiór z dnia %(date)s"
+
+#: core\templates\core\harvest_list.html:114
+msgid "Harvest pages"
+msgstr "Paginacja zbiorów"
+
+#: core\forms.py:642
+msgid "Harvest quantity is required."
+msgstr "Ilość zbioru jest wymagana."
+
+#: core\forms.py:676
+msgid "Harvest quantity must be greater than zero."
+msgstr "Ilość zbioru musi być większa od zera."
+
+#: core\templates\core\harvest_detail.html:43
+msgid "Harvest result"
+msgstr "Wynik zbioru"
+
+#: core\templates\core\harvest_detail.html:10
+#, python-format
+msgid "Harvest · %(date)s"
+msgstr "Zbiór · %(date)s"
+
+#: core\templates\core\harvest_detail.html:11
+#, python-format
+msgid "Harvest – %(crop)s"
+msgstr "Zbiór – %(crop)s"
+
+#: core\templates\core\report_dashboard.html:69
+msgid "Harvested"
+msgstr "Zebrano"
+
+#: core\templates\core\partials\report_summary.html:54
+msgid "Harvested in total"
+msgstr "Zebrano łącznie"
+
+#: core\templates\core\base.html:68
+#: core\templates\core\cultivation_detail.html:95
+#: core\templates\core\cultivation_report.html:67
+#: core\templates\core\dashboard.html:145
+#: core\templates\core\field_report.html:48
+msgid "Harvests"
+msgstr "Zbiory"
+
+#: core\templates\core\harvest_list.html:4
+msgctxt "page title"
+msgid "Harvests"
+msgstr "Zbiory"
+
+#: core\management\commands\seed_demo_data.py:147
+#, python-format
+msgid "Harvests created or updated: %(count)s"
+msgstr "Zbiory utworzone lub zaktualizowane: %(count)s"
+
+#: core\templates\core\dashboard.html:10
+#, python-format
+msgid "Hello, <em>%(name)s</em>."
+msgstr "Dzień dobry, <em>%(name)s</em>."
+
+#: core\templates\core\error_report_form.html:10
+#: core\templates\core\error_report_list.html:10
+msgid "Help"
+msgstr "Pomoc"
+
+#: core\templates\core\partials\form_field.html:8
+msgid "Hide"
+msgstr "Ukryj"
+
+#: core\templates\core\home.html:100
+msgid "How it works"
+msgstr "Jak to działa"
+
+#: core\templates\core\harvest_list.html:11
+msgid "How much was harvested, what happened to it and what it brought in."
+msgstr "Ile zebrano, co się z tym stało i ile to dało."
+
+#: core\forms.py:173
+msgid "How the location is given"
+msgstr "Sposób określenia lokalizacji"
+
+#: core\templates\core\home.html:24
+msgid "I already have an account"
+msgstr "Mam już konto"
+
+#: core\models.py:316
+msgid "In progress"
+msgstr "W trakcie"
+
+#: core\templates\core\partials\report_summary.html:57
+msgid "In storage"
+msgstr "W magazynie"
+
+#: core\templates\core\crop_list.html:19
+#, python-format
+msgid "In the catalogue: %(count)s"
+msgstr "W katalogu: %(count)s"
+
+#: core\templates\core\home.html:57
+msgid "Instead of a notebook and a calculator"
+msgstr "Zamiast zeszytu i&nbsp;kalkulatora"
+
+#: core\models.py:311
+msgid "Interface problem"
+msgstr "Problem z interfejsem"
+
+#: core\templates\core\dashboard.html:121
+#: core\templates\core\harvest_detail.html:48
+#: core\templates\core\partials\report_summary.html:30
+msgid "Item"
+msgstr "Pozycja"
+
+#: core\models.py:238
+msgid "Kept in storage"
+msgstr "Pozostawiony w magazynie"
+
+#: core\templates\core\partials\report_summary.html:3
+msgid "Key figures"
+msgstr "Najważniejsze liczby"
+
+#: core\templates\core\base.html:91
+#: core\templates\core\base.html:91
+msgid "Language"
+msgstr "Język"
+
+#: core\templates\core\home.html:145
+msgid "Large text, simple words, and after you log in the app suggests the next step."
+msgstr "Duży tekst, proste słowa, a&nbsp;po zalogowaniu aplikacja podpowiada następny krok."
+
+#: core\forms.py:130
+#: core\forms.py:53
+#: core\forms.py:74
+#: core\templates\core\profile.html:28
+msgid "Last name"
+msgstr "Nazwisko"
+
+#: core\forms.py:62
+msgid "Last name is required."
+msgstr "Nazwisko jest wymagane."
+
+#: core\forms.py:175
+#: core\templates\core\field_detail.html:37
+msgid "Latitude"
+msgstr "Szerokość geograficzna"
+
+#: core\forms.py:234
+msgid "Latitude is required for this location."
+msgstr "Szerokość geograficzna jest wymagana dla tej lokalizacji."
+
+#: core\templates\core\base.html:106
+msgid "Light mode is on."
+msgstr "Włączono tryb jasny."
+
+#: core\models.py:33
+msgid "Loamy soil"
+msgstr "Gleba ilasta"
+
+#: core\templates\core\field_detail.html:34
+#: core\templates\core\field_list.html:39
+msgid "Location method"
+msgstr "Sposób lokalizacji"
+
+#: core\templates\core\home.html:189
+#: core\templates\core\login.html:12
+#: core\templates\core\login.html:26
+#: core\templates\core\register.html:44
+msgid "Log in"
+msgstr "Zaloguj się"
+
+#: core\templates\core\base.html:86
+msgctxt "navigation"
+msgid "Log in"
+msgstr "Logowanie"
+
+#: core\templates\core\base.html:82
+msgid "Log out"
+msgstr "Wyloguj się"
+
+#: core\templates\core\login.html:26
+msgid "Logging in…"
+msgstr "Logowanie…"
+
+#: core\templates\core\login.html:11
+msgid "Login"
+msgstr "Logowanie"
+
+#: core\templates\core\login.html:4
+msgctxt "page title"
+msgid "Login"
+msgstr "Logowanie"
+
+#: core\templates\core\register.html:33
+msgid "Login details"
+msgstr "Dane do logowania"
+
+#: core\forms.py:176
+#: core\templates\core\field_detail.html:38
+msgid "Longitude"
+msgstr "Długość geograficzna"
+
+#: core\forms.py:238
+msgid "Longitude is required for this location."
+msgstr "Długość geograficzna jest wymagana dla tej lokalizacji."
+
+#: core\models.py:239
+msgid "Loss / discarded"
+msgstr "Strata / zutylizowany"
+
+#: core\templates\core\report_dashboard.html:73
+msgid "Losses"
+msgstr "Straty"
+
+#: core\templates\core\partials\report_summary.html:58
+msgid "Losses / disposal"
+msgstr "Straty / utylizacja"
+
+#: core\templates\core\base.html:59
+msgid "Main navigation"
+msgstr "Główna nawigacja"
+
+#: core\templates\core\base.html:138
+msgid "Manage your farm in one place"
+msgstr "Zarządzaj gospodarstwem w jednym miejscu"
+
+#: core\templates\core\base.html:122
+msgid "Messages"
+msgstr "Komunikaty"
+
+#: core\templates\core\error_report_list.html:11
+msgid "My error reports"
+msgstr "Moje zgłoszenia błędów"
+
+#: core\templates\core\error_report_list.html:4
+msgctxt "page title"
+msgid "My error reports"
+msgstr "Moje zgłoszenia błędów"
+
+#: core\templates\core\base.html:63
+#: core\templates\core\dashboard.html:141
+#: core\templates\core\field_form.html:10
+#: core\templates\core\field_list.html:10
+msgid "My fields"
+msgstr "Moje pola"
+
+#: core\templates\core\field_list.html:4
+msgctxt "page title"
+msgid "My fields"
+msgstr "Moje pola"
+
+#: core\templates\core\dashboard.html:139
+msgid "My records"
+msgstr "Moje zapisy"
+
+#: core\templates\core\error_report_form.html:7
+#: core\templates\core\profile.html:37
+msgid "My reports"
+msgstr "Moje zgłoszenia"
+
+#: core\forms.py:539
+msgid "Name of the product used, up to 150 characters."
+msgstr "Nazwa zastosowanego preparatu, maksymalnie 150 znaków."
+
+#: core\templates\core\field_list.html:26
+msgid "Name, parcel or address"
+msgstr "Nazwa, działka lub adres"
+
+#: core\models.py:315
+msgid "New"
+msgstr "Nowe"
+
+#: core\templates\core\error_report_list.html:80
+#: core\templates\core\partials\pagination.html:13
+msgid "Next"
+msgstr "Następna"
+
+#: core\templates\core\dashboard.html:15
+msgid "Next step"
+msgstr "Następny krok"
+
+#: core\templates\core\cultivation_list.html:104
+msgid "No cultivations"
+msgstr "Brak upraw"
+
+#: core\templates\core\field_detail.html:67
+msgid "No cultivations have been recorded on this field yet."
+msgstr "Na tym polu nie zarejestrowano jeszcze żadnych upraw."
+
+#: core\templates\core\cultivation_list.html:105
+msgid "No cultivations match the given criteria."
+msgstr "Nie znaleziono upraw spełniających podane kryteria."
+
+#: core\templates\core\report_dashboard.html:108
+msgid "No data"
+msgstr "Brak danych"
+
+#: core\templates\core\field_list.html:89
+msgid "No fields match the given criteria. Change the filters or add a new field."
+msgstr "Nie znaleziono pól spełniających podane kryteria. Zmień filtry albo dodaj nowe pole."
+
+#: core\templates\core\report_dashboard.html:109
+msgid "No financial data for the chosen criteria."
+msgstr "Brak danych finansowych dla wybranych kryteriów."
+
+#: core\templates\core\cultivation_detail.html:119
+msgid "No harvests have been recorded for this cultivation yet."
+msgstr "Dla tej uprawy nie zarejestrowano jeszcze zbiorów."
+
+#: core\templates\core\harvest_list.html:119
+msgid "No harvests match the given criteria."
+msgstr "Nie znaleziono zbiorów spełniających podane kryteria."
+
+#: core\templates\core\harvest_list.html:118
+msgid "No harvests recorded"
+msgstr "Brak zapisanych zbiorów"
+
+#: core\templates\core\cultivation_report.html:87
+msgid "No harvests."
+msgstr "Brak zbiorów."
+
+#: core\templates\core\error_report_list.html:68
+msgid "No reports"
+msgstr "Brak zgłoszeń"
+
+#: core\templates\core\error_report_list.html:69
+msgid "No reports match the chosen criteria."
+msgstr "Nie znaleziono zgłoszeń spełniających wybrane kryteria."
+
+#: core\templates\core\cultivation_detail.html:89
+msgid "No sprayings have been recorded for this cultivation yet."
+msgstr "Dla tej uprawy nie zarejestrowano jeszcze oprysków."
+
+#: core\templates\core\spraying_list.html:107
+msgid "No sprayings match the given criteria."
+msgstr "Nie znaleziono oprysków spełniających podane kryteria."
+
+#: core\templates\core\spraying_list.html:106
+msgid "No sprayings recorded"
+msgstr "Brak zapisanych oprysków"
+
+#: core\templates\core\cultivation_report.html:62
+msgid "No sprayings."
+msgstr "Brak oprysków."
+
+#: core\templates\core\cultivation_detail.html:64
+msgid "No works have been recorded for this cultivation yet."
+msgstr "Dla tej uprawy nie zarejestrowano jeszcze prac."
+
+#: core\templates\core\fieldwork_list.html:106
+msgid "No works match the given criteria."
+msgstr "Nie znaleziono prac spełniających podane kryteria."
+
+#: core\templates\core\fieldwork_list.html:105
+msgid "No works recorded"
+msgstr "Brak zapisanych prac"
+
+#: core\templates\core\cultivation_report.html:43
+msgid "No works."
+msgstr "Brak prac."
+
+#: core\templates\core\home.html:169
+msgid "No. Every user sees only their own fields, cultivations and records."
+msgstr "Nie. Każdy użytkownik widzi tylko swoje pola, uprawy i&nbsp;zapisy."
+
+#: core\templates\core\home.html:161
+msgid "No. The account and using the app are free."
+msgstr "Nie. Konto i&nbsp;korzystanie z&nbsp;aplikacji są bezpłatne."
+
+#: core\templates\core\home.html:165
+msgid "No. You open the app in a browser, like a normal website."
+msgstr "Nie. Aplikację otwierasz w&nbsp;przeglądarce, jak zwykłą stronę internetową."
+
+#: core\forms.py:275
+#: core\forms.py:623
+#: core\templates\core\cultivation_detail.html:40
+#: core\templates\core\harvest_detail.html:37
+msgid "Notes"
+msgstr "Notatki"
+
+#: core\templates\core\harvest_list.html:26
+msgid "Notes, field or cultivation"
+msgstr "Notatki, pole lub uprawa"
+
+#: core\templates\core\report_dashboard.html:49
+msgid "Number of cultivations"
+msgstr "Liczba upraw"
+
+#: core\templates\core\report_dashboard.html:48
+msgid "Number of fields"
+msgstr "Liczba pól"
+
+#: core\templates\core\cultivation_detail.html:39
+#: core\templates\core\report_dashboard.html:52
+msgid "Number of harvests"
+msgstr "Liczba zbiorów"
+
+#: core\templates\core\field_report.html:44
+#: core\templates\core\report_dashboard.html:47
+msgid "Number of records"
+msgstr "Liczba zapisów"
+
+#: core\templates\core\cultivation_detail.html:38
+#: core\templates\core\report_dashboard.html:51
+msgid "Number of sprayings"
+msgstr "Liczba oprysków"
+
+#: core\templates\core\cultivation_detail.html:37
+#: core\templates\core\report_dashboard.html:50
+msgid "Number of works"
+msgstr "Liczba prac"
+
+#: core\templates\core\profile.html:40
+#, python-format
+msgid "Number of your reports: %(count)s"
+msgstr "Liczba Twoich zgłoszeń: %(count)s"
+
+#: core\templates\core\home.html:101
+msgid "One season in Farmer App"
+msgstr "Jeden sezon w&nbsp;Farmer App"
+
+#: core\templates\core\register.html:65
+msgid "Only you can see your fields and records."
+msgstr "Twoje pola i&nbsp;zapisy widzisz tylko Ty."
+
+#: core\forms.py:282
+msgid "Optional date when sowing started."
+msgstr "Opcjonalna data rozpoczęcia siewu."
+
+#: core\forms.py:542
+msgid "Optional description of the spraying."
+msgstr "Opcjonalny opis oprysku."
+
+#: core\forms.py:433
+msgid "Optional description of the work."
+msgstr "Opcjonalny opis wykonanej pracy."
+
+#: core\forms.py:634
+msgid "Optional notes about the harvest."
+msgstr "Opcjonalne informacje o zbiorze."
+
+#: core\forms.py:722
+msgid "Optional short description (up to 1000 characters)."
+msgstr "Opcjonalny krótki opis (maksymalnie 1000 znaków)."
+
+#: core\models.py:312
+msgctxt "report category"
+msgid "Other"
+msgstr "Inny"
+
+#: core\models.py:36
+msgctxt "soil type"
+msgid "Other"
+msgstr "Inna"
+
+#: core\models.py:155
+msgctxt "work type"
+msgid "Other"
+msgstr "Inna"
+
+#: core\templates\core\error_report_list.html:78
+#: core\templates\core\partials\pagination.html:10
+#, python-format
+msgid "Page %(number)s of %(total)s"
+msgstr "Strona %(number)s z %(total)s"
+
+#: core\views.py:904
+#, python-format
+msgid "Page: %(path)s"
+msgstr "Strona: %(path)s"
+
+#: core\forms.py:172
+#: core\models.py:42
+#: core\templates\core\field_detail.html:35
+msgid "Parcel identifier"
+msgstr "Identyfikator działki"
+
+#: core\forms.py:243
+msgid "Parcel identifier is required for this location method."
+msgstr "Identyfikator działki jest wymagany dla tej metody lokalizacji."
+
+#: core\forms.py:76
+msgid "Password"
+msgstr "Hasło"
+
+#: core\models.py:35
+msgid "Peat soil"
+msgstr "Gleba torfowa"
+
+#: core\templates\core\home.html:144
+msgid "People who do not like computers"
+msgstr "Osoby, które nie lubią komputerów"
+
+#: core\models.py:94
+msgid "Planned"
+msgstr "Planowana"
+
+#: core\forms.py:274
+#: core\templates\core\cultivation_detail.html:36
+msgid "Planned harvest date"
+msgstr "Planowana data zbioru"
+
+#: core\templates\core\home.html:38
+msgid "Plot behind the barn"
+msgstr "Działka za stodołą"
+
+#: core\models.py:150
+#: core\templates\core\home.html:75
+msgid "Plowing"
+msgstr "Orka"
+
+#: core\templates\core\fieldwork_list.html:11
+msgid "Plowing, sowing, fertilizing and other treatments with their costs."
+msgstr "Orka, siew, nawożenie i inne zabiegi razem z kosztami."
+
+#: core\templates\core\dashboard.html:82
+msgid "Plowing, sowing, fertilizing and their cost."
+msgstr "Orka, siew, nawożenie i ich koszt."
+
+#: core\models.py:41
+msgid "Point on a map"
+msgstr "Punkt na mapie"
+
+#: core\templates\core\error_report_list.html:76
+#: core\templates\core\partials\pagination.html:7
+msgid "Previous"
+msgstr "Poprzednia"
+
+#: core\forms.py:762
+msgid "Problem description"
+msgstr "Opis problemu"
+
+#: core\forms.py:769
+msgid "Problem description is required."
+msgstr "Opis problemu jest wymagany."
+
+#: core\forms.py:531
+msgid "Product name"
+msgstr "Nazwa preparatu"
+
+#: core\forms.py:551
+msgid "Product name can have at most 150 characters."
+msgstr "Nazwa preparatu może mieć najwyżej 150 znaków."
+
+#: core\forms.py:550
+msgid "Product name is required."
+msgstr "Nazwa preparatu jest wymagana."
+
+#: core\templates\core\spraying_form.html:16
+msgid "Product name, dose and treatment cost on the chosen cultivation."
+msgstr "Nazwa środka, dawka i koszt zabiegu na wybranej uprawie."
+
+#: core\forms.py:554
+msgid "Product quantity is required."
+msgstr "Ilość preparatu jest wymagana."
+
+#: core\forms.py:583
+msgid "Product quantity must be greater than zero."
+msgstr "Ilość preparatu musi być większa od zera."
+
+#: core\templates\core\spraying_list.html:26
+msgid "Product, description, field or cultivation"
+msgstr "Preparat, opis, pole lub uprawa"
+
+#: core\templates\core\dashboard.html:90
+msgid "Product, quantity and treatment cost."
+msgstr "Środek, ilość i koszt zabiegu."
+
+#: core\templates\core\base.html:76
+#: core\templates\core\error_report_list.html:7
+msgid "Profile"
+msgstr "Profil"
+
+#: core\templates\core\profile.html:4
+msgctxt "page title"
+msgid "Profile"
+msgstr "Profil"
+
+#: core\templates\core\dashboard.html:54
+#: core\templates\core\partials\report_summary.html:13
+#: core\templates\core\partials\report_summary.html:41
+#: core\templates\core\report_dashboard.html:79
+msgid "Profit/loss"
+msgstr "Zysk/strata"
+
+#: core\forms.py:532
+#: core\forms.py:618
+#: core\templates\core\harvest_detail.html:31
+#: core\templates\core\spraying_detail.html:31
+msgid "Quantity"
+msgstr "Ilość"
+
+#: core\forms.py:540
+#: core\forms.py:627
+msgid "Quantity must be greater than zero."
+msgstr "Ilość musi być większa od zera."
+
+#: core\templates\core\home.html:155
+msgid "Questions"
+msgstr "Pytania"
+
+#: core\templates\core\home.html:72
+msgid "Record"
+msgstr "Zapis"
+
+#: core\templates\core\dashboard.html:97
+msgid "Record harvest"
+msgstr "Zapisz zbiór"
+
+#: core\templates\core\dashboard.html:89
+msgid "Record spraying"
+msgstr "Zapisz oprysk"
+
+#: core\templates\core\dashboard.html:81
+#: core\views.py:87
+msgid "Record work"
+msgstr "Zapisz pracę"
+
+#: core\views.py:85
+msgid "Record your first work or harvest"
+msgstr "Zapisz pierwszą pracę lub zbiór"
+
+#: core\templates\core\fieldwork_list.html:9
+#: core\templates\core\harvest_list.html:9
+#: core\templates\core\spraying_list.html:9
+msgid "Records"
+msgstr "Zapisy"
+
+#: core\forms.py:77
+msgid "Repeat password"
+msgstr "Powtórz hasło"
+
+#: core\templates\core\error_report_detail.html:11
+#: core\templates\core\error_report_detail.html:4
+#: core\templates\core\error_report_list.html:55
+#, python-format
+msgid "Report #%(number)s"
+msgstr "Zgłoszenie #%(number)s"
+
+#: core\models.py:335
+#, python-format
+msgid "Report #%(number)s — %(category)s"
+msgstr "Zgłoszenie #%(number)s — %(category)s"
+
+#: core\templates\core\base.html:141
+#: core\templates\core\error_report_form.html:11
+msgid "Report a bug"
+msgstr "Zgłoś błąd"
+
+#: core\templates\core\error_report_form.html:4
+msgctxt "page title"
+msgid "Report a bug"
+msgstr "Zgłoś błąd"
+
+#: core\templates\core\base.html:149
+msgid "Report a problem"
+msgstr "Zgłoś problem"
+
+#: core\forms.py:761
+msgid "Report category"
+msgstr "Kategoria zgłoszenia"
+
+#: core\templates\core\error_report_list.html:74
+msgid "Report pages"
+msgstr "Paginacja zgłoszeń"
+
+#: core\templates\core\field_report.html:21
+#: core\templates\core\report_dashboard.html:15
+msgid "Report range"
+msgstr "Zakres raportu"
+
+#: core\templates\core\cultivation_report.html:11
+#, python-format
+msgid "Report: %(crop)s – %(field)s (%(year)s)"
+msgstr "Raport: %(crop)s – %(field)s (%(year)s)"
+
+#: core\templates\core\base.html:69
+#: core\templates\core\report_dashboard.html:9
+msgid "Reports"
+msgstr "Raporty"
+
+#: core\forms.py:185
+msgid "Required for GPS and a point on a map; range -180 to 180."
+msgstr "Wymagana dla GPS i punktu na mapie; zakres od -180 do 180."
+
+#: core\forms.py:184
+msgid "Required for GPS and a point on a map; range -90 to 90."
+msgstr "Wymagana dla GPS i punktu na mapie; zakres od -90 do 90."
+
+#: core\forms.py:182
+msgid "Required when the location is a parcel."
+msgstr "Wymagany przy lokalizacji według działki."
+
+#: core\forms.py:183
+msgid "Required when the location is an address."
+msgstr "Wymagany przy lokalizacji według adresu."
+
+#: core\models.py:317
+msgid "Resolved"
+msgstr "Rozwiązane"
+
+#: core\templates\core\dashboard.html:131
+#: core\templates\core\harvest_detail.html:56
+#: core\templates\core\home.html:85
+msgid "Result"
+msgstr "Wynik"
+
+#: core\forms.py:621
+#: core\templates\core\dashboard.html:46
+#: core\templates\core\harvest_detail.html:51
+#: core\templates\core\home.html:83
+#: core\templates\core\partials\report_summary.html:33
+msgid "Revenue"
+msgstr "Przychód"
+
+#: core\forms.py:632
+#: core\forms.py:682
+msgid "Revenue cannot be negative."
+msgstr "Przychód nie może być ujemny."
+
+#: core\templates\core\dashboard.html:124
+msgid "Revenue from harvests"
+msgstr "Przychód ze zbiorów"
+
+#: core\forms.py:648
+msgid "Revenue is required."
+msgstr "Przychód jest wymagany."
+
+#: core\forms.py:702
+#: core\models.py:294
+msgid "Revenue must be 0 if the harvest was not sold."
+msgstr "Przychód musi wynosić 0, jeśli zbiór nie został sprzedany."
+
+#: core\templates\core\home.html:48
+msgid "Sample farm, 2026 season"
+msgstr "Przykładowe gospodarstwo, sezon 2026"
+
+#: core\templates\core\home.html:70
+msgid "Sample records for the field by the forest in the 2026 season"
+msgstr "Przykładowe zapisy dla pola przy lesie w&nbsp;sezonie 2026"
+
+#: core\models.py:31
+msgid "Sandy soil"
+msgstr "Gleba piaszczysta"
+
+#: core\templates\core\crop_form.html:21
+#: core\templates\core\cultivation_form.html:45
+#: core\templates\core\field_form.html:25
+#: core\templates\core\fieldwork_form.html:26
+#: core\templates\core\harvest_form.html:26
+msgid "Save"
+msgstr "Zapisz"
+
+#: core\templates\core\profile_edit.html:21
+msgid "Save changes"
+msgstr "Zapisz zmiany"
+
+#: core\templates\core\crop_form.html:21
+#: core\templates\core\cultivation_form.html:45
+#: core\templates\core\field_form.html:25
+#: core\templates\core\fieldwork_form.html:26
+#: core\templates\core\harvest_form.html:26
+msgid "Saving…"
+msgstr "Zapisywanie…"
+
+#: core\forms.py:628
+msgid "Say whether the harvest was sold, put into storage or discarded as a loss."
+msgstr "Określ, czy zbiór został sprzedany, trafił do magazynu, czy został zutylizowany jako strata."
+
+#: core\templates\core\field_list.html:23
+#: core\templates\core\fieldwork_list.html:23
+#: core\templates\core\harvest_list.html:23
+#: core\templates\core\spraying_list.html:23
+msgid "Search"
+msgstr "Szukaj"
+
+#: core\templates\core\cultivation_detail.html:33
+#: core\templates\core\fieldwork_detail.html:34
+#: core\templates\core\harvest_detail.html:36
+#: core\templates\core\spraying_detail.html:35
+msgid "Season"
+msgstr "Sezon"
+
+#: core\templates\core\cultivation_list.html:76
+#: core\templates\core\field_detail.html:55
+#: core\templates\core\field_report.html:61
+#, python-format
+msgid "Season %(year)s"
+msgstr "Sezon %(year)s"
+
+#: core\forms.py:271
+#: core\forms.py:394
+#: core\templates\core\cultivation_list.html:60
+#: core\templates\core\field_report.html:24
+#: core\templates\core\report_dashboard.html:27
+msgid "Season year"
+msgstr "Rok sezonu"
+
+#: core\forms.py:295
+msgid "Season year is required."
+msgstr "Rok sezonu jest wymagany."
+
+#: core\templates\core\cultivation_list.html:10
+msgid "Seasonal cultivations"
+msgstr "Uprawy sezonowe"
+
+#: core\templates\core\cultivation_list.html:9
+msgid "Seasons"
+msgstr "Sezony"
+
+#: core\templates\core\error_report_form.html:21
+msgid "Send report"
+msgstr "Wyślij zgłoszenie"
+
+#: core\templates\core\error_report_form.html:21
+msgid "Sending…"
+msgstr "Wysyłanie…"
+
+#: core\templates\core\profile.html:33
+msgid "Settings and help"
+msgstr "Ustawienia i pomoc"
+
+#: core\templates\core\partials\form_field.html:8
+#: core\templates\core\partials\form_field.html:8
+msgid "Show"
+msgstr "Pokaż"
+
+#: core\templates\core\base.html:87
+#: core\templates\core\register.html:11
+msgid "Sign up"
+msgstr "Rejestracja"
+
+#: core\templates\core\register.html:4
+msgctxt "page title"
+msgid "Sign up"
+msgstr "Rejestracja"
+
+#: core\models.py:34
+msgid "Silt soil"
+msgstr "Gleba pyłowa"
+
+#: core\templates\core\base.html:52
+msgid "Skip to content"
+msgstr "Przejdź do treści"
+
+#: core\templates\core\home.html:136
+msgid "Small and medium farms"
+msgstr "Małe i&nbsp;średnie gospodarstwa"
+
+#: core\forms.py:171
+#: core\templates\core\field_detail.html:33
+#: core\templates\core\field_list.html:30
+msgid "Soil type"
+msgstr "Rodzaj gleby"
+
+#: core\models.py:237
+msgid "Sold"
+msgstr "Sprzedany"
+
+#: core\templates\core\partials\report_summary.html:56
+#: core\templates\core\report_dashboard.html:71
+msgctxt "harvested quantity"
+msgid "Sold"
+msgstr "Sprzedano"
+
+#: core\models.py:151
+msgid "Sowing"
+msgstr "Siew"
+
+#: core\forms.py:273
+#: core\templates\core\cultivation_detail.html:35
+msgid "Sowing date"
+msgstr "Data siewu"
+
+#: core\templates\core\home.html:76
+msgid "Sowing wheat"
+msgstr "Siew pszenicy"
+
+#: core\templates\core\home.html:78
+#: core\templates\core\spraying_form.html:14
+msgid "Spraying"
+msgstr "Oprysk"
+
+#: core\templates\core\dashboard.html:126
+#: core\templates\core\partials\report_summary.html:35
+msgid "Spraying costs"
+msgstr "Koszty oprysków"
+
+#: core\forms.py:530
+#: core\templates\core\spraying_detail.html:32
+msgid "Spraying date"
+msgstr "Data oprysku"
+
+#: core\forms.py:546
+msgid "Spraying date is required."
+msgstr "Data oprysku jest wymagana."
+
+#: core\templates\core\spraying_detail.html:26
+msgid "Spraying details"
+msgstr "Dane oprysku"
+
+#: core\templates\core\spraying_detail.html:4
+msgctxt "page title"
+msgid "Spraying details"
+msgstr "Szczegóły oprysku"
+
+#: core\templates\core\spraying_list.html:102
+msgid "Spraying pages"
+msgstr "Paginacja oprysków"
+
+#: core\templates\core\spraying_detail.html:10
+#, python-format
+msgid "Spraying · %(date)s"
+msgstr "Oprysk · %(date)s"
+
+#: core\templates\core\base.html:67
+#: core\templates\core\cultivation_detail.html:70
+#: core\templates\core\cultivation_report.html:48
+#: core\templates\core\dashboard.html:144
+#: core\templates\core\field_report.html:47
+msgid "Sprayings"
+msgstr "Opryski"
+
+#: core\templates\core\spraying_list.html:4
+msgctxt "page title"
+msgid "Sprayings"
+msgstr "Opryski"
+
+#: core\management\commands\seed_demo_data.py:144
+#, python-format
+msgid "Sprayings created or updated: %(count)s"
+msgstr "Opryski utworzone lub zaktualizowane: %(count)s"
+
+#: core\templates\core\home.html:105
+msgid "Spring"
+msgstr "Wiosna"
+
+#: core\templates\core\home.html:182
+msgid "Start with one field."
+msgstr "Zacznij od jednego pola."
+
+#: core\forms.py:272
+#: core\templates\core\cultivation_detail.html:34
+#: core\templates\core\cultivation_list.html:51
+#: core\templates\core\error_report_detail.html:22
+#: core\templates\core\error_report_list.html:33
+msgid "Status"
+msgstr "Status"
+
+#: core\templates\core\report_dashboard.html:72
+msgid "Storage"
+msgstr "Magazyn"
+
+#: core\templates\core\cultivation_report.html:24
+#: core\templates\core\report_dashboard.html:45
+msgid "Summary"
+msgstr "Podsumowanie"
+
+#: core\templates\core\home.html:110
+msgid "Summer"
+msgstr "Lato"
+
+#: core\models.py:309
+msgid "Technical problem"
+msgstr "Problem techniczny"
+
+#: core\templates\core\home.html:26
+msgid "The account is free and there is nothing to install. It works on a phone and on a computer."
+msgstr "Konto jest bezpłatne, nic nie trzeba instalować. Działa na telefonie i&nbsp;na komputerze."
+
+#: core\templates\core\register.html:13
+msgid "The account is free. Filling in the form takes a moment."
+msgstr "Konto jest bezpłatne. Wypełnienie formularza zajmie chwilę."
+
+#: core\templates\core\error_report_form.html:12
+msgid "The address of the page with the problem is already in the description. Add what happened and what should have happened."
+msgstr "Adres strony, na której był problem, jest już wpisany w opisie. Dopisz, co się stało i co powinno było się wydarzyć."
+
+#: core\templates\core\register.html:61
+msgid "The app suggests the rest"
+msgstr "Aplikacja podpowie resztę"
+
+#: core\forms.py:292
+msgid "The chosen crop type is not available."
+msgstr "Wybrany rodzaj uprawy jest niedostępny."
+
+#: core\forms.py:410
+#: core\forms.py:514
+#: core\forms.py:600
+msgid "The chosen cultivation is not available."
+msgstr "Wybrana uprawa jest niedostępna."
+
+#: core\forms.py:288
+msgid "The chosen field is not available."
+msgstr "Wybrane pole jest niedostępne."
+
+#: core\forms.py:484
+msgid "The chosen season does not match the season of the chosen cultivation."
+msgstr "Wybrany sezon nie jest zgodny z sezonem wybranej uprawy."
+
+#: core\forms.py:401
+msgid "The chosen season is not available."
+msgstr "Wybrany sezon jest niedostępny."
+
+#: core\templates\core\spraying_confirm_delete.html:12
+msgid "The cost of this spraying will disappear from the reports. This cannot be undone."
+msgstr "Koszt tego oprysku zniknie z raportów. Tego nie da się cofnąć."
+
+#: core\templates\core\fieldwork_confirm_delete.html:12
+msgid "The cost of this work will disappear from the reports. This cannot be undone."
+msgstr "Koszt tej pracy zniknie z raportów. Tego nie da się cofnąć."
+
+#: core\templates\core\crop_list.html:31
+msgid "The crop type catalogue is empty."
+msgstr "Katalog rodzajów upraw jest pusty."
+
+#: core\templates\core\cultivation_form.html:32
+msgid "The crop type catalogue is empty. Add a crop type to be able to create a cultivation."
+msgstr "Katalog rodzajów upraw jest pusty. Dodaj rodzaj uprawy, aby móc utworzyć uprawę."
+
+#: core\templates\core\crop_list.html:11
+msgid "The crop type catalogue is shared by all users. If a type you need is missing, you can add it."
+msgstr "Katalog rodzajów upraw jest wspólny dla wszystkich użytkowników. Jeżeli brakuje potrzebnego rodzaju, możesz go dodać."
+
+#: core\views.py:466
+msgid "The cultivation has been created."
+msgstr "Uprawa została utworzona."
+
+#: core\views.py:495
+msgid "The cultivation has been deleted."
+msgstr "Uprawa została usunięta."
+
+#: core\views.py:481
+msgid "The cultivation has been updated."
+msgstr "Uprawa została zaktualizowana."
+
+#: core\templates\core\field_confirm_delete.html:12
+msgid "The cultivations, works, sprayings and harvests recorded on this field will be deleted with it. This cannot be undone."
+msgstr "Razem z polem znikną zapisane na nim uprawy, prace, opryski i zbiory. Tego nie da się cofnąć."
+
+#: core\templates\core\register.html:62
+msgid "The dashboard always shows the next step."
+msgstr "Na pulpicie zawsze widać następny krok."
+
+#: core\forms.py:748
+msgid "The description can have at most 1000 characters."
+msgstr "Opis może mieć maksymalnie 1000 znaków."
+
+#: core\forms.py:780
+msgid "The description cannot have more than 5000 characters."
+msgstr "Opis nie może zawierać więcej niż 5000 znaków."
+
+#: core\forms.py:778
+msgid "The description must have at least 10 characters."
+msgstr "Opis musi zawierać co najmniej 10 znaków."
+
+#: core\views.py:916
+msgid "The error report has been created."
+msgstr "Zgłoszenie błędu zostało utworzone."
+
+#: core\views.py:302
+msgid "The field has been created."
+msgstr "Pole zostało utworzone."
+
+#: core\views.py:330
+msgid "The field has been deleted."
+msgstr "Pole zostało usunięte."
+
+#: core\views.py:316
+msgid "The field has been updated."
+msgstr "Pole zostało zaktualizowane."
+
+#: core\templates\core\field_report.html:79
+msgid "The field has no cultivations in the chosen period."
+msgstr "Pole nie ma upraw dla wybranego okresu."
+
+#: core\forms.py:82
+#, python-format
+msgid "The field “%(label)s” is required."
+msgstr "Pole „%(label)s” jest wymagane."
+
+#: core\templates\core\report_dashboard.html:40
+msgid "The given filters are not valid or not available."
+msgstr "Podane filtry są nieprawidłowe lub niedostępne."
+
+#: core\templates\core\field_report.html:37
+msgid "The given year is not valid."
+msgstr "Podany rok jest nieprawidłowy."
+
+#: core\views.py:738
+msgid "The harvest has been created."
+msgstr "Zbiór został utworzony."
+
+#: core\views.py:754
+msgid "The harvest has been deleted."
+msgstr "Zbiór został usunięty."
+
+#: core\views.py:747
+msgid "The harvest has been updated."
+msgstr "Zbiór został zaktualizowany."
+
+#: core\templates\core\harvest_detail.html:61
+msgid "The harvest result is revenue minus the harvest cost only, before field work and spraying costs."
+msgstr "Wynik zbioru to przychód pomniejszony wyłącznie o koszt zbioru, przed uwzględnieniem kosztów prac polowych i oprysków."
+
+#: core\forms.py:727
+msgid "The name can have at most 100 characters."
+msgstr "Nazwa może mieć maksymalnie 100 znaków."
+
+#: core\forms.py:180
+msgid "The name must be unique among your fields."
+msgstr "Nazwa musi być unikalna wśród Twoich pól."
+
+#: core\templates\core\crop_form.html:12
+msgid "The new crop type will be visible to all users of the app."
+msgstr "Dodany rodzaj uprawy będzie widoczny dla wszystkich użytkowników aplikacji."
+
+#: core\forms.py:44
+msgid "The passwords do not match."
+msgstr "Podane hasła nie są takie same."
+
+#: core\forms.py:367
+#: core\models.py:136
+msgid "The planned harvest date cannot be earlier than the sowing date."
+msgstr "Planowana data zbioru nie może być wcześniejsza od daty siewu."
+
+#: core\views.py:93
+msgid "The report shows costs, revenue and profit for fields and cultivations."
+msgstr "Raport pokazuje koszty, przychody i zysk dla pól oraz upraw."
+
+#: core\templates\core\error_report_detail.html:27
+#: core\templates\core\error_report_list.html:12
+msgid "The report status is changed by an administrator."
+msgstr "Status zgłoszenia jest zmieniany przez administratora."
+
+#: core\templates\core\harvest_confirm_delete.html:12
+msgid "The revenue and cost of this harvest will disappear from the reports. This cannot be undone."
+msgstr "Przychód i koszt tego zbioru znikną z raportów. Tego nie da się cofnąć."
+
+#: core\forms.py:250
+msgid "The season year must be between {min} and {max}."
+msgstr "Rok sezonu musi mieścić się w zakresie {min}–{max}."
+
+#: core\forms.py:496
+#: core\models.py:183
+msgid "The sowing date year must match the cultivation season year."
+msgstr "Rok daty siewu musi być zgodny z rokiem sezonu uprawy."
+
+#: core\forms.py:357
+#: core\models.py:133
+msgid "The sowing date year must match the season year."
+msgstr "Rok daty siewu musi być zgodny z rokiem sezonu."
+
+#: core\views.py:696
+msgid "The spraying has been created."
+msgstr "Oprysk został utworzony."
+
+#: core\views.py:712
+msgid "The spraying has been deleted."
+msgstr "Oprysk został usunięty."
+
+#: core\views.py:705
+msgid "The spraying has been updated."
+msgstr "Oprysk został zaktualizowany."
+
+#: core\forms.py:113
+msgid "The username or password is incorrect. Check that Caps Lock is off, because letter case matters."
+msgstr "Login albo hasło są nieprawidłowe. Sprawdź, czy nie jest włączony Caps Lock, bo wielkość liter ma znaczenie."
+
+#: core\views.py:657
+msgid "The work has been created."
+msgstr "Praca została utworzona."
+
+#: core\views.py:673
+msgid "The work has been deleted."
+msgstr "Praca została usunięta."
+
+#: core\views.py:666
+msgid "The work has been updated."
+msgstr "Praca została zaktualizowana."
+
+#: core\templates\core\cultivation_confirm_delete.html:12
+msgid "The works, sprayings and harvests recorded for this cultivation will be deleted with it. This cannot be undone."
+msgstr "Razem z uprawą znikną zapisane przy niej prace, opryski i zbiory. Tego nie da się cofnąć."
+
+#: core\templates\core\dashboard.html:30
+msgid "There are no crop types in the catalogue yet, so a cultivation cannot be added."
+msgstr "W katalogu nie ma jeszcze rodzajów upraw, więc nie da się dodać uprawy."
+
+#: core\templates\core\field_list.html:88
+msgid "There are no fields here"
+msgstr "Nie ma tu żadnego pola"
+
+#: core\forms.py:378
+msgid "This crop is already assigned to this field and season."
+msgstr "Taka uprawa jest już przypisana do tego pola i sezonu."
+
+#: core\templates\core\register.html:50
+msgid "Three steps to your first result"
+msgstr "Trzy kroki do pierwszego wyniku"
+
+#: core\templates\core\fieldwork_list.html:61
+#: core\templates\core\harvest_list.html:70
+#: core\templates\core\spraying_list.html:61
+msgid "To"
+msgstr "Do"
+
+#: core\templates\core\register.html:58
+msgid "To start, a name and an area are enough."
+msgstr "Na początek wystarczy nazwa i&nbsp;powierzchnia."
+
+#: core\views.py:166
+msgid "Too many failed login attempts. Try again in a few minutes."
+msgstr "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za kilka minut."
+
+#: core\templates\core\partials\report_summary.html:39
+#: core\templates\core\partials\report_summary.html:9
+msgid "Total costs"
+msgstr "Koszty całkowite"
+
+#: core\templates\core\base.html:104
+#: core\templates\core\base.html:104
+#: core\templates\core\base.html:105
+msgid "Turn on dark mode"
+msgstr "Włącz tryb ciemny"
+
+#: core\templates\core\base.html:105
+msgid "Turn on light mode"
+msgstr "Włącz tryb jasny"
+
+#: core\forms.py:533
+#: core\forms.py:619
+#: core\templates\core\harvest_list.html:48
+#: core\templates\core\spraying_list.html:48
+msgid "Unit"
+msgstr "Jednostka"
+
+#: core\templates\core\error_report_detail.html:24
+msgid "Updated at"
+msgstr "Data aktualizacji"
+
+#: core\management\commands\seed_demo_data.py:31
+#, python-format
+msgid "User \"%(username)s\" does not exist."
+msgstr "Użytkownik o nazwie \"%(username)s\" nie istnieje."
+
+#: core\forms.py:51
+#: core\forms.py:72
+#: core\templates\core\profile.html:25
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+#: core\forms.py:58
+msgid "Username is required."
+msgstr "Nazwa użytkownika jest wymagana."
+
+#: core\templates\core\profile_edit.html:12
+#, python-format
+msgid "Username: <strong>%(username)s</strong>. The username cannot be changed."
+msgstr "Nazwa użytkownika: <strong>%(username)s</strong>. Nazwy użytkownika nie można zmienić."
+
+#: core\templates\core\fieldwork_detail.html:27
+#: core\templates\core\harvest_detail.html:28
+#: core\templates\core\spraying_detail.html:27
+msgid "View cultivation"
+msgstr "Zobacz uprawę"
+
+#: core\templates\core\cultivation_detail.html:30
+msgid "View field"
+msgstr "Zobacz pole"
+
+#: core\templates\core\dashboard.html:105
+#: core\views.py:94
+msgid "View report"
+msgstr "Zobacz raport"
+
+#: core\models.py:153
+msgid "Watering"
+msgstr "Nawadnianie"
+
+#: core\models.py:154
+msgid "Weeding"
+msgstr "Odchwaszczanie"
+
+#: core\templates\core\register.html:49
+msgid "What comes next"
+msgstr "Co dalej"
+
+#: core\templates\core\dashboard.html:60
+msgid "What do you want to record?"
+msgstr "Co chcesz zapisać?"
+
+#: core\templates\core\cultivation_list.html:11
+msgid "What grows on which field and in which season."
+msgstr "Co rośnie na którym polu i w jakim sezonie."
+
+#: core\templates\core\home.html:172
+msgid "What if I enter something wrong?"
+msgstr "Co, jeśli coś wpiszę źle?"
+
+#: core\templates\core\fieldwork_form.html:16
+msgid "What was done, when, on which cultivation and what it cost."
+msgstr "Co zrobiono, kiedy, na której uprawie i ile to kosztowało."
+
+#: core\templates\core\login.html:35
+msgid "What you will see after logging in"
+msgstr "Co zobaczysz po zalogowaniu"
+
+#: core\templates\core\home.html:67
+msgid "Wheat · 2026"
+msgstr "Pszenica · 2026"
+
+#: core\templates\core\spraying_list.html:11
+msgid "Which product, how much and at what cost, on every cultivation."
+msgstr "Jakim środkiem, ile i za ile, na każdej uprawie."
+
+#: core\templates\core\home.html:131
+msgid "Who it is for"
+msgstr "Dla kogo"
+
+#: core\templates\core\home.html:168
+msgid "Will anyone see my data?"
+msgstr "Czy ktoś zobaczy moje dane?"
+
+#: core\templates\core\home.html:120
+msgid "Winter"
+msgstr "Zima"
+
+#: core\templates\core\register.html:54
+msgid "With the username and password you set in this form."
+msgstr "Loginem i&nbsp;hasłem, które ustawisz w&nbsp;tym formularzu."
+
+#: core\templates\core\crop_list.html:32
+msgid "Without crop types you cannot record a cultivation on a field."
+msgstr "Bez rodzajów upraw nie da się zapisać uprawy na polu."
+
+#: core\templates\core\fieldwork_form.html:14
+msgid "Work"
+msgstr "Praca"
+
+#: core\templates\core\dashboard.html:125
+#: core\templates\core\partials\report_summary.html:34
+msgid "Work costs"
+msgstr "Koszty prac"
+
+#: core\forms.py:426
+msgid "Work date"
+msgstr "Data wykonania"
+
+#: core\forms.py:438
+msgid "Work date is required."
+msgstr "Data wykonania jest wymagana."
+
+#: core\templates\core\fieldwork_detail.html:26
+msgid "Work details"
+msgstr "Dane pracy"
+
+#: core\templates\core\fieldwork_detail.html:4
+msgctxt "page title"
+msgid "Work details"
+msgstr "Szczegóły pracy"
+
+#: core\templates\core\fieldwork_list.html:101
+msgid "Work pages"
+msgstr "Paginacja prac"
+
+#: core\forms.py:425
+#: core\templates\core\fieldwork_list.html:48
+msgid "Work type"
+msgstr "Rodzaj pracy"
+
+#: core\templates\core\fieldwork_detail.html:10
+#, python-format
+msgid "Work · %(date)s"
+msgstr "Praca · %(date)s"
+
+#: core\templates\core\base.html:66
+#: core\templates\core\cultivation_report.html:29
+#: core\templates\core\dashboard.html:143
+#: core\templates\core\field_report.html:46
+#: core\templates\core\fieldwork_form.html:10
+msgid "Works"
+msgstr "Prace"
+
+#: core\templates\core\fieldwork_list.html:4
+msgctxt "page title"
+msgid "Works"
+msgstr "Prace"
+
+#: core\management\commands\seed_demo_data.py:142
+#, python-format
+msgid "Works created or updated: %(count)s"
+msgstr "Prace utworzone lub zaktualizowane: %(count)s"
+
+#: core\templates\core\home.html:141
+msgid "Works, sprayings and harvests are in one place, so it is easy to check what has already been done."
+msgstr "Prace, opryski i&nbsp;zbiory są w&nbsp;jednym miejscu, więc łatwo sprawdzić, co już zrobiono."
+
+#: core\templates\core\report_dashboard.html:67
+msgid "Year"
+msgstr "Rok"
+
+#: core\templates\core\fieldwork_confirm_delete.html:15
+msgid "Yes, delete"
+msgstr "Tak, usuń"
+
+#: core\templates\core\cultivation_confirm_delete.html:15
+msgid "Yes, delete cultivation"
+msgstr "Tak, usuń uprawę"
+
+#: core\templates\core\field_confirm_delete.html:15
+msgid "Yes, delete field"
+msgstr "Tak, usuń pole"
+
+#: core\templates\core\harvest_confirm_delete.html:15
+msgid "Yes, delete harvest"
+msgstr "Tak, usuń zbiór"
+
+#: core\templates\core\spraying_confirm_delete.html:15
+msgid "Yes, delete spraying"
+msgstr "Tak, usuń oprysk"
+
+#: core\templates\core\report_dashboard.html:70
+msgid "Yield"
+msgstr "Wydajność"
+
+#: core\templates\core\partials\report_summary.html:17
+#: core\templates\core\partials\report_summary.html:55
+msgid "Yield per hectare"
+msgstr "Wydajność na hektar"
+
+#: core\templates\core\dashboard.html:98
+msgid "Yield quantity and sales revenue."
+msgstr "Ilość plonu i przychód ze sprzedaży."
+
+#: core\templates\core\harvest_form.html:16
+msgid "Yield quantity, what happened to it, revenue and the cost of the harvest itself."
+msgstr "Ilość plonu, co się z nim stało, przychód i koszt samego zbioru."
+
+#: core\templates\core\partials\report_summary.html:50
+msgid "Yields"
+msgstr "Plony"
+
+#: core\templates\core\home.html:106
+msgid "You add fields and cultivations and record plowing and sowing."
+msgstr "Dodajesz pola i&nbsp;uprawy, zapisujesz orkę i&nbsp;siew."
+
+#: core\templates\core\register.html:57
+msgid "You add your first field"
+msgstr "Dodasz pierwsze pole"
+
+#: core\forms.py:210
+msgid "You already have a field with this name."
+msgstr "Masz już pole o tej nazwie."
+
+#: core\templates\core\home.html:173
+msgid "You can correct or delete any entry later."
+msgstr "Każdy wpis możesz później poprawić albo usunąć."
+
+#: core\forms.py:278
+msgid "You can only choose one of your own fields."
+msgstr "Możesz wybrać wyłącznie jedno ze swoich pól."
+
+#: core\templates\core\harvest_form.html:39
+msgid "You do not have any cultivations yet. A harvest is always recorded for a specific cultivation."
+msgstr "Nie masz jeszcze upraw. Zbiór zapisuje się zawsze przy konkretnej uprawie."
+
+#: core\templates\core\spraying_form.html:39
+msgid "You do not have any cultivations yet. A spraying is always recorded for a specific cultivation."
+msgstr "Nie masz jeszcze upraw. Oprysk zapisuje się zawsze przy konkretnej uprawie."
+
+#: core\templates\core\fieldwork_form.html:39
+msgid "You do not have any cultivations yet. A work is always recorded for a specific cultivation."
+msgstr "Nie masz jeszcze upraw. Pracę zapisuje się zawsze przy konkretnej uprawie."
+
+#: core\templates\core\cultivation_form.html:24
+msgid "You do not have any fields yet. Create a field before adding a cultivation."
+msgstr "Nie masz jeszcze żadnych pól. Utwórz pole przed dodaniem uprawy."
+
+#: core\templates\core\cultivation_list.html:26
+msgid "You do not have any fields yet. Create a field first to add a cultivation."
+msgstr "Nie masz jeszcze żadnych pól. Najpierw utwórz pole, aby dodać uprawę."
+
+#: core\templates\core\password_change.html:12
+msgid "You do not need to log in again. The new password works right away."
+msgstr "Nie trzeba logować się ponownie. Nowe hasło obowiązuje od razu."
+
+#: core\templates\core\home.html:116
+msgid "You enter the harvests and what happened to them: sale, storage or losses."
+msgstr "Wpisujesz zbiory i&nbsp;to, co się z&nbsp;nimi stało: sprzedaż, magazyn albo straty."
+
+#: core\templates\core\home.html:15
+msgid "You know what <em>every field</em> earned."
+msgstr "Wiesz, ile zarobiło <em>każde pole</em>."
+
+#: core\templates\core\register.html:53
+msgid "You log in"
+msgstr "Zalogujesz się"
+
+#: core\templates\core\home.html:111
+msgid "You note fertilizing and sprayings together with their costs."
+msgstr "Notujesz nawożenie i&nbsp;opryski razem z&nbsp;kosztami."
+
+#: core\templates\core\home.html:121
+msgid "You open the report and see which field made money and which did not."
+msgstr "Otwierasz raport i&nbsp;widzisz, które pole zarobiło, a&nbsp;które nie."
+
+#: core\templates\core\home.html:17
+msgid "You record sowing, sprayings and harvests, and Farmer App works out costs, revenue and profit for each field and each cultivation separately."
+msgstr "Zapisujesz siew, opryski i&nbsp;zbiory, a&nbsp;Farmer App liczy koszty, przychód i&nbsp;zysk osobno dla każdego pola i&nbsp;każdej uprawy."
+
+#: core\templates\core\login.html:37
+msgid "You will see your fields and how much each of them earned."
+msgstr "Zobaczysz swoje pola i&nbsp;to, ile każde z&nbsp;nich zarobiło."
+
+#: core\forms.py:88
+msgid "You will use it to log in, e.g. jan.kowalski. Letters, digits and @ . + - _ characters, no spaces."
+msgstr "Tym będziesz się logować, np. jan.kowalski. Litery, cyfry i znaki @ . + - _, bez spacji."
+
+#: core\templates\core\home.html:58
+msgid "You write down what you did. The sums do themselves."
+msgstr "Wpisujesz to, co zrobiłeś. Rachunek robi się sam."
+
+#: core\views.py:136
+msgid "Your account has been created. You can log in now."
+msgstr "Konto zostało utworzone. Możesz się teraz zalogować."
+
+#: core\templates\core\login.html:13
+msgid "Your fields, cultivations and reports are right where you left them."
+msgstr "Twoje pola, uprawy i&nbsp;raporty są tam, gdzie je zostawiłeś."
+
+#: core\views.py:228
+msgid "Your password has been changed."
+msgstr "Hasło zostało zmienione."
+
+#: core\templates\core\profile.html:10
+msgid "Your profile"
+msgstr "Twój profil"
+
+#: core\views.py:211
+msgid "Your profile has been updated."
+msgstr "Dane profilu zostały zaktualizowane."
+
+#: core\templates\core\home.html:4
+msgid "a farm notebook online"
+msgstr "zeszyt gospodarstwa w internecie"
+
+#: core\models.py:60
+msgid "address"
+msgstr "adres"
+
+#: core\models.py:52
+msgid "area (ha)"
+msgstr "powierzchnia (ha)"
+
+#: core\models.py:323
+msgid "category"
+msgstr "kategoria"
+
+#: core\models.py:163
+#: core\models.py:208
+msgid "cost"
+msgstr "koszt"
+
+#: core\templates\core\cultivation_report.html:80
+#, python-format
+msgid "cost %(amount)s zł"
+msgstr "koszt %(amount)s zł"
+
+#: core\models.py:115
+#: core\models.py:167
+#: core\models.py:18
+#: core\models.py:212
+#: core\models.py:265
+msgid "created at"
+msgstr "data utworzenia"
+
+#: core\models.py:103
+#: core\models.py:21
+msgid "crop type"
+msgstr "rodzaj uprawy"
+
+#: core\models.py:22
+msgid "crop types"
+msgstr "rodzaje upraw"
+
+#: core\models.py:118
+#: core\models.py:158
+#: core\models.py:198
+#: core\models.py:242
+msgid "cultivation"
+msgstr "uprawa"
+
+#: core\models.py:119
+msgid "cultivations"
+msgstr "uprawy"
+
+#: core\models.py:166
+#: core\models.py:17
+#: core\models.py:211
+#: core\models.py:324
+#: core\models.py:71
+msgid "description"
+msgstr "opis"
+
+#: core\models.py:330
+msgid "error report"
+msgstr "zgłoszenie błędu"
+
+#: core\models.py:331
+msgid "error reports"
+msgstr "zgłoszenia błędów"
+
+#: core\models.py:99
+msgid "field"
+msgstr "pole"
+
+#: core\models.py:76
+msgctxt "model name"
+msgid "field"
+msgstr "pole rolne"
+
+#: core\models.py:170
+msgid "field work"
+msgstr "wykonana praca"
+
+#: core\models.py:171
+msgid "field works"
+msgstr "wykonane prace"
+
+#: core\models.py:77
+msgctxt "model name"
+msgid "fields"
+msgstr "pola rolne"
+
+#: core\models.py:268
+msgid "harvest"
+msgstr "zbiór"
+
+#: core\models.py:261
+msgid "harvest cost"
+msgstr "koszt zbioru"
+
+#: core\models.py:244
+msgid "harvest date"
+msgstr "data zbioru"
+
+#: core\models.py:251
+msgid "harvest disposition"
+msgstr "przeznaczenie zbioru"
+
+#: core\templates\core\field_report.html:64
+#, python-format
+msgid "harvested %(quantity)s kg"
+msgstr "zebrano %(quantity)s kg"
+
+#: core\models.py:269
+msgid "harvests"
+msgstr "zbiory"
+
+#: core\templates\core\partials\report_summary.html:51
+msgid "in kilograms"
+msgstr "w kilogramach"
+
+#: core\models.py:62
+msgid "latitude"
+msgstr "szerokość geograficzna"
+
+#: core\models.py:58
+msgid "location method"
+msgstr "metoda lokalizacji"
+
+#: core\models.py:67
+msgid "longitude"
+msgstr "długość geograficzna"
+
+#: core\templates\core\field_report.html:66
+#, python-format
+msgid "losses %(quantity)s kg"
+msgstr "straty %(quantity)s kg"
+
+#: core\templates\core\home.html:44
+msgid "maize"
+msgstr "kukurydza"
+
+#: core\models.py:16
+#: core\models.py:50
+msgid "name"
+msgstr "nazwa"
+
+#: core\models.py:336
+msgid "new"
+msgstr "nowe"
+
+#: core\models.py:114
+#: core\models.py:264
+msgid "notes"
+msgstr "notatki"
+
+#: core\models.py:48
+msgid "owner"
+msgstr "właściciel"
+
+#: core\templates\core\field_list.html:63
+#, python-format
+msgid "parcel %(parcel)s"
+msgstr "działka %(parcel)s"
+
+#: core\models.py:56
+msgid "parcel identifier"
+msgstr "identyfikator działki"
+
+#: core\models.py:113
+msgid "planned harvest date"
+msgstr "planowana data zbioru"
+
+#: core\models.py:201
+msgid "product name"
+msgstr "nazwa środka"
+
+#: core\models.py:203
+#: core\models.py:246
+msgid "quantity"
+msgstr "ilość"
+
+#: core\templates\core\home.html:39
+msgid "rapeseed"
+msgstr "rzepak"
+
+#: core\models.py:257
+msgid "revenue"
+msgstr "przychód"
+
+#: core\templates\core\cultivation_report.html:79
+#, python-format
+msgid "revenue %(amount)s zł"
+msgstr "przychód %(amount)s zł"
+
+#: core\templates\core\cultivation_detail.html:112
+#: core\templates\core\harvest_list.html:97
+#, python-format
+msgid "revenue %(revenue)s zł · cost %(cost)s zł"
+msgstr "przychód %(revenue)s zł · koszt %(cost)s zł"
+
+#: core\templates\core\field_report.html:72
+#, python-format
+msgid "revenue %(revenue)s zł · costs %(costs)s zł"
+msgstr "przychód %(revenue)s zł · koszty %(costs)s zł"
+
+#: core\templates\core\harvest_list.html:91
+#, python-format
+msgid "season %(year)s"
+msgstr "sezon %(year)s"
+
+#: core\models.py:106
+msgid "season year"
+msgstr "rok sezonu"
+
+#: core\models.py:55
+msgid "soil type"
+msgstr "rodzaj gleby"
+
+#: core\models.py:112
+msgid "sowing date"
+msgstr "data siewu"
+
+#: core\templates\core\cultivation_list.html:80
+#: core\templates\core\field_detail.html:57
+#, python-format
+msgid "sown %(date)s"
+msgstr "siew %(date)s"
+
+#: core\models.py:215
+msgid "spraying"
+msgstr "oprysk"
+
+#: core\models.py:200
+msgid "spraying date"
+msgstr "data oprysku"
+
+#: core\models.py:216
+msgid "sprayings"
+msgstr "opryski"
+
+#: core\models.py:111
+#: core\models.py:325
+msgid "status"
+msgstr "status"
+
+#: core\models.py:206
+#: core\models.py:249
+msgid "unit"
+msgstr "jednostka"
+
+#: core\models.py:327
+#: core\models.py:73
+msgid "updated at"
+msgstr "data aktualizacji"
+
+#: core\models.py:321
+msgid "user"
+msgstr "użytkownik"
+
+#: core\templates\core\home.html:34
+msgid "wheat"
+msgstr "pszenica"
+
+#: core\models.py:161
+msgid "work date"
+msgstr "data wykonania"
+
+#: core\models.py:160
+msgid "work type"
+msgstr "rodzaj pracy"
+
+#: core\templates\core\field_report.html:65
+msgid "yield"
+msgstr "wydajność"

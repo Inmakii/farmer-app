@@ -1,0 +1,10 @@
+{# Non-field errors and every form field, each rendered with form_field.html. #}
+{% if form.non_field_errors %}
+    <div class="form-alert" role="alert">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+    </div>
+{% endif %}
+{% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+{% for field in form.visible_fields %}
+    {% include "core/partials/form_field.html" %}
+{% endfor %}

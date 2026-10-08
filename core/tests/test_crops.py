@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import NoReverseMatch, reverse
 
-from .forms import CropForm, CultivationForm
-from .models import Crop, Field
+from ..forms import CropForm, CultivationForm
+from ..models import Crop, Field
 
 DUPLICATE_ERROR = "Rodzaj uprawy o tej nazwie już istnieje."
 REQUIRED_ERROR = "Nazwa rodzaju uprawy jest wymagana."

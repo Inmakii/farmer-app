@@ -1,22 +1,26 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Dodawanie rodzaju uprawy – Farmer App{% endblock %}
+{% block title %}{% translate "Add crop type" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Dodaj rodzaj uprawy</h1>
-    <p>Dodany rodzaj uprawy będzie widoczny dla wszystkich użytkowników aplikacji.</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for form_field in form %}
-            <p>
-                {{ form_field.label_tag }}
-                {{ form_field }}
-                {% if form_field.help_text %}<small>{{ form_field.help_text }}</small>{% endif %}
-                {{ form_field.errors }}
-            </p>
-        {% endfor %}
-        <button type="submit">Zapisz</button>
-        <a href="{% url 'core:crop_list' %}">Anuluj</a>
-    </form>
+    <a class="back-link" href="{% url 'core:crop_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Crop types" %}</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">{% translate "Catalogue" %}</p>
+            <h1>{% translate "Add crop type" %}</h1>
+            <p class="page-head-lead">{% translate "The new crop type will be visible to all users of the app." %}</p>
+        </div>
+    </header>
+
+    <div class="sheet app-form">
+        <form method="post" data-busy-form>
+            {% csrf_token %}
+            {% include "core/partials/form_body.html" %}
+            <div class="form-actions">
+                <button class="button" type="submit" data-busy-label="{% translate "Saving…" %}">{% translate "Save" %}</button>
+                <a class="button button-text" href="{% url 'core:crop_list' %}">{% translate "Cancel" %}</a>
+            </div>
+        </form>
+    </div>
 {% endblock %}

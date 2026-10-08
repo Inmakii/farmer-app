@@ -1,25 +1,36 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Rodzaje upraw – Farmer App{% endblock %}
+{% block title %}{% translate "Crop types" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <header>
-        <h1>Rodzaje upraw</h1>
-        <a class="button" href="{% url 'core:crop_create' %}">Dodaj rodzaj uprawy</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">{% translate "Catalogue" %}</p>
+            <h1>{% translate "Crop types" %}</h1>
+            <p class="page-head-lead">{% translate "The crop type catalogue is shared by all users. If a type you need is missing, you can add it." %}</p>
+        </div>
+        <div class="page-actions">
+            <a class="button" href="{% url 'core:crop_create' %}">{% translate "Add crop type" %}</a>
+        </div>
     </header>
 
-    <p>Katalog rodzajów upraw jest wspólny dla wszystkich użytkowników. Jeżeli brakuje potrzebnego rodzaju, możesz go dodać.</p>
-
     {% if crops %}
-        <ul>
+        <p class="result-count">{% blocktranslate with count=crops|length %}In the catalogue: {{ count }}{% endblocktranslate %}</p>
+        <ul class="catalog">
             {% for crop in crops %}
                 <li>
-                    <strong>{{ crop.name }}</strong>{% if crop.description %} – {{ crop.description }}{% endif %}
+                    <strong>{{ crop.name }}</strong>
+                    {% if crop.description %}<span>{{ crop.description }}</span>{% endif %}
                 </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>Katalog rodzajów upraw jest pusty.</p>
-        <p><a href="{% url 'core:crop_create' %}">Dodaj pierwszy rodzaj uprawy</a></p>
+        <div class="empty">
+            <span class="empty-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg></span>
+            <strong>{% translate "The crop type catalogue is empty." %}</strong>
+            <p>{% translate "Without crop types you cannot record a cultivation on a field." %}</p>
+            <a class="button button-secondary" href="{% url 'core:crop_create' %}">{% translate "Add the first crop type" %}</a>
+        </div>
     {% endif %}
 {% endblock %}

@@ -14,6 +14,8 @@ Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządz
 - rozróżnienie zbiorów sprzedanych, magazynowanych oraz zutylizowanych;
 - zgłaszanie błędów i podgląd własnych zgłoszeń;
 - edycja i usuwanie rodzajów upraw oraz obsługa statusów zgłoszeń w Django Admin;
+- uwierzytelnianie JWT dla klientów API z tokenami access i refresh (z limitem żądań);
+- blokada logowania po 5 nieudanych próbach (15 minut, per IP i nazwa użytkownika);
 - jasny i ciemny motyw z przełącznikiem w nagłówku;
 - idempotentna komenda przygotowująca dane demonstracyjne;
 - izolacja danych każdego właściciela oraz testy bezpieczeństwa.
@@ -22,6 +24,7 @@ Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządz
 
 - Python 3.14.6;
 - Django 6.0.7;
+- Django REST Framework 3.18.1 i SimpleJWT 5.5.1;
 - MySQL Server 8.0.46 i MySQL Workbench;
 - SQLite jako opcjonalna baza lokalna i baza testowa;
 - mysqlclient 2.2.8;
@@ -50,8 +53,9 @@ farmer-app-main/
 │   ├── services/                 # agregacje raportów finansowych
 │   ├── static/core/              # style CSS i skrypty motywu
 │   ├── templates/core/           # proste szablony Django
+│   ├── tests/                    # testy modeli, widoków, API i bezpieczeństwa
 │   ├── forms.py, views.py        # formularze i widoki
-│   └── test_*.py                 # testy funkcjonalne i bezpieczeństwa
+│   └── api_views.py              # chronione endpointy API
 ├── docs/
 │   ├── database/                 # eksport schematu SQL
 │   ├── diagrams/                 # ERD i model Workbench
@@ -139,7 +143,7 @@ DB_HOST=localhost
 DB_PORT=3306
 ```
 
-`DJANGO_DEBUG=False` należy stosować poza środowiskiem deweloperskim. `DJANGO_ALLOWED_HOSTS` jest listą nazw oddzielonych przecinkami. Gdy `DB_ENGINE` nie ma wartości `mysql`, aplikacja korzysta z SQLite.
+Domyślnie (bez zmiennej) `DJANGO_DEBUG` ma wartość `False`; lokalnie ustaw `DJANGO_DEBUG=True` w `.env`. `DJANGO_DEBUG=False` należy stosować poza środowiskiem deweloperskim. `DJANGO_ALLOWED_HOSTS` jest listą nazw oddzielonych przecinkami. Gdy `DB_ENGINE` nie ma wartości `mysql`, aplikacja korzysta z SQLite.
 
 ## Przygotowanie MySQL
 
@@ -187,6 +191,26 @@ python manage.py seed_demo_data --username admin
 
 Tworzy lub aktualizuje rodzaje upraw, dwa pola, uprawy sezonu 2026, prace, opryski i zbiory. Ponowne uruchomienie dla tego samego użytkownika nie duplikuje danych.
 
+## Uwierzytelnianie JWT
+
+JWT działa równolegle ze zwykłymi sesjami używanymi przez strony HTML i panel
+administracyjny. Dostępne endpointy:
+
+- `POST /api/auth/token/` — wydanie tokenów `access` i `refresh` na podstawie nazwy użytkownika i hasła;
+- `POST /api/auth/token/refresh/` — wydanie nowego tokenu `access`;
+- `POST /api/auth/token/verify/` — sprawdzenie poprawności tokenu;
+- `GET /api/auth/me/` — dane aktualnego użytkownika, wymagany nagłówek `Authorization: Bearer <access>`.
+
+Token `access` jest ważny 15 minut, a `refresh` jeden dzień. Przykładowe pobranie
+tokenów w PowerShell:
+
+```powershell
+$body = @{username = "admin"; password = "twoje-haslo"} | ConvertTo-Json
+$tokens = Invoke-RestMethod -Method Post `
+    -Uri http://127.0.0.1:8000/api/auth/token/ `
+    -ContentType "application/json" -Body $body
+```
+
 ## Testy na SQLite
 
 ```powershell
@@ -197,7 +221,14 @@ python manage.py test
 Remove-Item Env:DB_ENGINE
 ```
 
-Pakiet zawiera obecnie 298 testów; wszystkie przechodzą na tymczasowej bazie SQLite. Django tworzy oddzielną bazę testową i usuwa ją po zakończeniu testów. Przy testach bezpośrednio na MySQL konto bazy musi zwykle mieć uprawnienie `CREATE`, ponieważ Django tworzy tymczasową bazę z prefiksem `test_`. Zalecanym wariantem lokalnym pozostaje SQLite.
+Wszystkie testy znajdują się w osobnym pakiecie `core/tests/`. Wyłącznie testy
+JWT można uruchomić poleceniem:
+
+```powershell
+python manage.py test core.tests.test_jwt_auth
+```
+
+Django tworzy oddzielną bazę testową i usuwa ją po zakończeniu testów. Przy testach bezpośrednio na MySQL konto bazy musi zwykle mieć uprawnienie `CREATE`, ponieważ Django tworzy tymczasową bazę z prefiksem `test_`. Zalecanym wariantem lokalnym pozostaje SQLite.
 
 ## Workflow Git
 

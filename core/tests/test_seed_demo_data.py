@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.management import CommandError, call_command
 from django.test import TestCase
 
-from .models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
+from ..models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
 
 
 class SeedDemoDataCommandTests(TestCase):

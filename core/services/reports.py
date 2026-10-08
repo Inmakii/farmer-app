@@ -50,7 +50,7 @@ def _harvest_aggregates():
 
 
 def calculate_totals(cultivations_queryset):
-    """Zwraca bezpiecznie zagregowane kwoty, liczniki, powierzchnię i wydajność."""
+    """Return safely aggregated amounts, counts, area and yield."""
 
     works = FieldWork.objects.filter(cultivation__in=cultivations_queryset).aggregate(
         work_costs=_sum("cost"),
@@ -123,14 +123,14 @@ def calculate_totals(cultivations_queryset):
         "spraying_count": sprayings["spraying_count"],
         "harvest_count": harvests["harvest_count"],
 
-        # Nowe dane dotyczące wydajności.
+        # Yield data.
         "total_area_ha": total_area,
         "yield_kg_per_ha": yield_kg_per_ha,
     }
 
 
 def get_cultivation_reports(cultivations_queryset):
-    """Buduje raporty wielu upraw stałą liczbą zapytań, bez problemu N+1."""
+    """Build reports for many cultivations with a fixed number of queries (no N+1)."""
 
     cultivations = list(
         cultivations_queryset.select_related("field", "crop").order_by(
@@ -250,7 +250,7 @@ def get_cultivation_reports(cultivations_queryset):
 
 
 def get_cultivation_report(cultivation):
-    """Zwraca podsumowanie i zdarzenia jednej, wcześniej autoryzowanej uprawy."""
+    """Return the summary and events of a single, already authorised cultivation."""
 
     queryset = Cultivation.objects.filter(pk=cultivation.pk)
 
@@ -277,7 +277,7 @@ def get_cultivation_report(cultivation):
 
 
 def get_field_report(field, season_year=None):
-    """Zwraca raport pola, opcjonalnie ograniczony do jednego sezonu."""
+    """Return the field report, optionally limited to one season."""
 
     queryset = Cultivation.objects.filter(field=field)
 
@@ -310,7 +310,7 @@ def get_field_report(field, season_year=None):
 
 
 def get_user_report(user, field=None, season_year=None):
-    """Zwraca raport wyłącznie z pól wskazanego użytkownika."""
+    """Return a report built only from the given user's fields."""
 
     queryset = Cultivation.objects.filter(
         field__owner=user

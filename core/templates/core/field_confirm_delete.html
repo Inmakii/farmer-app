@@ -1,13 +1,19 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Usuwanie pola – Farmer App{% endblock %}
+{% block title %}{% translate "Delete field" context "page title" %} – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Usuń pole</h1>
-    <p>Czy na pewno chcesz usunąć pole „{{ field.name }}”?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Tak, usuń pole</button>
-        <a href="{% url 'core:field_detail' field.pk %}">Anuluj</a>
-    </form>
+    <a class="back-link" href="{% url 'core:field_detail' field.pk %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Back" %}</a>
+    <div class="sheet confirm">
+        <span class="confirm-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg></span>
+        <h1>{% translate "Delete field" %}</h1>
+        <p class="confirm-text">{% blocktranslate with name=field.name %}Are you sure you want to delete the field “{{ name }}”?{% endblocktranslate %}</p>
+        <p class="confirm-note">{% translate "The cultivations, works, sprayings and harvests recorded on this field will be deleted with it. This cannot be undone." %}</p>
+        <form method="post" class="form-actions" data-busy-form>
+            {% csrf_token %}
+            <button class="button button-danger" type="submit" data-busy-label="{% translate "Deleting…" %}">{% translate "Yes, delete field" %}</button>
+            <a class="button button-text" href="{% url 'core:field_detail' field.pk %}">{% translate "Cancel" %}</a>
+        </form>
+    </div>
 {% endblock %}

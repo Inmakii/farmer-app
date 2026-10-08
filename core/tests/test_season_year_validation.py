@@ -6,9 +6,9 @@ from django.core.exceptions import ValidationError
 from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
 
-from .forms import CultivationForm, FieldWorkForm
-from .models import Crop, Cultivation, Field, FieldWork
-from .views import parse_season_year
+from ..forms import CultivationForm, FieldWorkForm
+from ..models import Crop, Cultivation, Field, FieldWork
+from ..views import parse_season_year
 
 SOWING_YEAR_ERROR = "Rok daty siewu musi być zgodny z rokiem sezonu."
 SOWING_WORK_YEAR_ERROR = "Rok daty siewu musi być zgodny z rokiem sezonu uprawy."

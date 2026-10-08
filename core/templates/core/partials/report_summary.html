@@ -1,0 +1,62 @@
+{# Report summary: money and yield. Expects t (totals or report) and area (ha). #}
+{% load i18n %}
+<dl class="tally" aria-label="{% translate "Key figures" %}">
+    <div>
+        <dt>{% translate "Revenue" %}</dt>
+        <dd>{{ t.total_revenue|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+    <div>
+        <dt>{% translate "Total costs" %}</dt>
+        <dd>{{ t.total_costs|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+    <div class="{% if t.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+        <dt>{% translate "Profit/loss" %}</dt>
+        <dd>{{ t.profit|floatformat:"2g" }}<small>zł</small></dd>
+    </div>
+    <div>
+        <dt>{% translate "Yield per hectare" %}</dt>
+        <dd>{{ t.yield_kg_per_ha|floatformat:"2g" }}<small>kg/ha</small></dd>
+    </div>
+</dl>
+
+<div class="balance-grid">
+    <figure class="sheet" aria-labelledby="summary-money-title">
+        <div class="sheet-head">
+            <strong id="summary-money-title">{% translate "Balance" %}</strong>
+            <span>{{ area|floatformat:"2g" }} ha</span>
+        </div>
+        <table class="sheet-table">
+            <thead>
+                <tr><th scope="col">{% translate "Item" %}</th><th scope="col" class="num">{% translate "Amount" %}</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>{% translate "Revenue" %}</td><td class="num is-in">+{{ t.total_revenue|floatformat:"2g" }} zł</td></tr>
+                <tr><td>{% translate "Work costs" %}</td><td class="num">−{{ t.work_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>{% translate "Spraying costs" %}</td><td class="num">−{{ t.spraying_costs|floatformat:"2g" }} zł</td></tr>
+                <tr><td>{% translate "Harvest costs" %}</td><td class="num">−{{ t.harvest_costs|floatformat:"2g" }} zł</td></tr>
+            </tbody>
+            <tfoot>
+                <tr><th scope="row">{% translate "Total costs" %}</th><td class="num">{{ t.total_costs|floatformat:"2g" }} zł</td></tr>
+                <tr class="sheet-result {% if t.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+                    <th scope="row">{% translate "Profit/loss" %}</th>
+                    <td class="num">{{ t.profit|floatformat:"2g" }} zł</td>
+                </tr>
+            </tfoot>
+        </table>
+    </figure>
+
+    <section class="sheet" aria-labelledby="summary-yield-title">
+        <div class="sheet-title">
+            <h2 id="summary-yield-title">{% translate "Yields" %}</h2>
+            <span class="sheet-title-note">{% translate "in kilograms" %}</span>
+        </div>
+        <dl class="facts">
+            <div class="fact-key"><dt>{% translate "Harvested in total" %}</dt><dd>{{ t.total_quantity_kg|floatformat:"2g" }} kg</dd></div>
+            <div class="fact-key"><dt>{% translate "Yield per hectare" %}</dt><dd>{{ t.yield_kg_per_ha|floatformat:"2g" }} kg/ha</dd></div>
+            <div><dt>{% translate "Sold" context "harvested quantity" %}</dt><dd>{{ t.sold_quantity_kg|floatformat:"2g" }} kg</dd></div>
+            <div><dt>{% translate "In storage" %}</dt><dd>{{ t.stored_quantity_kg|floatformat:"2g" }} kg</dd></div>
+            <div><dt>{% translate "Losses / disposal" %}</dt><dd>{{ t.discarded_quantity_kg|floatformat:"2g" }} kg</dd></div>
+            <div><dt>{% translate "Area" %}</dt><dd>{{ area|floatformat:"2g" }} ha</dd></div>
+        </dl>
+    </section>
+</div>

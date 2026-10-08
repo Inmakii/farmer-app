@@ -1,53 +1,71 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
 {% block title %}{{ field.name }} – Farmer App{% endblock %}
 
 {% block content %}
-    <article>
-        <h1>{{ field.name }}</h1>
-        <dl>
-            <dt>Powierzchnia</dt>
-            <dd>{{ field.area_ha }} ha</dd>
-            <dt>Rodzaj gleby</dt>
-            <dd>{{ field.get_soil_type_display }}</dd>
-            <dt>Sposób lokalizacji</dt>
-            <dd>{{ field.get_location_method_display }}</dd>
-            <dt>Identyfikator działki</dt>
-            <dd>{{ field.parcel_identifier|default:"—" }}</dd>
-            <dt>Adres</dt>
-            <dd>{{ field.address|default:"—" }}</dd>
-            <dt>Szerokość geograficzna</dt>
-            <dd>{{ field.latitude|default_if_none:"—" }}</dd>
-            <dt>Długość geograficzna</dt>
-            <dd>{{ field.longitude|default_if_none:"—" }}</dd>
-            <dt>Opis</dt>
-            <dd>{{ field.description|default:"—" }}</dd>
+    <a class="back-link" href="{% url 'core:field_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Back to the list" %}</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">{% translate "Field" %}</p>
+            <h1>{{ field.name }}</h1>
+            <p class="page-head-lead">{{ field.area_ha|floatformat:"2g" }} ha · {{ field.get_soil_type_display }}</p>
+        </div>
+        <div class="page-actions">
+            <a class="button button-secondary" href="{% url 'core:field_report' field.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg>{% translate "Field report" %}
+            </a>
+            <a class="button button-secondary" href="{% url 'core:field_update' field.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg>{% translate "Edit" %}
+            </a>
+            <a class="button button-text" href="{% url 'core:field_delete' field.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>{% translate "Delete" %}
+            </a>
+        </div>
+    </header>
+
+    <article class="sheet" aria-labelledby="field-data-title">
+        <div class="sheet-title">
+            <h2 id="field-data-title">{% translate "Field data" %}</h2>
+        </div>
+        <dl class="facts">
+            <div class="fact-key"><dt>{% translate "Area" %}</dt><dd>{{ field.area_ha|floatformat:"2g" }} ha</dd></div>
+            <div><dt>{% translate "Soil type" %}</dt><dd>{{ field.get_soil_type_display }}</dd></div>
+            <div><dt>{% translate "Location method" %}</dt><dd>{{ field.get_location_method_display }}</dd></div>
+            <div><dt>{% translate "Parcel identifier" %}</dt><dd>{{ field.parcel_identifier|default:"—" }}</dd></div>
+            <div><dt>{% translate "Address" %}</dt><dd>{{ field.address|default:"—" }}</dd></div>
+            <div><dt>{% translate "Latitude" %}</dt><dd>{{ field.latitude|default_if_none:"—" }}</dd></div>
+            <div><dt>{% translate "Longitude" %}</dt><dd>{{ field.longitude|default_if_none:"—" }}</dd></div>
+            <div class="fact-wide"><dt>{% translate "Description" %}</dt><dd>{{ field.description|default:"—"|linebreaksbr }}</dd></div>
         </dl>
-        <p>
-            <a href="{% url 'core:field_list' %}">Wróć do listy</a>
-            <a href="{% url 'core:field_update' field.pk %}">Edytuj</a>
-            <a href="{% url 'core:field_delete' field.pk %}">Usuń</a>
-            <a href="{% url 'core:field_report' field.pk %}">Raport pola</a>
-        </p>
     </article>
 
-    <section>
-        <h2>Uprawy na tym polu</h2>
-        <p>
-            <a href="{% url 'core:cultivation_create' %}?field={{ field.pk }}">Dodaj uprawę</a>
-        </p>
+    <section class="block" aria-labelledby="field-cultivations-title">
+        <div class="block-head">
+            <h2 id="field-cultivations-title">{% translate "Cultivations on this field" %}</h2>
+            <a class="button button-secondary" href="{% url 'core:cultivation_create' %}?field={{ field.pk }}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Add cultivation" %}
+            </a>
+        </div>
         {% if field.cultivations.all %}
-            <ul>
+            <ul class="records">
                 {% for cultivation in field.cultivations.all %}
-                    <li>
-                        {{ cultivation.crop.name }} – sezon {{ cultivation.season_year }},
-                        {{ cultivation.get_status_display }}
-                        <a href="{% url 'core:cultivation_detail' cultivation.pk %}">Szczegóły</a>
+                    <li class="record">
+                        <div class="record-main">
+                            <span class="record-date">{% blocktranslate with year=cultivation.season_year %}Season {{ year }}{% endblocktranslate %}</span>
+                            <a class="record-title" href="{% url 'core:cultivation_detail' cultivation.pk %}">{{ cultivation.crop.name }}</a>
+                            {% if cultivation.sowing_date %}<p class="record-meta"><span>{% blocktranslate with date=cultivation.sowing_date|date:"d.m.Y" %}sown {{ date }}{% endblocktranslate %}</span></p>{% endif %}
+                        </div>
+                        <div class="record-side">
+                            <span class="tag tag-{{ cultivation.status|lower }}">{{ cultivation.get_status_display }}</span>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Na tym polu nie zarejestrowano jeszcze żadnych upraw.</p>
+            <div class="empty empty-compact">
+                <p>{% translate "No cultivations have been recorded on this field yet." %}</p>
+            </div>
         {% endif %}
     </section>
 {% endblock %}

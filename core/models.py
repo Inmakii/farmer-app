@@ -5,19 +5,21 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Q
+from django.utils.translation import gettext, pgettext_lazy
+from django.utils.translation import gettext_lazy as _
 
 SEASON_YEAR_MIN = 1980
 SEASON_YEAR_MAX = 2100
 
 
 class Crop(models.Model):
-    name = models.CharField("nazwa", max_length=100, unique=True)
-    description = models.TextField("opis", blank=True)
-    created_at = models.DateTimeField("data utworzenia", auto_now_add=True)
+    name = models.CharField(_("name"), max_length=100, unique=True)
+    description = models.TextField(_("description"), blank=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     class Meta:
-        verbose_name = "rodzaj uprawy"
-        verbose_name_plural = "rodzaje upraw"
+        verbose_name = _("crop type")
+        verbose_name_plural = _("crop types")
         ordering = ["name"]
 
     def __str__(self):
@@ -26,53 +28,53 @@ class Crop(models.Model):
 
 class Field(models.Model):
     class SoilType(models.TextChoices):
-        SANDY = "SANDY", "Gleba piaszczysta"
-        CLAY = "CLAY", "Gleba gliniasta"
-        LOAMY = "LOAMY", "Gleba ilasta"
-        SILT = "SILT", "Gleba pyłowa"
-        PEAT = "PEAT", "Gleba torfowa"
-        OTHER = "OTHER", "Inna"
+        SANDY = "SANDY", _("Sandy soil")
+        CLAY = "CLAY", _("Clay soil")
+        LOAMY = "LOAMY", _("Loamy soil")
+        SILT = "SILT", _("Silt soil")
+        PEAT = "PEAT", _("Peat soil")
+        OTHER = "OTHER", pgettext_lazy("soil type", "Other")
 
     class LocationMethod(models.TextChoices):
-        ADDRESS = "ADDRESS", "Adres"
-        GPS = "GPS", "Współrzędne GPS"
-        MAP = "MAP", "Punkt na mapie"
-        PARCEL = "PARCEL", "Identyfikator działki"
+        ADDRESS = "ADDRESS", _("Address")
+        GPS = "GPS", _("GPS coordinates")
+        MAP = "MAP", _("Point on a map")
+        PARCEL = "PARCEL", _("Parcel identifier")
 
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="fields",
-        verbose_name="właściciel",
+        verbose_name=_("owner"),
     )
-    name = models.CharField("nazwa", max_length=150)
+    name = models.CharField(_("name"), max_length=150)
     area_ha = models.DecimalField(
-        "powierzchnia (ha)", max_digits=10, decimal_places=2,
+        _("area (ha)"), max_digits=10, decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
     )
-    soil_type = models.CharField("rodzaj gleby", max_length=10, choices=SoilType.choices)
-    parcel_identifier = models.CharField("identyfikator działki", max_length=100, blank=True)
+    soil_type = models.CharField(_("soil type"), max_length=10, choices=SoilType.choices)
+    parcel_identifier = models.CharField(_("parcel identifier"), max_length=100, blank=True)
     location_method = models.CharField(
-        "metoda lokalizacji", max_length=10, choices=LocationMethod.choices
+        _("location method"), max_length=10, choices=LocationMethod.choices
     )
-    address = models.CharField("adres", max_length=255, blank=True)
+    address = models.CharField(_("address"), max_length=255, blank=True)
     latitude = models.DecimalField(
-        "szerokość geograficzna", max_digits=9, decimal_places=6,
+        _("latitude"), max_digits=9, decimal_places=6,
         null=True, blank=True,
         validators=[MinValueValidator(Decimal("-90")), MaxValueValidator(Decimal("90"))],
     )
     longitude = models.DecimalField(
-        "długość geograficzna", max_digits=9, decimal_places=6,
+        _("longitude"), max_digits=9, decimal_places=6,
         null=True, blank=True,
         validators=[MinValueValidator(Decimal("-180")), MaxValueValidator(Decimal("180"))],
     )
-    description = models.TextField("opis", blank=True)
-    created_at = models.DateTimeField("data utworzenia", auto_now_add=True)
-    updated_at = models.DateTimeField("data aktualizacji", auto_now=True)
+    description = models.TextField(_("description"), blank=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("updated at"), auto_now=True)
 
     class Meta:
-        verbose_name = "pole rolne"
-        verbose_name_plural = "pola rolne"
+        verbose_name = pgettext_lazy("model name", "field")
+        verbose_name_plural = pgettext_lazy("model name", "fields")
         ordering = ["name"]
         constraints = [
             models.CheckConstraint(
@@ -89,32 +91,32 @@ class Field(models.Model):
 
 class Cultivation(models.Model):
     class Status(models.TextChoices):
-        PLANNED = "PLANNED", "Planowana"
-        ACTIVE = "ACTIVE", "Aktywna"
-        COMPLETED = "COMPLETED", "Zakończona"
+        PLANNED = "PLANNED", _("Planned")
+        ACTIVE = "ACTIVE", _("Active")
+        COMPLETED = "COMPLETED", _("Completed")
 
     field = models.ForeignKey(
-        Field, on_delete=models.CASCADE, related_name="cultivations", verbose_name="pole"
+        Field, on_delete=models.CASCADE, related_name="cultivations", verbose_name=_("field")
     )
     crop = models.ForeignKey(
         Crop, on_delete=models.PROTECT, related_name="cultivations",
-        verbose_name="rodzaj uprawy",
+        verbose_name=_("crop type"),
     )
     season_year = models.PositiveSmallIntegerField(
-        "rok sezonu", validators=[
+        _("season year"), validators=[
             MinValueValidator(SEASON_YEAR_MIN),
             MaxValueValidator(SEASON_YEAR_MAX),
         ],
     )
-    status = models.CharField("status", max_length=10, choices=Status.choices)
-    sowing_date = models.DateField("data siewu", null=True, blank=True)
-    planned_harvest_date = models.DateField("planowana data zbioru", null=True, blank=True)
-    notes = models.TextField("notatki", blank=True)
-    created_at = models.DateTimeField("data utworzenia", auto_now_add=True)
+    status = models.CharField(_("status"), max_length=10, choices=Status.choices)
+    sowing_date = models.DateField(_("sowing date"), null=True, blank=True)
+    planned_harvest_date = models.DateField(_("planned harvest date"), null=True, blank=True)
+    notes = models.TextField(_("notes"), blank=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     class Meta:
-        verbose_name = "uprawa"
-        verbose_name_plural = "uprawy"
+        verbose_name = _("cultivation")
+        verbose_name_plural = _("cultivations")
         ordering = ["-season_year", "field__name", "crop__name"]
         constraints = [
             models.UniqueConstraint(
@@ -128,43 +130,45 @@ class Cultivation(models.Model):
         errors = {}
         if (self.sowing_date and self.season_year
                 and self.sowing_date.year != self.season_year):
-            errors["sowing_date"] = "Rok daty siewu musi być zgodny z rokiem sezonu."
+            errors["sowing_date"] = gettext("The sowing date year must match the season year.")
         if (self.sowing_date and self.planned_harvest_date
                 and self.planned_harvest_date < self.sowing_date):
-            errors["planned_harvest_date"] = (
-                "Planowana data zbioru nie może być wcześniejsza od daty siewu."
+            errors["planned_harvest_date"] = gettext(
+                "The planned harvest date cannot be earlier than the sowing date."
             )
         if errors:
             raise ValidationError(errors)
 
     def __str__(self):
-        return f"{self.crop} na polu {self.field.name} ({self.season_year})"
+        return gettext("%(crop)s on field %(field)s (%(year)s)") % {
+            "crop": self.crop, "field": self.field.name, "year": self.season_year,
+        }
 
 
 class FieldWork(models.Model):
     class WorkType(models.TextChoices):
-        PLOWING = "PLOWING", "Orka"
-        SOWING = "SOWING", "Siew"
-        FERTILIZING = "FERTILIZING", "Nawożenie"
-        WATERING = "WATERING", "Nawadnianie"
-        WEEDING = "WEEDING", "Odchwaszczanie"
-        OTHER = "OTHER", "Inna"
+        PLOWING = "PLOWING", _("Plowing")
+        SOWING = "SOWING", _("Sowing")
+        FERTILIZING = "FERTILIZING", _("Fertilizing")
+        WATERING = "WATERING", _("Watering")
+        WEEDING = "WEEDING", _("Weeding")
+        OTHER = "OTHER", pgettext_lazy("work type", "Other")
 
     cultivation = models.ForeignKey(
-        Cultivation, on_delete=models.CASCADE, related_name="works", verbose_name="uprawa"
+        Cultivation, on_delete=models.CASCADE, related_name="works", verbose_name=_("cultivation")
     )
-    work_type = models.CharField("rodzaj pracy", max_length=12, choices=WorkType.choices)
-    work_date = models.DateField("data wykonania")
+    work_type = models.CharField(_("work type"), max_length=12, choices=WorkType.choices)
+    work_date = models.DateField(_("work date"))
     cost = models.DecimalField(
-        "koszt", max_digits=12, decimal_places=2, default=0,
+        _("cost"), max_digits=12, decimal_places=2, default=0,
         validators=[MinValueValidator(Decimal("0"))],
     )
-    description = models.TextField("opis", blank=True)
-    created_at = models.DateTimeField("data utworzenia", auto_now_add=True)
+    description = models.TextField(_("description"), blank=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     class Meta:
-        verbose_name = "wykonana praca"
-        verbose_name_plural = "wykonane prace"
+        verbose_name = _("field work")
+        verbose_name_plural = _("field works")
         ordering = ["-work_date", "-created_at"]
         constraints = [models.CheckConstraint(
             condition=Q(cost__gte=0), name="core_fieldwork_cost_gte_zero"
@@ -176,7 +180,7 @@ class FieldWork(models.Model):
                 and self.cultivation_id
                 and self.work_date.year != self.cultivation.season_year):
             raise ValidationError({
-                "work_date": "Rok daty siewu musi być zgodny z rokiem sezonu uprawy."
+                "work_date": gettext("The sowing date year must match the cultivation season year.")
             })
 
     def __str__(self):
@@ -191,25 +195,25 @@ class Spraying(models.Model):
         G = "G", "g"
 
     cultivation = models.ForeignKey(
-        Cultivation, on_delete=models.CASCADE, related_name="sprayings", verbose_name="uprawa"
+        Cultivation, on_delete=models.CASCADE, related_name="sprayings", verbose_name=_("cultivation")
     )
-    spraying_date = models.DateField("data oprysku")
-    product_name = models.CharField("nazwa środka", max_length=150)
+    spraying_date = models.DateField(_("spraying date"))
+    product_name = models.CharField(_("product name"), max_length=150)
     quantity = models.DecimalField(
-        "ilość", max_digits=10, decimal_places=2,
+        _("quantity"), max_digits=10, decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
     )
-    unit = models.CharField("jednostka", max_length=2, choices=Unit.choices)
+    unit = models.CharField(_("unit"), max_length=2, choices=Unit.choices)
     cost = models.DecimalField(
-        "koszt", max_digits=12, decimal_places=2, default=0,
+        _("cost"), max_digits=12, decimal_places=2, default=0,
         validators=[MinValueValidator(Decimal("0"))],
     )
-    description = models.TextField("opis", blank=True)
-    created_at = models.DateTimeField("data utworzenia", auto_now_add=True)
+    description = models.TextField(_("description"), blank=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     class Meta:
-        verbose_name = "oprysk"
-        verbose_name_plural = "opryski"
+        verbose_name = _("spraying")
+        verbose_name_plural = _("sprayings")
         ordering = ["-spraying_date", "-created_at"]
         constraints = [
             models.CheckConstraint(
@@ -230,39 +234,39 @@ class Harvest(models.Model):
         T = "T", "t"
 
     class Disposition(models.TextChoices):
-        SOLD = "SOLD", "Sprzedany"
-        STORED = "STORED", "Pozostawiony w magazynie"
-        DISCARDED = "DISCARDED", "Strata / zutylizowany"
+        SOLD = "SOLD", _("Sold")
+        STORED = "STORED", _("Kept in storage")
+        DISCARDED = "DISCARDED", _("Loss / discarded")
 
     cultivation = models.ForeignKey(
-        Cultivation, on_delete=models.CASCADE, related_name="harvests", verbose_name="uprawa"
+        Cultivation, on_delete=models.CASCADE, related_name="harvests", verbose_name=_("cultivation")
     )
-    harvest_date = models.DateField("data zbioru")
+    harvest_date = models.DateField(_("harvest date"))
     quantity = models.DecimalField(
-        "ilość", max_digits=12, decimal_places=2,
+        _("quantity"), max_digits=12, decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
     )
-    unit = models.CharField("jednostka", max_length=2, choices=Unit.choices)
+    unit = models.CharField(_("unit"), max_length=2, choices=Unit.choices)
     disposition = models.CharField(
-        "przeznaczenie zbioru",
+        _("harvest disposition"),
         max_length=10,
         choices=Disposition.choices,
         default=Disposition.SOLD,
     )
     revenue = models.DecimalField(
-        "przychód", max_digits=12, decimal_places=2, default=0,
+        _("revenue"), max_digits=12, decimal_places=2, default=0,
         validators=[MinValueValidator(Decimal("0"))],
     )
     harvest_cost = models.DecimalField(
-        "koszt zbioru", max_digits=12, decimal_places=2, default=0,
+        _("harvest cost"), max_digits=12, decimal_places=2, default=0,
         validators=[MinValueValidator(Decimal("0"))],
     )
-    notes = models.TextField("notatki", blank=True)
-    created_at = models.DateTimeField("data utworzenia", auto_now_add=True)
+    notes = models.TextField(_("notes"), blank=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     class Meta:
-        verbose_name = "zbiór"
-        verbose_name_plural = "zbiory"
+        verbose_name = _("harvest")
+        verbose_name_plural = _("harvests")
         ordering = ["-harvest_date", "-created_at"]
         constraints = [
             models.CheckConstraint(
@@ -287,9 +291,7 @@ class Harvest(models.Model):
             and self.revenue != Decimal("0")
         ):
             raise ValidationError({
-                "revenue": (
-                    "Przychód musi wynosić 0, jeśli zbiór nie został sprzedany."
-                )
+                "revenue": gettext("Revenue must be 0 if the harvest was not sold.")
             })
 
     @property
@@ -297,35 +299,40 @@ class Harvest(models.Model):
         return self.revenue - self.harvest_cost
 
     def __str__(self):
-        return f"Zbiór {self.cultivation} — {self.harvest_date}"
+        return gettext("Harvest %(cultivation)s — %(date)s") % {
+            "cultivation": self.cultivation, "date": self.harvest_date,
+        }
 
 
 class ErrorReport(models.Model):
     class Category(models.TextChoices):
-        TECHNICAL = "TECHNICAL", "Problem techniczny"
-        DATA = "DATA", "Problem z danymi"
-        INTERFACE = "INTERFACE", "Problem z interfejsem"
-        OTHER = "OTHER", "Inny"
+        TECHNICAL = "TECHNICAL", _("Technical problem")
+        DATA = "DATA", _("Data problem")
+        INTERFACE = "INTERFACE", _("Interface problem")
+        OTHER = "OTHER", pgettext_lazy("report category", "Other")
 
     class Status(models.TextChoices):
-        NEW = "NEW", "Nowe"
-        IN_PROGRESS = "IN_PROGRESS", "W trakcie"
-        RESOLVED = "RESOLVED", "Rozwiązane"
+        NEW = "NEW", _("New")
+        IN_PROGRESS = "IN_PROGRESS", _("In progress")
+        RESOLVED = "RESOLVED", _("Resolved")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-        related_name="error_reports", verbose_name="użytkownik",
+        related_name="error_reports", verbose_name=_("user"),
     )
-    category = models.CharField("kategoria", max_length=10, choices=Category.choices)
-    description = models.TextField("opis")
-    status = models.CharField("status", max_length=11, choices=Status.choices)
-    created_at = models.DateTimeField("data utworzenia", auto_now_add=True)
-    updated_at = models.DateTimeField("data aktualizacji", auto_now=True)
+    category = models.CharField(_("category"), max_length=10, choices=Category.choices)
+    description = models.TextField(_("description"))
+    status = models.CharField(_("status"), max_length=11, choices=Status.choices)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("updated at"), auto_now=True)
 
     class Meta:
-        verbose_name = "zgłoszenie błędu"
-        verbose_name_plural = "zgłoszenia błędów"
+        verbose_name = _("error report")
+        verbose_name_plural = _("error reports")
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Zgłoszenie #{self.pk or 'nowe'} — {self.get_category_display()}"
+        return gettext("Report #%(number)s — %(category)s") % {
+            "number": self.pk or gettext("new"),
+            "category": self.get_category_display(),
+        }

@@ -1,0 +1,193 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}Farmer App · {% translate "a farm notebook online" %}{% endblock %}
+{% block body_class %}page-home{% endblock %}
+{% block main_class %}landing{% endblock %}
+
+{% block content %}
+
+{# ---------- Hero ---------- #}
+<section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+        <div class="hero-copy">
+            <p class="kicker">{% translate "Farm notebook" %}</p>
+            <h1 id="hero-title">{% blocktranslate %}You know what <em>every field</em> earned.{% endblocktranslate %}</h1>
+            <p class="hero-lead">
+                {% translate "You record sowing, sprayings and harvests, and Farmer App works out costs, revenue and profit for each field and each cultivation separately." %}
+            </p>
+            <div class="hero-actions">
+                <a class="button button-large" href="{% url 'core:register' %}">
+                    {% translate "Create a free account" %}
+                    <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+                </a>
+                <a class="link-quiet" href="{% url 'core:login' %}">{% translate "I already have an account" %}</a>
+            </div>
+            <p class="hero-note">{% translate "The account is free and there is nothing to install. It works on a phone and on a computer." %}</p>
+        </div>
+
+        <figure class="farm-map">
+            {% include "core/partials/farm_map.html" %}
+            <ul class="map-tags" aria-label="{% translate "Field results on a sample farm" %}">
+                <li class="map-tag">
+                    <span class="map-tag-name">{% translate "Field by the forest" %}</span>
+                    <span class="map-tag-crop">{% translate "wheat" %}</span>
+                    <span class="map-tag-value">+3&nbsp;700&nbsp;zł</span>
+                </li>
+                <li class="map-tag">
+                    <span class="map-tag-name">{% translate "Plot behind the barn" %}</span>
+                    <span class="map-tag-crop">{% translate "rapeseed" %}</span>
+                    <span class="map-tag-value">+1&nbsp;250&nbsp;zł</span>
+                </li>
+                <li class="map-tag is-loss">
+                    <span class="map-tag-name">{% translate "Field by the road" %}</span>
+                    <span class="map-tag-crop">{% translate "maize" %}</span>
+                    <span class="map-tag-value">−480&nbsp;zł</span>
+                </li>
+            </ul>
+            <figcaption>{% translate "Sample farm, 2026 season" %}</figcaption>
+        </figure>
+    </div>
+</section>
+
+{# ---------- What a record looks like ---------- #}
+<section class="landing-section" id="zapisy" aria-labelledby="ledger-title">
+    <div class="wrap ledger-grid">
+        <div class="section-copy">
+            <p class="kicker">{% translate "Instead of a notebook and a calculator" %}</p>
+            <h2 id="ledger-title">{% translate "You write down what you did. The sums do themselves." %}</h2>
+            <p>
+                {% translate "Every treatment and every harvest is one line: the date, what was done and what it cost or brought in. At the end of the season you see the field result without counting on paper." %}
+            </p>
+        </div>
+
+        <figure class="sheet">
+            <div class="sheet-head">
+                <strong>{% translate "Field by the forest" %}</strong>
+                <span>{% translate "Wheat · 2026" %}</span>
+            </div>
+            <table class="sheet-table">
+                <caption class="visually-hidden">{% translate "Sample records for the field by the forest in the 2026 season" %}</caption>
+                <thead>
+                    <tr><th scope="col">{% translate "Date" %}</th><th scope="col">{% translate "Record" %}</th><th scope="col" class="num">{% translate "Amount" %}</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>08.04</td><td>{% translate "Plowing" %}</td><td class="num">−620&nbsp;zł</td></tr>
+                    <tr><td>15.04</td><td>{% translate "Sowing wheat" %}</td><td class="num">−1&nbsp;450&nbsp;zł</td></tr>
+                    <tr><td>05.05</td><td>{% translate "Fertilizing" %}</td><td class="num">−1&nbsp;350&nbsp;zł</td></tr>
+                    <tr><td>02.06</td><td>{% translate "Spraying" %}</td><td class="num">−780&nbsp;zł</td></tr>
+                    <tr><td>28.07</td><td>{% translate "Harvest and grain sale" %}</td><td class="num is-in">+7&nbsp;900&nbsp;zł</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr><th scope="row" colspan="2">{% translate "Costs in total" %}</th><td class="num">−4&nbsp;200&nbsp;zł</td></tr>
+                    <tr><th scope="row" colspan="2">{% translate "Revenue" %}</th><td class="num">+7&nbsp;900&nbsp;zł</td></tr>
+                    <tr class="sheet-result">
+                        <th scope="row" colspan="2">{% translate "Result" %}</th>
+                        <td class="num">
+                            <span class="circled">+3&nbsp;700&nbsp;zł<svg class="circle-mark" viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M34 14C86 2 176 6 191 32c12 24-44 42-106 40C30 70 6 56 11 35 17 16 64 7 128 11"/></svg></span>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <figcaption class="sheet-note">{% translate "An example. This is how the app collects the records of one field." %}</figcaption>
+        </figure>
+    </div>
+</section>
+
+{# ---------- Season ---------- #}
+<section class="landing-section" id="sezon" aria-labelledby="season-title">
+    <div class="wrap">
+        <p class="kicker">{% translate "How it works" %}</p>
+        <h2 id="season-title">{% translate "One season in Farmer App" %}</h2>
+        <ol class="season-list">
+            <li>
+                <span class="season-icon" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-sprout"/></svg></span>
+                <h3>{% translate "Spring" %}</h3>
+                <p>{% translate "You add fields and cultivations and record plowing and sowing." %}</p>
+            </li>
+            <li>
+                <span class="season-icon" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-sun"/></svg></span>
+                <h3>{% translate "Summer" %}</h3>
+                <p>{% translate "You note fertilizing and sprayings together with their costs." %}</p>
+            </li>
+            <li>
+                <span class="season-icon" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-wheat"/></svg></span>
+                <h3>{% translate "Autumn" %}</h3>
+                <p>{% translate "You enter the harvests and what happened to them: sale, storage or losses." %}</p>
+            </li>
+            <li>
+                <span class="season-icon" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-snowflake"/></svg></span>
+                <h3>{% translate "Winter" %}</h3>
+                <p>{% translate "You open the report and see which field made money and which did not." %}</p>
+            </li>
+        </ol>
+    </div>
+</section>
+
+{# ---------- Who it is for ---------- #}
+<section class="landing-section" id="dla-kogo" aria-labelledby="audience-title">
+    <div class="wrap split">
+        <div>
+            <p class="kicker">{% translate "Who it is for" %}</p>
+            <h2 id="audience-title">{% translate "For those who would rather know than guess." %}</h2>
+        </div>
+        <dl class="row-list">
+            <div>
+                <dt>{% translate "Small and medium farms" %}</dt>
+                <dd>{% translate "A few fields, a few crops and a need for tidy records." %}</dd>
+            </div>
+            <div>
+                <dt>{% translate "Family farms" %}</dt>
+                <dd>{% translate "Works, sprayings and harvests are in one place, so it is easy to check what has already been done." %}</dd>
+            </div>
+            <div>
+                <dt>{% translate "People who do not like computers" %}</dt>
+                <dd>{% translate "Large text, simple words, and after you log in the app suggests the next step." %}</dd>
+            </div>
+        </dl>
+    </div>
+</section>
+
+{# ---------- Questions ---------- #}
+<section class="landing-section" id="pytania" aria-labelledby="faq-title">
+    <div class="wrap split">
+        <div>
+            <p class="kicker">{% translate "Questions" %}</p>
+            <h2 id="faq-title">{% translate "Before you create an account" %}</h2>
+        </div>
+        <dl class="row-list">
+            <div>
+                <dt>{% translate "Does it cost anything?" %}</dt>
+                <dd>{% translate "No. The account and using the app are free." %}</dd>
+            </div>
+            <div>
+                <dt>{% translate "Do I need to install anything?" %}</dt>
+                <dd>{% translate "No. You open the app in a browser, like a normal website." %}</dd>
+            </div>
+            <div>
+                <dt>{% translate "Will anyone see my data?" %}</dt>
+                <dd>{% translate "No. Every user sees only their own fields, cultivations and records." %}</dd>
+            </div>
+            <div>
+                <dt>{% translate "What if I enter something wrong?" %}</dt>
+                <dd>{% translate "You can correct or delete any entry later." %}</dd>
+            </div>
+        </dl>
+    </div>
+</section>
+
+{# ---------- Call to action ---------- #}
+<section class="closing" aria-labelledby="closing-title">
+    <div class="wrap">
+        <h2 id="closing-title">{% translate "Start with one field." %}</h2>
+        <p>{% translate "Create an account, add a field and the first cultivation. Add the rest when the time comes." %}</p>
+        <div class="hero-actions">
+            <a class="button button-large button-wheat" href="{% url 'core:register' %}">
+                {% translate "Create a free account" %}
+                <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+            </a>
+            <a class="link-quiet" href="{% url 'core:login' %}">{% translate "Log in" %}</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

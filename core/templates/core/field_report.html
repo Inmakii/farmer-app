@@ -1,153 +1,82 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Raport pola {{ field.name }} – Farmer App{% endblock %}
+{% block title %}{% blocktranslate with name=field.name %}Field report {{ name }}{% endblocktranslate %} – Farmer App{% endblock %}
 
 {% block content %}
-    <h1>Raport pola: {{ field.name }}</h1>
-
-    <p>
-        <a href="{% url 'core:report_dashboard' %}">
-            Wszystkie raporty
-        </a>
-
-        <a href="{% url 'core:field_detail' field.pk %}">
-            Szczegóły pola
-        </a>
-    </p>
-
-    <form method="get">
-        <p>
-            <label for="id_season_year">Rok sezonu</label>
-
-            <input
-                id="id_season_year"
-                type="number"
-                min="1980"
-                max="2100"
-                name="season_year"
-                value="{{ selected_season_year }}"
-            >
-
-            <button type="submit">Filtruj</button>
-
-            <a href="{% url 'core:field_report' field.pk %}">
-                Wyczyść filtr
+    <a class="back-link" href="{% url 'core:report_dashboard' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "All reports" %}</a>
+    <header class="page-head">
+        <div>
+            <p class="kicker">{% translate "Field report" %}</p>
+            <h1>{% blocktranslate with name=field.name %}Field report: {{ name }}{% endblocktranslate %}</h1>
+            <p class="page-head-lead">{% blocktranslate with area=totals.total_area_ha|floatformat:"2g" %}Field area: {{ area }} ha{% endblocktranslate %}</p>
+        </div>
+        <div class="page-actions">
+            <a class="button button-secondary" href="{% url 'core:field_detail' field.pk %}">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg>{% translate "Field details" %}
             </a>
-        </p>
+        </div>
+    </header>
+
+    <form class="filters" method="get" aria-label="{% translate "Report range" %}">
+        <div class="filters-grid">
+            <div class="filter">
+                <label for="id_season_year">{% translate "Season year" %}</label>
+                <input id="id_season_year" type="number" min="1980" max="2100" name="season_year" value="{{ selected_season_year }}" inputmode="numeric">
+            </div>
+        </div>
+        <div class="filters-actions">
+            <button class="button" type="submit">{% translate "Filter" %}</button>
+            <a class="button button-text" href="{% url 'core:field_report' field.pk %}">{% translate "Clear filter" %}</a>
+        </div>
     </form>
 
     {% if invalid_filter %}
-        <p>Podany rok jest nieprawidłowy.</p>
+        <div class="callout callout-error" role="alert">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-alert"/></svg>
+            <p>{% translate "The given year is not valid." %}</p>
+        </div>
     {% endif %}
 
-    <section>
-        <h2>Podsumowanie pola</h2>
-
-        <dl>
-            <dt>Powierzchnia pola</dt>
-            <dd>{{ totals.total_area_ha|floatformat:2 }} ha</dd>
-
-            <dt>Uprawy</dt>
-            <dd>{{ totals.cultivation_count }}</dd>
-
-            <dt>Prace</dt>
-            <dd>{{ totals.work_count }}</dd>
-
-            <dt>Opryski</dt>
-            <dd>{{ totals.spraying_count }}</dd>
-
-            <dt>Zbiory</dt>
-            <dd>{{ totals.harvest_count }}</dd>
-
-            <dt>Zebrano łącznie</dt>
-            <dd>{{ totals.total_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Wydajność na hektar</dt>
-            <dd>
-                <strong>
-                    {{ totals.yield_kg_per_ha|floatformat:2 }} kg/ha
-                </strong>
-            </dd>
-
-            <dt>Sprzedano</dt>
-            <dd>{{ totals.sold_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>W magazynie</dt>
-            <dd>{{ totals.stored_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Straty / utylizacja</dt>
-            <dd>{{ totals.discarded_quantity_kg|floatformat:2 }} kg</dd>
-
-            <dt>Koszty prac</dt>
-            <dd>{{ totals.work_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty oprysków</dt>
-            <dd>{{ totals.spraying_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty zbiorów</dt>
-            <dd>{{ totals.harvest_costs|floatformat:2 }} zł</dd>
-
-            <dt>Koszty całkowite</dt>
-            <dd>
-                <strong>
-                    {{ totals.total_costs|floatformat:2 }} zł
-                </strong>
-            </dd>
-
-            <dt>Przychód</dt>
-            <dd>
-                <strong>
-                    {{ totals.total_revenue|floatformat:2 }} zł
-                </strong>
-            </dd>
-
-            <dt>Zysk/strata</dt>
-            <dd>
-                <strong>
-                    {{ totals.profit|floatformat:2 }} zł
-                </strong>
-            </dd>
+    <section aria-labelledby="summary-title">
+        <h2 id="summary-title" class="visually-hidden">{% translate "Field summary" %}</h2>
+        {% include "core/partials/report_summary.html" with t=totals area=totals.total_area_ha %}
+        <dl class="tally" aria-label="{% translate "Number of records" %}">
+            <div><dt>{% translate "Cultivations" %}</dt><dd>{{ totals.cultivation_count }}</dd></div>
+            <div><dt>{% translate "Works" %}</dt><dd>{{ totals.work_count }}</dd></div>
+            <div><dt>{% translate "Sprayings" %}</dt><dd>{{ totals.spraying_count }}</dd></div>
+            <div><dt>{% translate "Harvests" %}</dt><dd>{{ totals.harvest_count }}</dd></div>
         </dl>
     </section>
 
-    <section>
-        <h2>Uprawy pola</h2>
-
+    <section class="block" aria-labelledby="field-crops-title">
+        <div class="block-head">
+            <h2 id="field-crops-title">{% translate "Cultivations of the field" %}</h2>
+        </div>
         {% if cultivation_reports %}
-            <ul>
+            <ul class="records">
                 {% for item in cultivation_reports %}
-                    <li>
-                        <a href="{% url 'core:cultivation_report' item.cultivation.pk %}">
-                            {{ item.cultivation.crop.name }} –
-                            {{ item.cultivation.season_year }}
-                        </a>:
-
-                        zebrano
-                        {{ item.total_quantity_kg|floatformat:2 }} kg,
-
-                        wydajność
-                        <strong>
-                            {{ item.yield_kg_per_ha|floatformat:2 }} kg/ha
-                        </strong>,
-
-                        straty
-                        {{ item.discarded_quantity_kg|floatformat:2 }} kg,
-
-                        koszty
-                        {{ item.total_costs|floatformat:2 }} zł,
-
-                        przychód
-                        {{ item.total_revenue|floatformat:2 }} zł,
-
-                        wynik
-                        {{ item.profit|floatformat:2 }} zł
+                    <li class="record">
+                        <div class="record-main">
+                            <span class="record-date">{% blocktranslate with year=item.cultivation.season_year %}Season {{ year }}{% endblocktranslate %}</span>
+                            <a class="record-title" href="{% url 'core:cultivation_report' item.cultivation.pk %}">{{ item.cultivation.crop.name }}</a>
+                            <p class="record-meta">
+                                <span>{% blocktranslate with quantity=item.total_quantity_kg|floatformat:"2g" %}harvested {{ quantity }} kg{% endblocktranslate %}</span>
+                                <span>{% translate "yield" %} <strong>{{ item.yield_kg_per_ha|floatformat:"2g" }} kg/ha</strong></span>
+                                <span>{% blocktranslate with quantity=item.discarded_quantity_kg|floatformat:"2g" %}losses {{ quantity }} kg{% endblocktranslate %}</span>
+                            </p>
+                        </div>
+                        <div class="record-side">
+                            <span class="record-amount {% if item.profit < 0 %}is-loss{% else %}is-gain{% endif %}">
+                                {{ item.profit|floatformat:"2g" }} zł
+                                <small>{% blocktranslate with revenue=item.total_revenue|floatformat:"2g" costs=item.total_costs|floatformat:"2g" %}revenue {{ revenue }} zł · costs {{ costs }} zł{% endblocktranslate %}</small>
+                            </span>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>
-                Pole nie ma upraw dla wybranego okresu.
-            </p>
+            <div class="empty empty-compact"><p>{% translate "The field has no cultivations in the chosen period." %}</p></div>
         {% endif %}
     </section>
 {% endblock %}

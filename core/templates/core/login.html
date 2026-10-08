@@ -1,21 +1,44 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
-{% block title %}Logowanie – Farmer App{% endblock %}
+{% block title %}{% translate "Login" context "page title" %} · Farmer App{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+{% block main_class %}auth-main{% endblock %}
 
 {% block content %}
-    <h1>Logowanie</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-            <p>
-                {{ field.label_tag }}
-                {{ field }}
-                {{ field.errors }}
-            </p>
-        {% endfor %}
-        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-        <button type="submit">Zaloguj się</button>
-    </form>
-    <p>Nie masz konta? <a href="{% url 'core:register' %}">Zarejestruj się</a>.</p>
+<div class="wrap auth-grid">
+    <section class="sheet auth-sheet" aria-labelledby="auth-title">
+        <p class="kicker">{% translate "Login" %}</p>
+        <h1 id="auth-title">{% translate "Log in" %}</h1>
+        <p class="auth-lead">{% translate "Your fields, cultivations and reports are right where you left them." %}</p>
+
+        <form method="post" class="auth-form" data-busy-form novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="form-alert" role="alert">
+                    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+            {% endif %}
+            {% for field in form %}
+                {% include "core/partials/form_field.html" %}
+            {% endfor %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+            <button class="button button-large button-block" type="submit" data-busy-label="{% translate "Logging in…" %}">{% translate "Log in" %}</button>
+        </form>
+
+        <p class="auth-switch">
+            {% translate "Do not have an account yet?" %}
+            <a class="link-quiet" href="{% url 'core:register' %}">{% translate "Create one for free" %}</a>
+        </p>
+    </section>
+
+    <aside class="auth-aside auth-aside-optional" aria-label="{% translate "What you will see after logging in" %}">
+        <p class="kicker">{% translate "After you log in" %}</p>
+        <h2>{% translate "You will see your fields and how much each of them earned." %}</h2>
+        <div class="auth-map">
+            {% include "core/partials/farm_map.html" %}
+        </div>
+    </aside>
+</div>
 {% endblock %}
+

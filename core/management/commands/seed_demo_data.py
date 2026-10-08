@@ -4,18 +4,19 @@ from decimal import Decimal
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.utils.translation import gettext
 
 from core.models import Crop, Cultivation, Field, FieldWork, Harvest, Spraying
 
 
 class Command(BaseCommand):
-    help = "Tworzy lub aktualizuje dane demonstracyjne dla istniejącego użytkownika."
+    help = "Creates or updates demo data for an existing user."
 
     def add_arguments(self, parser):
         parser.add_argument(
             "--username",
             required=True,
-            help="Nazwa istniejącego użytkownika, do którego zostaną przypisane dane.",
+            help="Name of the existing user the data will be assigned to.",
         )
 
     @transaction.atomic
@@ -27,7 +28,7 @@ class Command(BaseCommand):
             user = user_model._default_manager.get(username=username)
         except user_model.DoesNotExist as error:
             raise CommandError(
-                f'Użytkownik o nazwie "{username}" nie istnieje.'
+                gettext('User "%(username)s" does not exist.') % {"username": username}
             ) from error
 
         crops = {}
@@ -136,9 +137,13 @@ class Command(BaseCommand):
                 },
             )
 
-        self.stdout.write(f"Pola utworzone lub zaktualizowane: 2")
-        self.stdout.write(f"Uprawy utworzone lub zaktualizowane: 2")
-        self.stdout.write(f"Prace utworzone lub zaktualizowane: {len(work_data)}")
-        self.stdout.write(f"Opryski utworzone lub zaktualizowane: {len(spraying_data)}")
-        self.stdout.write(f"Zbiory utworzone lub zaktualizowane: {len(harvest_data)}")
-        self.stdout.write(self.style.SUCCESS("Dane demonstracyjne zostały przygotowane."))
+        self.stdout.write(gettext("Fields created or updated: %(count)s") % {"count": 2})
+        self.stdout.write(gettext("Cultivations created or updated: %(count)s") % {"count": 2})
+        self.stdout.write(gettext("Works created or updated: %(count)s") % {"count": len(work_data)})
+        self.stdout.write(
+            gettext("Sprayings created or updated: %(count)s") % {"count": len(spraying_data)}
+        )
+        self.stdout.write(
+            gettext("Harvests created or updated: %(count)s") % {"count": len(harvest_data)}
+        )
+        self.stdout.write(self.style.SUCCESS(gettext("Demo data is ready.")))

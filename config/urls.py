@@ -16,8 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework_simplejwt.views import TokenVerifyView
+
+from core.api_views import (
+    CurrentUserView,
+    ThrottledTokenObtainPairView,
+    ThrottledTokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('api/auth/token/', ThrottledTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/refresh/', ThrottledTokenRefreshView.as_view(), name='token_refresh'),
+    path('api/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/auth/me/', CurrentUserView.as_view(), name='api_current_user'),
     path('', include('core.urls')),
 ]
