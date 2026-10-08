@@ -151,7 +151,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Przyspiesza testy: szybki hasher haseł tylko podczas `manage.py test`.
+# Speeds up tests: a fast password hasher, only during `manage.py test`.
 if len(sys.argv) > 1 and sys.argv[1] == 'test':
     PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 
@@ -165,7 +165,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    # Limity dla endpointów tokenów (ScopedRateThrottle), chroniące przed zgadywaniem haseł.
+    # Rate limits for the token endpoints (ScopedRateThrottle) to slow down password guessing.
     "DEFAULT_THROTTLE_RATES": {
         "auth_token": "10/min",
         "auth_refresh": "30/min",

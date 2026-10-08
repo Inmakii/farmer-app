@@ -58,7 +58,7 @@ from .services.reports import (
 
 
 def home(request):
-    """Strona główna: opis aplikacji dla gościa, pulpit z podpowiedzią kroku po zalogowaniu."""
+    """Home page: app description for guests, dashboard with a next-step hint for signed-in users."""
     if not request.user.is_authenticated:
         return render(request, "core/home.html")
 
@@ -141,7 +141,7 @@ LOGIN_LOCKOUT_SECONDS = 15 * 60
 
 
 class LoginView(DjangoLoginView):
-    """Logowanie z blokadą po serii nieudanych prób (per adres IP i nazwa użytkownika)."""
+    """Login with a lockout after a series of failed attempts (per IP address and username)."""
 
     template_name = "core/login.html"
     authentication_form = LoginForm
@@ -494,7 +494,7 @@ class CultivationDeleteView(CultivationOwnerQuerysetMixin, DeleteView):
 
 
 class CultivationEventOwnerMixin(LoginRequiredMixin):
-    """Ogranicza zdarzenia uprawy (prace, opryski, zbiory) do pól zalogowanego właściciela."""
+    """Limit cultivation events (works, sprayings, harvests) to fields of the signed-in owner."""
 
     def get_queryset(self):
         return self.model.objects.filter(
@@ -517,10 +517,10 @@ class CultivationEventFormMixin:
 
 
 class CultivationEventListView(CultivationEventOwnerMixin, ListView):
-    """Lista z wyszukiwaniem i filtrami wspólnymi dla prac, oprysków i zbiorów.
+    """List with search and filters shared by works, sprayings and harvests.
 
-    Podklasy ustawiają ``date_field``, ``search_fields`` (dodatkowe pola tekstowe)
-    oraz ``choice_filters`` jako krotki ``(parametr, nazwa_wyborów_w_kontekście, enum)``.
+    Subclasses set ``date_field``, ``search_fields`` (extra text fields)
+    and ``choice_filters`` as tuples ``(parameter, context_choices_name, enum)``.
     """
 
     paginate_by = 10
@@ -886,7 +886,7 @@ class ErrorReportCreateView(LoginRequiredMixin, CreateView):
     template_name = "core/error_report_form.html"
 
     def get_source_page(self):
-        """Adres strony, z której otwarto zgłoszenie (tylko ścieżka w obrębie aplikacji)."""
+        """Address of the page the report was opened from (only a path within this app)."""
         source = self.request.GET.get("from", "")
         if source.startswith("/") and url_has_allowed_host_and_scheme(
             source, allowed_hosts={self.request.get_host()}

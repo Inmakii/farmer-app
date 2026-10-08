@@ -1,1 +1,1 @@
-"""Usługi logiki biznesowej aplikacji core."""
+"""Business logic services of the core app."""

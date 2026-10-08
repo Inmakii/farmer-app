@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 class ThrottledTokenObtainPairView(TokenObtainPairView):
-    """Wydawanie tokenów z limitem żądań (patrz DEFAULT_THROTTLE_RATES)."""
+    """Token issuing with a request limit (see DEFAULT_THROTTLE_RATES)."""
 
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = "auth_token"

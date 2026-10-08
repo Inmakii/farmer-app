@@ -1,6 +1,6 @@
-"""Dane wspólne dla wszystkich szablonów."""
+"""Data shared by all templates."""
 
-# Nazwy widoków, które należą do sekcji innej niż wynika z prefiksu nazwy.
+# View names that belong to a different section than their name prefix suggests.
 _SECTION_OVERRIDES = {
     "home": "home",
     "report_dashboard": "report",
@@ -12,7 +12,7 @@ _SECTION_OVERRIDES = {
 
 
 def nav_section(request):
-    """Zwraca sekcję menu, do której należy bieżąca strona (do podświetlenia linku)."""
+    """Return the menu section of the current page, used to highlight its link."""
     match = getattr(request, "resolver_match", None)
     name = match.url_name if match else None
     if not name:

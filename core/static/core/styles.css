@@ -334,7 +334,7 @@ a:hover {
     font-weight: 700;
 }
 
-/* Bieżąca sekcja: kreska w kolorze zboża pod linkiem. */
+/* Current section: a wheat-coloured line under the link. */
 .nav-links a[aria-current="page"]::after,
 .nav-profile[aria-current="page"]::after {
     content: "";
@@ -639,7 +639,7 @@ tbody tr:hover {
     margin: 0;
 }
 
-/* Węższy ekran: logo i przyciski w pierwszym rzędzie, sekcje w przewijanym pasku pod spodem. */
+/* Narrower screen: logo and buttons in the first row, sections in a scrollable strip below. */
 @media (max-width: 1140px) {
     .site-header.is-app .nav-shell {
         position: relative;
@@ -731,7 +731,7 @@ tbody tr:hover {
 }
 
 
-/* ---------- Strona główna, pulpit i ekrany logowania ---------- */
+/* ---------- Home page, dashboard and sign-in screens ---------- */
 
 .button-large {
     min-height: 54px;
@@ -746,7 +746,7 @@ tbody tr:hover {
     font-size: 16px;
 }
 
-/* ---------- Ikony ---------- */
+/* ---------- Icons ---------- */
 
 .icon-sprite {
     position: absolute;
@@ -770,7 +770,7 @@ tbody tr:hover {
     transition: transform 200ms var(--ease-out);
 }
 
-/* ---------- Strona główna: "zeszyt gospodarstwa" ---------- */
+/* ---------- Home page: "farm notebook" ---------- */
 
 .landing,
 .auth-main {
@@ -856,7 +856,7 @@ tbody tr:hover {
     text-decoration-color: currentColor;
 }
 
-/* Pierwszy ekran */
+/* Hero */
 
 .hero {
     padding-block: clamp(40px, 6vw, 88px) clamp(72px, 9vw, 120px);
@@ -906,7 +906,7 @@ tbody tr:hover {
     font-size: 16px;
 }
 
-/* Mapa pól */
+/* Field map */
 
 .farm-map {
     position: relative;
@@ -994,7 +994,7 @@ tbody tr:hover {
     font-size: 15px;
 }
 
-/* Kartka z zeszytu */
+/* Notebook sheet */
 
 .ledger-grid {
     display: grid;
@@ -1017,7 +1017,7 @@ tbody tr:hover {
     background: var(--sheet);
 }
 
-/* Czerwony margines jak w zeszycie. */
+/* Red margin line, like in a school notebook. */
 .sheet::before {
     content: "";
     position: absolute;
@@ -1027,7 +1027,7 @@ tbody tr:hover {
     border-left: 2px solid var(--margin-line);
 }
 
-/* Druga kartka pod spodem. */
+/* A second sheet underneath. */
 .sheet::after {
     content: "";
     position: absolute;
@@ -1165,7 +1165,7 @@ tbody tr:hover {
     font-size: 15px;
 }
 
-/* Sezon */
+/* Season */
 
 .season-list {
     display: grid;
@@ -1208,7 +1208,7 @@ tbody tr:hover {
     color: var(--ink-soft);
 }
 
-/* Dwie kolumny: nagłówek i lista wierszy (dla kogo, pytania) */
+/* Two columns: heading and a list of rows (audience, questions) */
 
 .split {
     display: grid;
@@ -1255,7 +1255,7 @@ tbody tr:hover {
     font-weight: 400;
 }
 
-/* Zakończenie */
+/* Closing section */
 
 .closing {
     position: relative;
@@ -1266,7 +1266,7 @@ tbody tr:hover {
     text-align: center;
 }
 
-/* Rzędy na polu, widziane z góry. */
+/* Crop rows seen from above. */
 .closing::before {
     content: "";
     position: absolute;
@@ -1325,14 +1325,14 @@ tbody tr:hover {
     border-top: 0;
 }
 
-/* Hover tylko dla myszy: na ekranie dotykowym nie zostaje "przyklejony". */
+/* Hover only for mouse pointers, so it does not "stick" on touch screens. */
 @media (hover: hover) and (pointer: fine) {
     .button:hover .icon-arrow {
         transform: translateX(3px);
     }
 }
 
-/* Ruch: pierwszy ekran pojawia się raz i po kolei, kółko rysuje się przy przewijaniu. */
+/* Motion: the hero appears once, step by step; the circle is drawn on scroll. */
 @media (prefers-reduced-motion: no-preference) {
     .hero-copy > * {
         animation: rise 600ms var(--ease-out) backwards;
@@ -1452,7 +1452,7 @@ tbody tr:hover {
     }
 }
 
-/* Logowanie i rejestracja: formularz na kartce z zeszytu */
+/* Login and registration: form on a notebook sheet */
 
 .auth-main {
     flex: 1;
@@ -1499,7 +1499,7 @@ tbody tr:hover {
     left: clamp(36px, 4.6vw, 62px);
 }
 
-/* Wysoka kartka: mniejszy skos, żeby spód nie uciekał w bok. */
+/* Tall sheet: smaller tilt so the bottom does not drift sideways. */
 .auth-sheet::after {
     transform: translate(10px, 8px) rotate(0.6deg);
 }
@@ -1509,7 +1509,7 @@ tbody tr:hover {
     color: var(--ink-soft);
 }
 
-/* Pola formularza */
+/* Form fields */
 
 .auth-form fieldset {
     min-width: 0;
@@ -1524,7 +1524,7 @@ tbody tr:hover {
     border-top: 1px solid var(--rule);
 }
 
-/* Legenda jako zwykły nagłówek, bez linii ramki przechodzącej przez tekst. */
+/* Legend as a plain heading, without the border line running through the text. */
 .auth-form legend {
     float: left;
     width: 100%;
@@ -1665,7 +1665,7 @@ tbody tr:hover {
     margin-left: 4px;
 }
 
-/* Kolumna obok formularza */
+/* Column next to the form */
 
 .auth-aside {
     position: sticky;
@@ -1744,7 +1744,7 @@ tbody tr:hover {
         max-width: 640px;
     }
 
-    /* Przy logowaniu formularz jest najważniejszy, mapa tylko by go odsuwała. */
+    /* On login the form matters most; the map would only push it down. */
     .auth-aside-optional {
         display: none;
     }
@@ -1769,8 +1769,8 @@ tbody tr:hover {
 }
 
 /* ==========================================================================
-   Wnętrze aplikacji: pulpit, listy, szczegóły, formularze i raporty.
-   Ten sam "zeszyt gospodarstwa" co strona główna, tylko gęściej.
+   App interior: dashboard, lists, details, forms and reports.
+   The same "farm notebook" as the home page, only denser.
    ========================================================================== */
 
 .page-content {
@@ -1796,7 +1796,7 @@ tbody tr:hover {
     line-height: 1.12;
 }
 
-/* Nagłówek strony */
+/* Page header */
 
 .page-head {
     display: flex;
@@ -1855,7 +1855,7 @@ tbody tr:hover {
     transition: transform 200ms var(--ease-out);
 }
 
-/* Przyciski */
+/* Buttons */
 
 .button {
     border-radius: 6px;
@@ -1918,7 +1918,7 @@ tbody tr:hover {
     color: var(--ink);
 }
 
-/* Kartka: ta sama co na stronie głównej, w wersji do pracy. */
+/* Sheet: the same as on the home page, in a working version. */
 
 .page-content .sheet {
     padding: clamp(22px, 3vw, 32px) clamp(20px, 3vw, 36px) clamp(22px, 3vw, 30px) clamp(48px, 6vw, 76px);
@@ -2000,7 +2000,7 @@ a.sheet-title-note:hover {
     font-size: 15px;
 }
 
-/* Filtry nad listą */
+/* Filters above a list */
 
 .filters {
     margin-bottom: 28px;
@@ -2066,7 +2066,7 @@ a.sheet-title-note:hover {
     text-transform: uppercase;
 }
 
-/* Pola formularzy (filtry i edycja) */
+/* Form controls (filters and editing) */
 
 .page-content input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="hidden"]),
 .page-content select,
@@ -2138,7 +2138,7 @@ a.sheet-title-note:hover {
     color: var(--ink-soft);
 }
 
-/* Lista wpisów, jak wiersze w zeszycie */
+/* Record list, like rows in a notebook */
 
 .records {
     margin: 0;
@@ -2270,7 +2270,7 @@ a.record-title:hover {
     height: 18px;
 }
 
-/* Etykiety statusu */
+/* Status tags */
 
 .tag {
     display: inline-flex;
@@ -2309,7 +2309,7 @@ a.record-title:hover {
     color: var(--wheat-ink);
 }
 
-/* Fakty o wpisie (szczegóły) */
+/* Record facts (detail pages) */
 
 .facts {
     display: grid;
@@ -2359,7 +2359,7 @@ a.record-title:hover {
     white-space: nowrap;
 }
 
-/* Podsumowanie liczb (pulpit, raporty) */
+/* Number summary (dashboard, reports) */
 
 .tally {
     display: grid;
@@ -2418,7 +2418,7 @@ a.record-title:hover {
     color: var(--clay);
 }
 
-/* Bilans: kartka z rachunkiem (pulpit i raporty) */
+/* Balance: ledger sheet (dashboard and reports) */
 
 .balance-grid {
     display: grid;
@@ -2450,7 +2450,7 @@ a.record-title:hover {
     color: var(--gain);
 }
 
-/* Szersza tabela raportu */
+/* Wide report table */
 
 .table-scroll {
     max-width: 100%;
@@ -2505,7 +2505,7 @@ a.record-title:hover {
     border-bottom: 0;
 }
 
-/* Pierwsza kolumna zostaje na miejscu przy przewijaniu w bok. */
+/* The first column stays in place when scrolling sideways. */
 .data-table td:first-child,
 .data-table th:first-child {
     position: sticky;
@@ -2532,7 +2532,7 @@ a.record-title:hover {
     color: var(--clay);
 }
 
-/* Pusty stan */
+/* Empty state */
 
 .empty {
     display: grid;
@@ -2583,7 +2583,7 @@ a.record-title:hover {
     margin: 0;
 }
 
-/* Ostrzeżenia na stronie */
+/* In-page notices */
 
 .callout {
     display: flex;
@@ -2625,7 +2625,7 @@ a.record-title:hover {
     color: var(--clay);
 }
 
-/* Potwierdzenie usunięcia */
+/* Delete confirmation */
 
 .confirm {
     max-width: 640px;
@@ -2664,7 +2664,7 @@ a.record-title:hover {
     color: var(--ink-soft);
 }
 
-/* Paginacja */
+/* Pagination */
 
 .pager {
     display: flex;
@@ -2705,7 +2705,7 @@ a.record-title:hover {
     min-width: 1px;
 }
 
-/* Pulpit */
+/* Dashboard */
 
 .dash-hero {
     display: grid;
@@ -2741,7 +2741,7 @@ a.record-title:hover {
     color: #f3eedf;
 }
 
-/* Rzędy na polu, jak w zakończeniu strony głównej. */
+/* Crop rows, like in the home page closing section. */
 .next-step::before {
     content: "";
     position: absolute;
@@ -2847,7 +2847,7 @@ a.record-title:hover {
     color: var(--ink-soft);
 }
 
-/* Profil */
+/* Profile */
 
 .profile-grid {
     display: grid;
@@ -2904,7 +2904,7 @@ a.record-title:hover {
     margin-left: 6px;
 }
 
-/* Rodzaje upraw: katalog */
+/* Crop types: catalogue */
 
 .catalog {
     display: grid;
@@ -2933,7 +2933,7 @@ a.record-title:hover {
     font-size: 15px;
 }
 
-/* Ruch */
+/* Motion */
 
 @media (hover: hover) and (pointer: fine) {
     .back-link:hover .icon {
@@ -2959,7 +2959,7 @@ a.record-title:hover {
     }
 }
 
-/* Układ na węższych ekranach */
+/* Layout on narrower screens */
 
 @media (max-width: 960px) {
     .dash-hero,
@@ -3033,7 +3033,7 @@ a.record-title:hover {
         flex: 1;
     }
 
-    /* Dwie kolumny filtrów, żeby lista nie uciekała daleko w dół. */
+    /* Two filter columns so the list does not end up far down the page. */
     .filters {
         padding: 14px 14px 16px;
     }
@@ -3097,7 +3097,7 @@ a.record-title:hover {
     }
 }
 
-/* Zgłoszenie problemu: zawsze pod ręką, w prawym dolnym rogu. */
+/* Problem report: always at hand, in the bottom-right corner. */
 
 .report-fab {
     position: fixed;
@@ -3134,7 +3134,7 @@ a.record-title:hover {
     height: 20px;
 }
 
-/* Miejsce pod przyciskiem, żeby nie zasłaniał stopki. */
+/* Room under the button so it does not cover the footer. */
 body:has(.report-fab) .site-footer {
     padding-bottom: 88px;
 }

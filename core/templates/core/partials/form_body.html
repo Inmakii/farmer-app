@@ -1,4 +1,4 @@
-{# Błędy ogólne i wszystkie pola formularza, każde przez form_field.html. #}
+{# Non-field errors and every form field, each rendered with form_field.html. #}
 {% if form.non_field_errors %}
     <div class="form-alert" role="alert">
         {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}

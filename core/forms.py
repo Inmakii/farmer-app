@@ -19,7 +19,7 @@ from .models import (
 
 
 class SkipDuplicateModelErrorsMixin:
-    """Pomija błędy z Model.clean(), które formularz zgłosił już dla tego pola."""
+    """Skip Model.clean() errors that the form has already reported for this field."""
 
     def _update_errors(self, errors):
         if hasattr(errors, "error_dict"):
@@ -79,7 +79,7 @@ class RegistrationForm(UserCreationForm):
             self.fields[field_name].error_messages["required"] = (
                 f"Pole „{label}” jest wymagane."
             )
-        # Imię jest pierwszym polem formularza, więc kursor nie skacze do loginu.
+        # First name is the first field of the form, so the cursor does not jump to the username.
         self.fields["username"].widget.attrs.pop("autofocus", None)
         self.fields["username"].widget.attrs["spellcheck"] = "false"
         self.fields["username"].help_text = (
@@ -761,7 +761,7 @@ class ErrorReportForm(forms.ModelForm):
 
     def clean_description(self):
         description = self.cleaned_data["description"].strip()
-        # Sam wpisany automatycznie adres strony nie jest jeszcze opisem problemu.
+        # The page address filled in automatically is not a description on its own.
         own_text = re.sub(r"^Strona: \S*", "", description).strip()
         if len(own_text) < 10:
             raise ValidationError("Opis musi zawierać co najmniej 10 znaków.")

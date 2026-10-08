@@ -1,4 +1,4 @@
-{# Jedno pole formularza: etykieta, kontrolka, podpowiedź i błędy pod polem. #}
+{# One form field: label, control, hint and errors below the field. #}
 <div class="field{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
     {% if field.field.widget.input_type == "password" %}

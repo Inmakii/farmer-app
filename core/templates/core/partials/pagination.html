@@ -1,4 +1,4 @@
-{# Paginacja listy. Oczekuje page_obj, querystring (bez page) i label, np. "Paginacja pól". #}
+{# List pagination. Expects page_obj, querystring (without page) and label, e.g. "Paginacja pól". #}
 {% if is_paginated %}
 <nav class="pager" aria-label="{{ label }}">
     {% if page_obj.has_previous %}
