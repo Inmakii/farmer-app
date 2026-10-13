@@ -26,21 +26,19 @@ Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządz
 - Django 6.0.7;
 - Django REST Framework 3.18.1 i SimpleJWT 5.5.1;
 - MySQL Server 8.0.46 i MySQL Workbench;
-- SQLite jako opcjonalna baza lokalna i baza testowa;
 - mysqlclient 2.2.8;
 - python-dotenv 1.2.3.
 
 Dokładne wersje zależności są zapisane w [`requirements.txt`](requirements.txt).
 
-## Dlaczego MySQL i SQLite
+## Baza danych MySQL
 
-Projekt nie korzysta z obu baz jednocześnie. W danym uruchomieniu aktywny jest zawsze tylko jeden silnik:
+Aplikacja obsługuje wyłącznie MySQL — zarówno podczas lokalnego uruchamiania, jak i w testach oraz na środowisku wdrożeniowym. Inne silniki baz danych nie są obsługiwane:
 
-- **MySQL** jest docelową bazą aplikacji i środowiska wdrożeniowego;
-- **SQLite** służy do lokalnego uruchamiania oraz izolowanych testów automatycznych;
-- aktywny silnik wybiera zmienna `DB_ENGINE` (`mysql` lub `sqlite`; brak wartości oznacza SQLite);
-- oba silniki korzystają z tych samych modeli i migracji Django;
-- dane nie są zapisywane równocześnie do obu baz ani między nimi synchronizowane.
+- połączenie konfigurują zmienne `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` (domyślnie `localhost`) i `DB_PORT` (domyślnie `3306`);
+- brak `DB_NAME`, `DB_USER` lub `DB_PASSWORD` kończy start Django błędem `ImproperlyConfigured`;
+- połączenie korzysta z kodowania `utf8mb4`;
+- testy automatyczne działają na tymczasowej bazie `test_farmer_db` na tym samym serwerze MySQL (szczegóły w sekcji [Testy](#testy)).
 
 ## Struktura repozytorium
 
@@ -118,24 +116,12 @@ Jeśli nie chcesz aktywować środowiska, używaj `.\.venv\Scripts\python.exe` z
 
 ## Konfiguracja `.env`
 
-W obu wariantach ustaw własny, długi i losowy `DJANGO_SECRET_KEY`. Nie kopiuj przykładowych haseł do środowiska produkcyjnego.
-
-SQLite:
+Ustaw własny, długi i losowy `DJANGO_SECRET_KEY`. Nie kopiuj przykładowych haseł do środowiska produkcyjnego.
 
 ```dotenv
 DJANGO_SECRET_KEY=change-me-to-a-long-random-value
 DJANGO_DEBUG=True
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
-DB_ENGINE=sqlite
-```
-
-MySQL:
-
-```dotenv
-DJANGO_SECRET_KEY=change-me-to-a-long-random-value
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
-DB_ENGINE=mysql
 DB_NAME=farmer_db
 DB_USER=farmer_app_user
 DB_PASSWORD=change-me
@@ -143,7 +129,7 @@ DB_HOST=localhost
 DB_PORT=3306
 ```
 
-Domyślnie (bez zmiennej) `DJANGO_DEBUG` ma wartość `False`; lokalnie ustaw `DJANGO_DEBUG=True` w `.env`. `DJANGO_DEBUG=False` należy stosować poza środowiskiem deweloperskim. `DJANGO_ALLOWED_HOSTS` jest listą nazw oddzielonych przecinkami. Gdy `DB_ENGINE` nie ma wartości `mysql`, aplikacja korzysta z SQLite.
+Domyślnie (bez zmiennej) `DJANGO_DEBUG` ma wartość `False`; lokalnie ustaw `DJANGO_DEBUG=True` w `.env`. `DJANGO_DEBUG=False` należy stosować poza środowiskiem deweloperskim. `DJANGO_ALLOWED_HOSTS` jest listą nazw oddzielonych przecinkami. `DB_NAME`, `DB_USER` i `DB_PASSWORD` są wymagane.
 
 ## Przygotowanie MySQL
 
@@ -153,10 +139,11 @@ Poniższe polecenia wykonaj jako administrator MySQL, zastępując przykładowe 
 CREATE DATABASE farmer_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'farmer_app_user'@'localhost' IDENTIFIED BY 'change-me-strong-password';
 GRANT ALL PRIVILEGES ON farmer_db.* TO 'farmer_app_user'@'localhost';
+GRANT ALL PRIVILEGES ON test_farmer_db.* TO 'farmer_app_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-Aplikacja powinna używać dedykowanego konta `farmer_app_user`, a nie `root`.
+Aplikacja powinna używać dedykowanego konta `farmer_app_user`, a nie `root`. Uprawnienia do `test_farmer_db` są potrzebne do uruchamiania testów (patrz [Testy](#testy)).
 
 ## Migracje i pierwsze uruchomienie
 
@@ -211,14 +198,14 @@ $tokens = Invoke-RestMethod -Method Post `
     -ContentType "application/json" -Body $body
 ```
 
-## Testy na SQLite
+## Testy
+
+Testy działają wyłącznie na MySQL, z tą samą konfiguracją `.env` co aplikacja:
 
 ```powershell
-$env:DB_ENGINE = "sqlite"
 python manage.py check
 python manage.py makemigrations --check --dry-run
 python manage.py test
-Remove-Item Env:DB_ENGINE
 ```
 
 Wszystkie testy znajdują się w osobnym pakiecie `core/tests/`. Wyłącznie testy
@@ -228,7 +215,17 @@ JWT można uruchomić poleceniem:
 python manage.py test core.tests.test_jwt_auth
 ```
 
-Django tworzy oddzielną bazę testową i usuwa ją po zakończeniu testów. Przy testach bezpośrednio na MySQL konto bazy musi zwykle mieć uprawnienie `CREATE`, ponieważ Django tworzy tymczasową bazę z prefiksem `test_`. Zalecanym wariantem lokalnym pozostaje SQLite.
+Podczas testów Django tworzy na tym samym serwerze MySQL tymczasową bazę `test_farmer_db` (prefiks `test_` + `DB_NAME`), wykonuje na niej migracje i usuwa ją po zakończeniu testów. Zwykła baza `farmer_db` nie jest przy tym modyfikowana.
+
+Konto `farmer_app_user` musi mieć uprawnienia do tworzenia, używania i usuwania bazy `test_farmer_db`. Administrator MySQL nadaje je jednorazowo:
+
+```sql
+GRANT ALL PRIVILEGES ON farmer_db.* TO 'farmer_app_user'@'localhost';
+GRANT ALL PRIVILEGES ON test_farmer_db.* TO 'farmer_app_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Bez tych uprawnień `python manage.py test` zakończy się błędem tworzenia bazy testowej (np. `Access denied for user 'farmer_app_user'@'localhost' to database 'test_farmer_db'`).
 
 ## Workflow Git
 
@@ -240,7 +237,7 @@ git commit -m "Krótki opis zmiany"
 git push -u origin feature/nazwa-zadania
 ```
 
-Przed scaleniem uruchom pełne testy, `git diff --check` i sprawdź konflikty. `.env`, `db.sqlite3`, `.venv` i dane uwierzytelniające nie mogą trafić do commita. Nazwa gałęzi bazowej i sposób tworzenia pull requestu powinny być zgodne z zasadami zespołu.
+Przed scaleniem uruchom pełne testy, `git diff --check` i sprawdź konflikty. `.env`, `.venv` i dane uwierzytelniające nie mogą trafić do commita. Nazwa gałęzi bazowej i sposób tworzenia pull requestu powinny być zgodne z zasadami zespołu.
 
 ## Bezpieczeństwo
 
