@@ -240,7 +240,7 @@ def get_cultivation_reports(cultivations_queryset):
                     0,
                 ),
 
-                # Nowe dane.
+                # Field area and yield per hectare.
                 "field_area_ha": field_area_ha,
                 "yield_kg_per_ha": yield_kg_per_ha,
             }

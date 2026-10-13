@@ -30,7 +30,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 if not SECRET_KEY:
     raise ImproperlyConfigured(
-        "Ustaw zmienną DJANGO_SECRET_KEY w środowisku lub lokalnym pliku .env."
+        "Set the DJANGO_SECRET_KEY variable in the environment or in the local .env file."
     )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -94,27 +94,36 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-if os.getenv('DB_ENGINE', '').lower() == 'mysql':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DB_NAME', ''),
-            'USER': os.getenv('DB_USER', ''),
-            'PASSWORD': os.getenv('DB_PASSWORD', ''),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '3306'),
-            'OPTIONS': {
-                'charset': 'utf8mb4',
-            },
-        }
+# The project supports MySQL only. Tests use a temporary database named
+# test_<DB_NAME> (test_farmer_db) on the same MySQL server.
+
+def _required_db_setting(name):
+    value = os.getenv(name)
+    if not value:
+        raise ImproperlyConfigured(
+            f"Set the {name} variable in the environment or in the local .env file "
+            "(required MySQL configuration)."
+        )
+    return value
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': _required_db_setting('DB_NAME'),
+        'USER': _required_db_setting('DB_USER'),
+        'PASSWORD': _required_db_setting('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST') or 'localhost',
+        'PORT': os.getenv('DB_PORT') or '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
+        'TEST': {
+            'CHARSET': 'utf8mb4',
+            'COLLATION': 'utf8mb4_unicode_ci',
+        },
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 
 # Password validation

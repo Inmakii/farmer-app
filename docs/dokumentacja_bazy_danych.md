@@ -13,8 +13,9 @@ Model danych pozwala powiązać wszystkie zdarzenia produkcyjne z konkretną upr
 - MySQL Server 8.0.46;
 - MySQL Workbench do modelowania, administracji, eksportu i importu danych;
 - mysqlclient 2.2.8 jako sterownik MySQL dla Django;
-- python-dotenv 1.2.3 do wczytywania konfiguracji z pliku `.env`;
-- SQLite jako opcjonalna, domyślna baza lokalna i baza używana w testach.
+- python-dotenv 1.2.3 do wczytywania konfiguracji z pliku `.env`.
+
+Aplikacja obsługuje wyłącznie MySQL; ten sam silnik jest używany lokalnie, w testach i na środowisku wdrożeniowym.
 
 Pozostałe przypięte zależności to: asgiref 3.12.1, sqlparse 0.6.0 i tzdata 2026.3. Dokładny zestaw znajduje się w pliku [`requirements.txt`](../requirements.txt).
 
@@ -194,7 +195,7 @@ Domyślne sortowanie: od najnowszego zgłoszenia.
 Integralność jest realizowana na dwóch poziomach:
 
 1. **Walidacja Django** działa m.in. podczas obsługi formularzy oraz po jawnym wywołaniu `full_clean()`. Zwykłe `save()` nie uruchamia automatycznie pełnej walidacji modelu.
-2. **Ograniczenia bazy danych** są zapisane w migracji i egzekwowane bezpośrednio przez MySQL lub SQLite, niezależnie od sposobu zapisu rekordu.
+2. **Ograniczenia bazy danych** są zapisane w migracji i egzekwowane bezpośrednio przez MySQL, niezależnie od sposobu zapisu rekordu.
 
 Zastosowane reguły:
 
@@ -265,7 +266,6 @@ Następnie należy uzupełnić lokalny `.env` właściwymi wartościami:
 DJANGO_SECRET_KEY=change-me
 DJANGO_DEBUG=True
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
-DB_ENGINE=mysql
 DB_NAME=farmer_db
 DB_USER=farmer_app_user
 DB_PASSWORD=change-me
@@ -284,7 +284,7 @@ python manage.py runserver --noreload
 
 `seed_demo_data` wymaga, aby użytkownik wskazany przez `--username` już istniał. Komenda nie tworzy użytkownika ani hasła.
 
-Jeśli `DB_ENGINE` nie ma wartości `mysql`, ustawienia Django wybierają lokalną bazę SQLite `db.sqlite3`. `DJANGO_ALLOWED_HOSTS` zawiera nazwy hostów oddzielone przecinkami. W środowisku innym niż deweloperskie należy ustawić `DJANGO_DEBUG=False`, właściwe hosty oraz unikalny, losowy sekret.
+`DB_NAME`, `DB_USER` i `DB_PASSWORD` są wymagane — ich brak kończy start Django błędem `ImproperlyConfigured`. `DB_HOST` domyślnie ma wartość `localhost`, a `DB_PORT` — `3306`. `DJANGO_ALLOWED_HOSTS` zawiera nazwy hostów oddzielone przecinkami. W środowisku innym niż deweloperskie należy ustawić `DJANGO_DEBUG=False`, właściwe hosty oraz unikalny, losowy sekret.
 
 ## 10. Migracje
 
@@ -324,16 +324,19 @@ odświeżanie i weryfikację tokenów JWT oraz dostęp do chronionego endpointu
 
 Testy `seed_demo_data` sprawdzają poprawne wartości i liczby rekordów, brak duplikatów po dwukrotnym uruchomieniu oraz błąd dla nieistniejącego użytkownika.
 
-Aby uruchomić testy na SQLite bez modyfikowania `.env` i bez dotykania danych MySQL, w bieżącej sesji PowerShell należy jawnie nadpisać silnik:
+Testy działają wyłącznie na MySQL, z tą samą konfiguracją `.env` co aplikacja:
 
 ```powershell
-$env:DB_ENGINE = "sqlite"
 python manage.py check
 python manage.py test
-Remove-Item Env:DB_ENGINE
 ```
 
-Django tworzy na czas testów osobną, tymczasową bazę testową i usuwa ją po zakończeniu.
+Django tworzy na tym samym serwerze MySQL tymczasową bazę `test_farmer_db` (kodowanie `utf8mb4`, porównywanie `utf8mb4_unicode_ci`), wykonuje na niej migracje i usuwa ją po zakończeniu testów. Zwykła baza `farmer_db` nie jest przy tym modyfikowana. Konto `farmer_app_user` musi mieć uprawnienia do bazy testowej:
+
+```sql
+GRANT ALL PRIVILEGES ON test_farmer_db.* TO 'farmer_app_user'@'localhost';
+FLUSH PRIVILEGES;
+```
 
 ## 13. Kopie zapasowe
 

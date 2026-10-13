@@ -734,8 +734,8 @@ class CropForm(forms.ModelForm):
         name = self.cleaned_data["name"].strip()
         if not name:
             raise ValidationError(gettext("Crop type name is required."))
-        # SQLite compares case-insensitively only for ASCII, so Polish letters
-        # (e.g. "Łubin" / "łubin") are compared in Python with casefold().
+        # Names are compared in Python with casefold(), so the check for Polish
+        # letters (e.g. "Łubin" / "łubin") does not depend on database collation.
         normalized = name.casefold()
         existing_names = Crop.objects.values_list("name", flat=True)
         if any(existing.casefold() == normalized for existing in existing_names):
