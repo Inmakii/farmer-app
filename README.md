@@ -79,6 +79,13 @@ farmer-app-main/
 - planowana data zbioru nie może być wcześniejsza od daty siewu, ale może przypadać na następny rok (np. uprawy ozime);
 - filtry roku sezonu na listach i w raportach bezpiecznie obsługują nieprawidłowe wartości — nie powodują błędu serwera; lista upraw pomija taki filtr, a raporty wyświetlają komunikat o nieprawidłowym filtrze.
 
+## Historia pola według lat
+
+- na liście pól przy każdym polu widać unikalne lata sezonów (od najnowszego); kliknięcie roku otwiera kartę tego roku na stronie pola, a pole bez upraw pokazuje komunikat „Brak zarejestrowanych sezonów”;
+- strona pola zawiera sekcję „Historia pola według lat” z osobną kartą dla każdego roku (`#season-<rok>`), w której są wszystkie uprawy z danego sezonu: rodzaj, status, data siewu i planowana data zbioru oraz link do szczegółów uprawy;
+- każda karta ma link „Raport za ten rok” do raportu pola z parametrem `season_year`;
+- dane pochodzą z istniejącej relacji pole → uprawa → `season_year` (bez nowych tabel); użytkownik widzi wyłącznie własne pola i uprawy.
+
 ## Rodzaje upraw
 
 | Ścieżka | Nazwa trasy | Opis |
