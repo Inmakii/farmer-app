@@ -63,6 +63,15 @@
                                 {% if field.parcel_identifier %}<span>{% blocktranslate with parcel=field.parcel_identifier %}parcel {{ parcel }}{% endblocktranslate %}</span>{% endif %}
                                 {% if field.address %}<span>{{ field.address }}</span>{% endif %}
                             </p>
+                            {% if field.season_years %}
+                                <ul class="season-chips" aria-label="{% blocktranslate with name=field.name %}Seasons of the field {{ name }}{% endblocktranslate %}">
+                                    {% for year in field.season_years %}
+                                        <li><a class="season-chip" href="{% url 'core:field_detail' field.pk %}#season-{{ year|stringformat:"d" }}">{{ year|stringformat:"d" }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="season-chips-empty">{% translate "No registered seasons" %}</p>
+                            {% endif %}
                         </div>
                         <div class="record-side">
                             <span class="record-amount">{{ field.area_ha|floatformat:"2g" }} ha</span>

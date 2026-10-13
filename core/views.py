@@ -1,5 +1,6 @@
 import hashlib
 import re
+from itertools import groupby
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -9,7 +10,7 @@ from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import LogoutView as DjangoLogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.cache import cache
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.db.models.functions import Lower
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
@@ -245,13 +246,32 @@ class FieldFormUserMixin:
         return kwargs
 
 
+def group_cultivations_by_season(cultivations):
+    """Group cultivations already ordered by season year (newest first)."""
+    return [
+        {"year": year, "cultivations": list(items)}
+        for year, items in groupby(cultivations, key=lambda cultivation: cultivation.season_year)
+    ]
+
+
 class FieldListView(FieldOwnerQuerysetMixin, ListView):
     template_name = "core/field_list.html"
     context_object_name = "fields"
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by("name")
+        # Only the season years are needed for the list, fetched in one extra query.
+        season_cultivations = Cultivation.objects.only("id", "field_id", "season_year").order_by(
+            "-season_year"
+        )
+        queryset = (
+            super()
+            .get_queryset()
+            .order_by("name")
+            .prefetch_related(
+                Prefetch("cultivations", queryset=season_cultivations, to_attr="season_cultivations")
+            )
+        )
         query = self.request.GET.get("q", "").strip()
         soil_type = self.request.GET.get("soil_type", "")
         location_method = self.request.GET.get("location_method", "")
@@ -270,6 +290,11 @@ class FieldListView(FieldOwnerQuerysetMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        for field in context["fields"]:
+            # Unique years, newest first; the prefetch is already ordered descending.
+            field.season_years = list(
+                dict.fromkeys(cultivation.season_year for cultivation in field.season_cultivations)
+            )
         query_parameters = self.request.GET.copy()
         query_parameters.pop("page", None)
         context.update(
@@ -290,6 +315,14 @@ class FieldListView(FieldOwnerQuerysetMixin, ListView):
 class FieldDetailView(FieldOwnerQuerysetMixin, DetailView):
     template_name = "core/field_detail.html"
     context_object_name = "field"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cultivations = self.object.cultivations.select_related("crop").order_by(
+            "-season_year", "crop__name"
+        )
+        context["season_groups"] = group_cultivations_by_season(cultivations)
+        return context
 
 
 class FieldCreateView(LoginRequiredMixin, FieldFormUserMixin, CreateView):

@@ -616,10 +616,6 @@ msgstr "Посівів створено або оновлено: %(count)s"
 msgid "Cultivations of the field"
 msgstr "Посіви поля"
 
-#: core\templates\core\field_detail.html:45
-msgid "Cultivations on this field"
-msgstr "Посіви на цьому полі"
-
 #: core\templates\core\base.html:106
 msgid "Dark mode is on."
 msgstr "Увімкнено темну тему."
@@ -1032,6 +1028,10 @@ msgstr "Дані поля"
 #: core\templates\core\field_report.html:16
 msgid "Field details"
 msgstr "Дані поля"
+
+#: core\templates\core\field_detail.html:45
+msgid "Field history by year"
+msgstr "Історія поля за роками"
 
 #: core\forms.py:169
 msgid "Field name"
@@ -1523,6 +1523,10 @@ msgstr "Немає записаних зборів"
 msgid "No harvests."
 msgstr "Немає зборів."
 
+#: core\templates\core\field_list.html:73
+msgid "No registered seasons"
+msgstr "Немає зареєстрованих сезонів"
+
 #: core\templates\core\error_report_list.html:68
 msgid "No reports"
 msgstr "Немає звернень"
@@ -1864,6 +1868,10 @@ msgstr "Повідомити про проблему"
 msgid "Report category"
 msgstr "Категорія звернення"
 
+#: core\templates\core\field_detail.html:58
+msgid "Report for this year"
+msgstr "Звіт за цей рік"
+
 #: core\templates\core\error_report_list.html:74
 msgid "Report pages"
 msgstr "Сторінки звернень"
@@ -2011,6 +2019,11 @@ msgstr "Сезонні посіви"
 #: core\templates\core\cultivation_list.html:9
 msgid "Seasons"
 msgstr "Сезони"
+
+#: core\templates\core\field_list.html:67
+#, python-format
+msgid "Seasons of the field %(name)s"
+msgstr "Сезони поля %(name)s"
 
 #: core\templates\core\error_report_form.html:21
 msgid "Send report"

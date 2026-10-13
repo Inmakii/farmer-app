@@ -616,10 +616,6 @@ msgstr "Uprawy utworzone lub zaktualizowane: %(count)s"
 msgid "Cultivations of the field"
 msgstr "Uprawy pola"
 
-#: core\templates\core\field_detail.html:45
-msgid "Cultivations on this field"
-msgstr "Uprawy na tym polu"
-
 #: core\templates\core\base.html:106
 msgid "Dark mode is on."
 msgstr "Włączono tryb ciemny."
@@ -1032,6 +1028,10 @@ msgstr "Dane pola"
 #: core\templates\core\field_report.html:16
 msgid "Field details"
 msgstr "Szczegóły pola"
+
+#: core\templates\core\field_detail.html:45
+msgid "Field history by year"
+msgstr "Historia pola według lat"
 
 #: core\forms.py:169
 msgid "Field name"
@@ -1523,6 +1523,10 @@ msgstr "Brak zapisanych zbiorów"
 msgid "No harvests."
 msgstr "Brak zbiorów."
 
+#: core\templates\core\field_list.html:73
+msgid "No registered seasons"
+msgstr "Brak zarejestrowanych sezonów"
+
 #: core\templates\core\error_report_list.html:68
 msgid "No reports"
 msgstr "Brak zgłoszeń"
@@ -1864,6 +1868,10 @@ msgstr "Zgłoś problem"
 msgid "Report category"
 msgstr "Kategoria zgłoszenia"
 
+#: core\templates\core\field_detail.html:58
+msgid "Report for this year"
+msgstr "Raport za ten rok"
+
 #: core\templates\core\error_report_list.html:74
 msgid "Report pages"
 msgstr "Paginacja zgłoszeń"
@@ -2011,6 +2019,11 @@ msgstr "Uprawy sezonowe"
 #: core\templates\core\cultivation_list.html:9
 msgid "Seasons"
 msgstr "Sezony"
+
+#: core\templates\core\field_list.html:67
+#, python-format
+msgid "Seasons of the field %(name)s"
+msgstr "Sezony pola %(name)s"
 
 #: core\templates\core\error_report_form.html:21
 msgid "Send report"
