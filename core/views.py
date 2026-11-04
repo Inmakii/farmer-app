@@ -10,6 +10,8 @@ from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import LogoutView as DjangoLogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.cache import cache
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError, models, transaction
 from django.db.models import Prefetch, Q
 from django.db.models.functions import Lower
 from django.shortcuts import redirect, render
@@ -230,6 +232,46 @@ class PasswordChangeView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
+class UniqueConflictMixin:
+    """Save the form and show a form error if the database reports a unique conflict.
+
+    Two requests can pass form validation with the same unique values at the same
+    time (for example a double-clicked submit button). The second save then fails
+    on the unique index; this turns that failure into a form error instead of
+    HTTP 500. Any other IntegrityError is re-raised.
+    """
+
+    unique_conflict_field = None
+    unique_conflict_message = ""
+    success_message = ""
+
+    def get_success_message(self):
+        return self.success_message
+
+    def has_unique_conflict(self, form):
+        instance = form.instance
+        try:
+            instance.validate_unique()
+            for constraint in instance._meta.constraints:
+                if isinstance(constraint, models.UniqueConstraint):
+                    constraint.validate(type(instance), instance)
+        except ValidationError:
+            return True
+        return False
+
+    def form_valid(self, form):
+        try:
+            with transaction.atomic():
+                response = super().form_valid(form)
+        except IntegrityError:
+            if not self.has_unique_conflict(form):
+                raise
+            form.add_error(self.unique_conflict_field, self.unique_conflict_message)
+            return self.form_invalid(form)
+        messages.success(self.request, self.get_success_message())
+        return response
+
+
 class FieldOwnerQuerysetMixin(LoginRequiredMixin):
     model = Field
 
@@ -325,29 +367,33 @@ class FieldDetailView(FieldOwnerQuerysetMixin, DetailView):
         return context
 
 
-class FieldCreateView(LoginRequiredMixin, FieldFormUserMixin, CreateView):
+class FieldCreateView(LoginRequiredMixin, FieldFormUserMixin, UniqueConflictMixin, CreateView):
     model = Field
     template_name = "core/field_form.html"
+    unique_conflict_field = "name"
+    unique_conflict_message = _("You already have a field with this name.")
+    success_message = _("The field has been created.")
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        response = super().form_valid(form)
-        messages.success(self.request, gettext("The field has been created."))
-        return response
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("core:field_detail", kwargs={"pk": self.object.pk})
 
 
-class FieldUpdateView(FieldOwnerQuerysetMixin, FieldFormUserMixin, UpdateView):
+class FieldUpdateView(
+    FieldOwnerQuerysetMixin, FieldFormUserMixin, UniqueConflictMixin, UpdateView
+):
     template_name = "core/field_form.html"
     context_object_name = "field"
+    unique_conflict_field = "name"
+    unique_conflict_message = _("You already have a field with this name.")
+    success_message = _("The field has been updated.")
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        response = super().form_valid(form)
-        messages.success(self.request, gettext("The field has been updated."))
-        return response
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("core:field_detail", kwargs={"pk": self.object.pk})
@@ -397,20 +443,17 @@ class CropListView(LoginRequiredMixin, ListView):
         return Crop.objects.order_by(Lower("name"), "name")
 
 
-class CropCreateView(LoginRequiredMixin, CreateView):
+class CropCreateView(LoginRequiredMixin, UniqueConflictMixin, CreateView):
     model = Crop
     form_class = CropForm
     template_name = "core/crop_form.html"
     success_url = reverse_lazy("core:crop_list")
     http_method_names = ["get", "post", "head", "options"]
+    unique_conflict_field = "name"
+    unique_conflict_message = _("A crop type with this name already exists.")
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(
-            self.request,
-            gettext("Crop type “%(name)s” has been added.") % {"name": self.object.name},
-        )
-        return response
+    def get_success_message(self):
+        return gettext("Crop type “%(name)s” has been added.") % {"name": self.object.name}
 
 
 class CultivationListView(CultivationOwnerQuerysetMixin, ListView):
@@ -479,9 +522,13 @@ class CultivationDetailView(CultivationOwnerQuerysetMixin, DetailView):
         return context
 
 
-class CultivationCreateView(LoginRequiredMixin, CultivationFormUserMixin, CreateView):
+class CultivationCreateView(
+    LoginRequiredMixin, CultivationFormUserMixin, UniqueConflictMixin, CreateView
+):
     model = Cultivation
     template_name = "core/cultivation_form.html"
+    unique_conflict_message = _("This crop is already assigned to this field and season.")
+    success_message = _("The cultivation has been created.")
 
     def get_initial(self):
         initial = super().get_initial()
@@ -494,25 +541,17 @@ class CultivationCreateView(LoginRequiredMixin, CultivationFormUserMixin, Create
                 initial["field"] = field
         return initial
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, gettext("The cultivation has been created."))
-        return response
-
     def get_success_url(self):
         return reverse("core:cultivation_detail", kwargs={"pk": self.object.pk})
 
 
 class CultivationUpdateView(
-    CultivationOwnerQuerysetMixin, CultivationFormUserMixin, UpdateView
+    CultivationOwnerQuerysetMixin, CultivationFormUserMixin, UniqueConflictMixin, UpdateView
 ):
     template_name = "core/cultivation_form.html"
     context_object_name = "cultivation"
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, gettext("The cultivation has been updated."))
-        return response
+    unique_conflict_message = _("This crop is already assigned to this field and season.")
+    success_message = _("The cultivation has been updated.")
 
     def get_success_url(self):
         return reverse("core:cultivation_detail", kwargs={"pk": self.object.pk})
