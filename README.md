@@ -139,6 +139,8 @@ DB_PORT=3306
 
 Domyślnie (bez zmiennej) `DJANGO_DEBUG` ma wartość `False`; lokalnie ustaw `DJANGO_DEBUG=True` w `.env`. `DJANGO_DEBUG=False` należy stosować poza środowiskiem deweloperskim. `DJANGO_ALLOWED_HOSTS` jest listą nazw oddzielonych przecinkami. `DB_NAME`, `DB_USER` i `DB_PASSWORD` są wymagane.
 
+Zmienne bezpieczeństwa produkcji (`DJANGO_CSRF_TRUSTED_ORIGINS`, `DJANGO_SECURE_SSL_REDIRECT`, `DJANGO_SESSION_COOKIE_SECURE`, `DJANGO_CSRF_COOKIE_SECURE`, `DJANGO_SECURE_HSTS_*`) są opisane w `.env.example` i w [dokumentacji bezpieczeństwa](docs/bezpieczenstwo_aplikacji.md). Lokalnie mogą pozostać puste albo `False`. Wartości logiczne muszą mieć postać `true/false`, `1/0`, `yes/no` lub `on/off`, inaczej aplikacja nie wystartuje.
+
 ## Przygotowanie MySQL
 
 Poniższe polecenia wykonaj jako administrator MySQL, zastępując przykładowe hasło:
@@ -263,7 +265,13 @@ Przed scaleniem uruchom pełne testy, `git diff --check` i sprawdź konflikty. `
 - formularze POST korzystają z CSRF, wylogowanie i właściwe usuwanie nie odbywają się przez GET;
 - hasła są walidowane i hashowane przez Django, a nie przechowywane jawnie;
 - `SECRET_KEY`, ustawienia MySQL, `DEBUG` i `ALLOWED_HOSTS` pochodzą ze środowiska;
+- logowanie jest blokowane po pięciu nieudanych próbach, a endpointy tokenów JWT mają limity zapytań;
+- Content Security Policy (wbudowane w Django 6.0) dopuszcza skrypty i style tylko z aplikacji oraz fonty Google Fonts, bez `unsafe-inline` i `unsafe-eval`. Przy `DJANGO_DEBUG=False` polityka jest wymuszana, a przy `DJANGO_DEBUG=True` tylko raportuje naruszenia w konsoli przeglądarki, żeby strony diagnostyczne Django i przeglądarka API DRF działały lokalnie. Na produkcji API zwraca wyłącznie JSON;
+- nagłówki `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: same-origin` i `Cross-Origin-Opener-Policy: same-origin` oraz cookie sesji `HttpOnly` i `SameSite=Lax`;
+- przekierowanie na HTTPS, cookie `Secure`, HSTS i `CSRF_TRUSTED_ORIGINS` są włączane zmiennymi środowiskowymi. Domyślnie są wyłączone, żeby lokalny HTTP działał. Błędne wartości tych zmiennych zatrzymują start aplikacji;
 - na produkcji należy uruchomić także `python manage.py check --deploy` i skonfigurować HTTPS.
+
+Szczegóły, model zagrożeń, sposób weryfikacji i etapowe włączanie HSTS: [docs/bezpieczenstwo_aplikacji.md](docs/bezpieczenstwo_aplikacji.md).
 
 ## Autorzy
 

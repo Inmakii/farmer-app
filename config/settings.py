@@ -14,13 +14,82 @@ import os
 import sys
 from datetime import timedelta
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.csp import CSP
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
+
+_TRUE_VALUES = ("true", "1", "yes", "on")
+_FALSE_VALUES = ("false", "0", "no", "off")
+
+
+def _env_bool(name, default):
+    """Read a boolean variable; an unrecognised value is an error, never a silent default."""
+    raw = os.getenv(name)
+    if raw is None or not raw.strip():
+        return default
+    value = raw.strip().lower()
+    if value in _TRUE_VALUES:
+        return True
+    if value in _FALSE_VALUES:
+        return False
+    raise ImproperlyConfigured(
+        f"{name} must be a boolean value (true/false, 1/0, yes/no, on/off)."
+    )
+
+
+_MAX_INT_DIGITS = 10
+
+
+def _env_non_negative_int(name, default):
+    """Read a whole number (0 or more) written with ASCII digits only; anything else is an error."""
+    raw = os.getenv(name)
+    if raw is None or not raw.strip():
+        return default
+    value = raw.strip()
+    # str.isdigit() alone also accepts e.g. "²" or full-width digits; isascii() limits it to 0-9.
+    # The length limit keeps int() away from its maximum string size.
+    if len(value) > _MAX_INT_DIGITS or not value.isascii() or not value.isdigit():
+        raise ImproperlyConfigured(
+            f"{name} must be a whole number greater than or equal to 0, "
+            f"written with the digits 0-9 (at most {_MAX_INT_DIGITS} digits)."
+        )
+    return int(value)
+
+
+def _env_trusted_origins(name):
+    """Read a comma-separated list of origins such as https://farm.example.com."""
+    origins = []
+    for item in os.getenv(name, "").split(","):
+        origin = item.strip()
+        if not origin:
+            continue
+        parts = urlsplit(origin)
+        host = parts.hostname or ""
+        try:
+            parts.port  # Raises ValueError for a malformed port.
+        except ValueError:
+            host = ""
+        if (
+            parts.scheme not in ("http", "https")
+            or not host
+            or host == "*"
+            or parts.path not in ("", "/")
+            or parts.query
+            or parts.fragment
+            or parts.username is not None
+        ):
+            raise ImproperlyConfigured(
+                f"{name} must contain origins in the form https://example.com "
+                "(scheme and host only, separated by commas)."
+            )
+        origins.append(origin.rstrip("/"))
+    return origins
 
 
 # Quick-start development settings - unsuitable for production
@@ -34,7 +103,7 @@ if not SECRET_KEY:
     )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes', 'on')
+DEBUG = _env_bool('DJANGO_DEBUG', False)
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -43,6 +112,85 @@ ALLOWED_HOSTS = [
     ).split(",")
     if host.strip()
 ]
+
+# Origins allowed to send unsafe (POST) requests over HTTPS from another host,
+# e.g. behind a proxy or on a separate domain. Empty by default.
+CSRF_TRUSTED_ORIGINS = _env_trusted_origins("DJANGO_CSRF_TRUSTED_ORIGINS")
+
+
+# HTTPS and HTTP security headers
+# https://docs.djangoproject.com/en/6.0/ref/middleware/#module-django.middleware.security
+#
+# The HTTPS flags are off by default so that local development over
+# http://127.0.0.1:8000 keeps working. Turn them on in production through the
+# environment once the site is served over HTTPS. SECURE_PROXY_SSL_HEADER is
+# deliberately not set: it is only safe when the real reverse proxy is known to
+# strip and set that header itself.
+SECURE_SSL_REDIRECT = _env_bool("DJANGO_SECURE_SSL_REDIRECT", False)
+# When the HTTPS redirect is on, the cookies are Secure unless explicitly
+# disabled, and disabling them together with the redirect is rejected.
+SESSION_COOKIE_SECURE = _env_bool("DJANGO_SESSION_COOKIE_SECURE", SECURE_SSL_REDIRECT)
+CSRF_COOKIE_SECURE = _env_bool("DJANGO_CSRF_COOKIE_SECURE", SECURE_SSL_REDIRECT)
+if SECURE_SSL_REDIRECT and not (SESSION_COOKIE_SECURE and CSRF_COOKIE_SECURE):
+    raise ImproperlyConfigured(
+        "DJANGO_SECURE_SSL_REDIRECT=True requires DJANGO_SESSION_COOKIE_SECURE and "
+        "DJANGO_CSRF_COOKIE_SECURE to be True (or unset, which makes them follow the redirect)."
+    )
+
+# HSTS stays off (0) until a real domain with working HTTPS is chosen.
+# includeSubDomains and preload are never enabled automatically.
+SECURE_HSTS_SECONDS = _env_non_negative_int("DJANGO_SECURE_HSTS_SECONDS", 0)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = _env_bool("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", False)
+SECURE_HSTS_PRELOAD = _env_bool("DJANGO_SECURE_HSTS_PRELOAD", False)
+if (SECURE_HSTS_INCLUDE_SUBDOMAINS or SECURE_HSTS_PRELOAD) and SECURE_HSTS_SECONDS == 0:
+    raise ImproperlyConfigured(
+        "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS and DJANGO_SECURE_HSTS_PRELOAD "
+        "require DJANGO_SECURE_HSTS_SECONDS greater than 0."
+    )
+if SECURE_HSTS_PRELOAD and (
+    not SECURE_HSTS_INCLUDE_SUBDOMAINS or SECURE_HSTS_SECONDS < 31536000
+):
+    raise ImproperlyConfigured(
+        "DJANGO_SECURE_HSTS_PRELOAD requires DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS=True "
+        "and DJANGO_SECURE_HSTS_SECONDS of at least 31536000 (one year)."
+    )
+
+# Cookies: not readable from JavaScript (session) and not sent on cross-site
+# subrequests or cross-site POSTs (Lax keeps normal links from other sites working).
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+
+X_FRAME_OPTIONS = "DENY"
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "same-origin"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+
+# Content Security Policy (django.middleware.csp.ContentSecurityPolicyMiddleware).
+# The templates contain no inline scripts, inline styles or style attributes;
+# the only external resources are Google Fonts. data: images are needed for the
+# SVG background in styles.css.
+_CSP_POLICY = {
+    "default-src": [CSP.SELF],
+    "script-src": [CSP.SELF],
+    "style-src": [CSP.SELF, "https://fonts.googleapis.com"],
+    "font-src": [CSP.SELF, "https://fonts.gstatic.com"],
+    "img-src": [CSP.SELF, "data:"],
+    "connect-src": [CSP.SELF],
+    "object-src": [CSP.NONE],
+    "base-uri": [CSP.SELF],
+    "form-action": [CSP.SELF],
+    "frame-ancestors": [CSP.NONE],
+}
+if DEBUG:
+    # Development: the same policy in report-only mode. Violations are logged in
+    # the browser console but not blocked, so Django's debug and CSRF failure
+    # pages and the DRF browsable API keep their inline styles.
+    SECURE_CSP = {}
+    SECURE_CSP_REPORT_ONLY = _CSP_POLICY
+else:
+    SECURE_CSP = _CSP_POLICY
+    SECURE_CSP_REPORT_ONLY = {}
 
 
 # Application definition
@@ -60,6 +208,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.csp.ContentSecurityPolicyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -191,6 +340,13 @@ REST_FRAMEWORK = {
         "auth_token": "10/min",
         "auth_refresh": "30/min",
     },
+    # The browsable API uses inline styles that the enforced CSP blocks, so it
+    # is only available in development; production responds with JSON.
+    "DEFAULT_RENDERER_CLASSES": (
+        ("rest_framework.renderers.JSONRenderer", "rest_framework.renderers.BrowsableAPIRenderer")
+        if DEBUG
+        else ("rest_framework.renderers.JSONRenderer",)
+    ),
 }
 
 SIMPLE_JWT = {
