@@ -119,7 +119,11 @@ z indeksu `(owner_id, name)`.
   i scaleń. Migracje 0003 i 0004 zmieniają tylko walidatory i etykiety, bez zmian w SQL.
 - Kolumny, typy (`decimal(p,s)`, `date`, `datetime(6)`, `smallint unsigned`), `NULL`,
   klucze obce, indeksy i ograniczenia `CHECK` odczytane z `information_schema` zgadzają się
-  z modelami i z plikiem `docs/database/farmer_db_schema.sql`.
+  z modelami.
+- Korekta (2026-11-04): pierwotnie zapisano tu także zgodność z plikiem
+  `docs/database/farmer_db_schema.sql`. Dokładniejsze porównanie wykazało, że eksport miał
+  `core_harvest.disposition` z `DEFAULT 'SOLD'` w innej pozycji kolumny. Eksport wygenerowano
+  ponownie, opis w `docs/database/weryfikacja_mysql_workbench.md`.
 
 ### 4.3. Integralność danych w `farmer_db`
 

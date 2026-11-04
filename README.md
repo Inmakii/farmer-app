@@ -69,6 +69,7 @@ farmer-app-main/
 - [Diagram ERD](docs/diagrams/erd_farmer_app.png)
 - [Model MySQL Workbench](docs/diagrams/farmer_db_model.mwb)
 - [Eksport schematu SQL](docs/database/farmer_db_schema.sql)
+- [Weryfikacja materiałów MySQL Workbench](docs/database/weryfikacja_mysql_workbench.md)
 
 ![Diagram ERD](docs/diagrams/erd_farmer_app.png)
 
