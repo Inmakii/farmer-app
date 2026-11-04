@@ -228,6 +228,8 @@ w osobnym zadaniu przebudowy (na tym etapie polecenie nie było zmieniane):
    utworzone lub zaktualizowane rekordy.
 7. Daty są na stałe ustawione na sezon 2026.
 
+**Aktualizacja (gałąź `feature/seed-demo-data`):** wszystkie powyższe braki zostały usunięte. Polecenie obejmuje teraz `ErrorReport` i wszystkie wartości słownikowe, wywołuje `full_clean()`, nie używa `update_or_create`, nie nadpisuje istniejących rekordów, ma opcję `--dry-run` i wypisuje faktyczne liczniki. Opis znajduje się w README i w `docs/dokumentacja_bazy_danych.md`.
+
 ## 7. Wniosek
 
 **Baza MySQL `farmer_db` jest gotowa do normalnego używania przez aplikację.**

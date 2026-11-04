@@ -17,6 +17,11 @@ msgstr "%(crop)s на полі %(field)s (%(year)s)"
 msgid "%(crop)s on the field %(field)s, season %(year)s"
 msgstr "%(crop)s на полі %(field)s, сезон %(year)s"
 
+#: core\management\commands\seed_demo_data.py:398
+#, python-format
+msgid "%(model)s: created %(created)s, reused %(reused)s, skipped %(skipped)s"
+msgstr "%(model)s: створено %(created)s, використано повторно %(reused)s, пропущено %(skipped)s"
+
 #: core\templates\core\harvest_detail.html:12
 #, python-format
 msgid "%(quantity)s %(unit)s from the field %(field)s, season %(year)s"
@@ -509,6 +514,11 @@ msgstr "Створіть його безкоштовно"
 msgid "Create your first field"
 msgstr "Створити перше поле"
 
+#: core\management\commands\seed_demo_data.py:380
+#, python-format
+msgid "Created %(model)s: %(object)s"
+msgstr "Створено (%(model)s): %(object)s"
+
 #: core\templates\core\error_report_detail.html:23
 msgid "Created at"
 msgstr "Дата створення"
@@ -606,11 +616,6 @@ msgstr "Посіви"
 msgctxt "page title"
 msgid "Cultivations"
 msgstr "Посіви"
-
-#: core\management\commands\seed_demo_data.py:141
-#, python-format
-msgid "Cultivations created or updated: %(count)s"
-msgstr "Посівів створено або оновлено: %(count)s"
 
 #: core\templates\core\field_report.html:54
 msgid "Cultivations of the field"
@@ -726,7 +731,12 @@ msgstr "Видалити роботу %(type)s від %(date)s"
 msgid "Deleting…"
 msgstr "Видалення…"
 
-#: core\management\commands\seed_demo_data.py:149
+#: core\management\commands\seed_demo_data.py:347
+#, python-format
+msgid "Demo data failed validation (%(model)s “%(object)s”): %(errors)s"
+msgstr "Демонстраційні дані не пройшли перевірку (%(model)s: «%(object)s»): %(errors)s"
+
+#: core\management\commands\seed_demo_data.py:411
 msgid "Demo data is ready."
 msgstr "Демонстраційні дані підготовлено."
 
@@ -770,6 +780,14 @@ msgstr "Ще не маєте облікового запису?"
 #: core\templates\core\home.html:160
 msgid "Does it cost anything?"
 msgstr "Це щось коштує?"
+
+#: core\management\commands\seed_demo_data.py:408
+msgid "Dry run finished. No changes were saved to the database."
+msgstr "Пробний режим завершено. Жодних змін у базі даних не збережено."
+
+#: core\management\commands\seed_demo_data.py:230
+msgid "Dry run: the data is checked, but no changes will be saved."
+msgstr "Пробний режим: дані буде перевірено, але жодних змін не буде збережено."
 
 #: core\templates\core\cultivation_detail.html:19
 #: core\templates\core\cultivation_list.html:86
@@ -1073,11 +1091,6 @@ msgstr "Підсумок поля"
 msgid "Fields"
 msgstr "Поля"
 
-#: core\management\commands\seed_demo_data.py:140
-#, python-format
-msgid "Fields created or updated: %(count)s"
-msgstr "Полів створено або оновлено: %(count)s"
-
 #: core\templates\core\partials\farm_map.html:5
 msgid "Fields seen from above: wheat, rapeseed, maize, meadow and fallow land"
 msgstr "Поля згори: пшениця, ріпак, кукурудза, луг і переліг"
@@ -1253,11 +1266,6 @@ msgstr "Збори"
 msgctxt "page title"
 msgid "Harvests"
 msgstr "Збори"
-
-#: core\management\commands\seed_demo_data.py:147
-#, python-format
-msgid "Harvests created or updated: %(count)s"
-msgstr "Зборів створено або оновлено: %(count)s"
 
 #: core\templates\core\dashboard.html:10
 #, python-format
@@ -1917,6 +1925,11 @@ msgstr "Вирішено"
 msgid "Result"
 msgstr "Результат"
 
+#: core\management\commands\seed_demo_data.py:387
+#, python-format
+msgid "Reused %(model)s: %(object)s"
+msgstr "Використано повторно (%(model)s): %(object)s"
+
 #: core\forms.py:621
 #: core\templates\core\dashboard.html:46
 #: core\templates\core\harvest_detail.html:51
@@ -2060,6 +2073,11 @@ msgstr "Пилуватий ґрунт"
 msgid "Skip to content"
 msgstr "Перейти до вмісту"
 
+#: core\management\commands\seed_demo_data.py:369
+#, python-format
+msgid "Skipped %(model)s “%(object)s”: a record with the same identifying values already exists with different data and was left unchanged. Dependent demo records were skipped as well."
+msgstr "Пропущено (%(model)s): «%(object)s». Запис із тими самими ідентифікаційними даними вже існує, але має інші значення – його залишено без змін. Залежні демонстраційні записи також пропущено."
+
 #: core\templates\core\home.html:136
 msgid "Small and medium farms"
 msgstr "Малі й середні господарства"
@@ -2143,11 +2161,6 @@ msgctxt "page title"
 msgid "Sprayings"
 msgstr "Обприскування"
 
-#: core\management\commands\seed_demo_data.py:144
-#, python-format
-msgid "Sprayings created or updated: %(count)s"
-msgstr "Обприскувань створено або оновлено: %(count)s"
-
 #: core\templates\core\home.html:105
 msgid "Spring"
 msgstr "Весна"
@@ -2172,6 +2185,14 @@ msgstr "Склад"
 #: core\templates\core\report_dashboard.html:45
 msgid "Summary"
 msgstr "Підсумок"
+
+#: core\management\commands\seed_demo_data.py:393
+msgid "Summary (dry run, nothing was saved):"
+msgstr "Підсумок (пробний режим, нічого не збережено):"
+
+#: core\management\commands\seed_demo_data.py:393
+msgid "Summary:"
+msgstr "Підсумок:"
 
 #: core\templates\core\home.html:110
 msgid "Summer"
@@ -2456,7 +2477,7 @@ msgstr "Одиниця"
 msgid "Updated at"
 msgstr "Дата оновлення"
 
-#: core\management\commands\seed_demo_data.py:31
+#: core\management\commands\seed_demo_data.py:248
 #, python-format
 msgid "User \"%(username)s\" does not exist."
 msgstr "Користувача \"%(username)s\" не існує."
@@ -2604,14 +2625,19 @@ msgctxt "page title"
 msgid "Works"
 msgstr "Роботи"
 
-#: core\management\commands\seed_demo_data.py:142
-#, python-format
-msgid "Works created or updated: %(count)s"
-msgstr "Робіт створено або оновлено: %(count)s"
-
 #: core\templates\core\home.html:141
 msgid "Works, sprayings and harvests are in one place, so it is easy to check what has already been done."
 msgstr "Роботи, обприскування та збори в одному місці, тож легко перевірити, що вже зроблено."
+
+#: core\management\commands\seed_demo_data.py:378
+#, python-format
+msgid "Would create %(model)s: %(object)s"
+msgstr "Буде створено (%(model)s): %(object)s"
+
+#: core\management\commands\seed_demo_data.py:385
+#, python-format
+msgid "Would reuse %(model)s: %(object)s"
+msgstr "Буде використано повторно (%(model)s): %(object)s"
 
 #: core\templates\core\report_dashboard.html:67
 msgid "Year"

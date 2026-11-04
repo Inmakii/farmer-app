@@ -169,21 +169,30 @@ python manage.py showmigrations
 python manage.py sqlmigrate core 0001
 ```
 
-Aplikacja `core` ma obecnie trzy migracje:
+Aplikacja `core` ma obecnie cztery migracje:
 
 - `0001_initial` — początkowa struktura tabel;
 - `0002_harvest_disposition_and_more` — pole przeznaczenia zbioru (`disposition`) oraz ograniczenie zerowego przychodu dla zbiorów niesprzedanych;
-- `0003_alter_cultivation_season_year` — aktualizacja walidatorów roku sezonu do zakresu 1980–2100; zmienia jedynie walidację na poziomie Django, a nie strukturę tabel.
+- `0003_alter_cultivation_season_year` — aktualizacja walidatorów roku sezonu do zakresu 1980–2100; zmienia jedynie walidację na poziomie Django, a nie strukturę tabel;
+- `0004_english_verbose_names` — zmiana nazw modeli i pól (`verbose_name`) oraz etykiet wyborów na angielskie teksty źródłowe tłumaczone przez `locale/`. Zapisywane wartości wyborów (np. `PLANNED`, `SOLD`) się nie zmieniają, a migracja nie generuje żadnego SQL (`sqlmigrate core 0004` jest pusty), więc struktura tabel pozostaje bez zmian.
 
 ## Dane demonstracyjne
 
-Komenda wymaga istniejącego użytkownika i nie tworzy konta ani hasła:
+Komenda zasila bazę przykładowym scenariuszem dla istniejącego użytkownika. Nie tworzy konta ani hasła:
 
 ```powershell
 python manage.py seed_demo_data --username admin
+python manage.py seed_demo_data --username admin --dry-run
 ```
 
-Tworzy lub aktualizuje rodzaje upraw, dwa pola, uprawy sezonu 2026, prace, opryski i zbiory. Ponowne uruchomienie dla tego samego użytkownika nie duplikuje danych.
+- `--username` (wymagany) to nazwa istniejącego użytkownika, do którego trafią dane. Dla nieznanej nazwy komenda kończy się błędem i niczego nie zapisuje.
+- `--dry-run` sprawdza cały scenariusz i wypisuje, co zostałoby utworzone albo wykorzystane ponownie. Na końcu wycofuje transakcję, więc w bazie nie zostają żadne dane. Jedynym śladem może być przesunięty licznik `AUTO_INCREMENT` w MySQL.
+
+Scenariusz obejmuje wszystkie modele: wspólne rodzaje upraw, trzy pola, uprawy z sezonów 2025–2027, prace, opryski, zbiory i zgłoszenia błędów. Nazwy pól, środków i opisy zgłoszeń mają oznaczenie `[DEMO]`. Każdy nowy obiekt przechodzi `full_clean()`, a cały zapis odbywa się w jednej transakcji. Błąd w trakcie nie zostawia więc części danych.
+
+Komenda jest idempotentna. Ponowne uruchomienie dla tego samego użytkownika nie tworzy duplikatów, tylko wykorzystuje istniejące rekordy demonstracyjne. Dla innego użytkownika powstaje jego własny zestaw pól, upraw i zdarzeń, a rodzaje upraw z katalogu są wspólne.
+
+Komenda nie zmienia istniejących rekordów. Jeśli rekord o tych samych danych identyfikujących (np. pole `[DEMO] Pole Północne`) istnieje, ale ma inne wartości, zostaje bez zmian. Komenda wypisuje wtedy ostrzeżenie i pomija go razem z zależnymi danymi demonstracyjnymi. Podsumowanie pokazuje dla każdego modelu faktyczną liczbę rekordów utworzonych, wykorzystanych ponownie i pominiętych.
 
 ## Uwierzytelnianie JWT
 
