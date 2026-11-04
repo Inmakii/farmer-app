@@ -30,7 +30,7 @@ Oznaczenia na diagramie:
 - **UNIQUE** – wartość albo zestaw wartości nie może się powtarzać;
 - **1:N** – jednemu rekordowi po stronie „1” może odpowiadać wiele rekordów po stronie „N”, natomiast każdy rekord po stronie „N” wskazuje dokładnie jeden rekord nadrzędny.
 
-Diagram przedstawia tabele i relacje wynikające z modelu Django. Szczegółowe, nazwane ograniczenia `CHECK` i złożone ograniczenia `UNIQUE` są zdefiniowane w migracji i opisane w dalszych sekcjach.
+Diagram przedstawia tabele i relacje wynikające z modelu Django. Szczegółowe, nazwane ograniczenia `CHECK` i złożone ograniczenia `UNIQUE` są zdefiniowane w migracjach `0001_initial` i `0002_harvest_disposition_and_more` i opisane w dalszych sekcjach.
 
 ## 4. Opis tabel
 
@@ -195,7 +195,7 @@ Domyślne sortowanie: od najnowszego zgłoszenia.
 Integralność jest realizowana na dwóch poziomach:
 
 1. **Walidacja Django** działa m.in. podczas obsługi formularzy oraz po jawnym wywołaniu `full_clean()`. Zwykłe `save()` nie uruchamia automatycznie pełnej walidacji modelu.
-2. **Ograniczenia bazy danych** są zapisane w migracji i egzekwowane bezpośrednio przez MySQL, niezależnie od sposobu zapisu rekordu.
+2. **Ograniczenia bazy danych** są zapisane w migracjach `0001_initial` i `0002_harvest_disposition_and_more` i egzekwowane bezpośrednio przez MySQL, niezależnie od sposobu zapisu rekordu.
 
 Zastosowane reguły:
 
@@ -203,19 +203,19 @@ Zastosowane reguły:
 - koszty `FieldWork.cost`, `Spraying.cost`, `Harvest.harvest_cost` i przychód `Harvest.revenue` mają walidatory minimum `0` oraz odpowiednie constrainty `>= 0`;
 - ilości `Spraying.quantity` i `Harvest.quantity` mają walidatory minimum `0.01` oraz constrainty `> 0`;
 - `Harvest.revenue` musi wynosić `0`, gdy przeznaczeniem zbioru jest magazyn albo strata/utylizacja;
-- `latitude` ma walidatory od −90 do 90, a `longitude` od −180 do 180; migracja nie definiuje dla nich osobnych constraintów CHECK, dlatego jest to walidacja warstwy Django;
+- `latitude` ma walidatory od −90 do 90, a `longitude` od −180 do 180; migracje nie definiują dla nich osobnych constraintów CHECK, dlatego jest to walidacja warstwy Django;
 - para (`owner`, `name`) w `Field` jest unikalna dzięki `core_field_unique_owner_name`;
 - trójka (`field`, `crop`, `season_year`) w `Cultivation` jest unikalna dzięki `core_cultivation_unique_field_crop_season`;
 - rok sezonu ma walidatory od 1980 do 2100;
-- `Cultivation.clean()` odrzuca planowaną datę zbioru wcześniejszą od daty siewu; migracja nie zawiera constraintu dat, więc zapis omijający walidację Django nie jest przez bazę chroniony przed taką kolejnością;
-- wartości `TextChoices` są sprawdzane przez Django, ale w migracji nie ma dla nich osobnych constraintów CHECK;
+- `Cultivation.clean()` odrzuca planowaną datę zbioru wcześniejszą od daty siewu; migracje nie zawierają constraintu dat, więc zapis omijający walidację Django nie jest przez bazę chroniony przed taką kolejnością;
+- wartości `TextChoices` są sprawdzane przez Django, ale w migracjach nie ma dla nich osobnych constraintów CHECK;
 - `Crop` używany przez `Cultivation` jest chroniony przez `on_delete=PROTECT`.
 
-MySQL 8.0.46 egzekwuje nazwane ograniczenia CHECK utworzone przez migrację. Klucze obce i ograniczenia UNIQUE są także wykonywane bezpośrednio przez silnik bazy.
+MySQL 8.0.46 egzekwuje nazwane ograniczenia CHECK utworzone przez migracje. Klucze obce i ograniczenia UNIQUE są także wykonywane bezpośrednio przez silnik bazy.
 
 ### Indeksy
 
-Migracja tworzy indeksy wynikające z kluczy głównych, kluczy obcych i ograniczeń unikalności. Obejmuje to m.in. unikalny indeks `core_crop.name`, unikalną parę (`owner_id`, `name`) pola oraz unikalną trójkę (`field_id`, `crop_id`, `season_year`) uprawy. Django/MySQL indeksuje także kolumny ForeignKey: `owner_id`, `user_id`, `field_id`, `crop_id` i `cultivation_id`. Modele nie deklarują dodatkowych indeksów przez `Meta.indexes`.
+Migracja `0001_initial` tworzy indeksy wynikające z kluczy głównych, kluczy obcych i ograniczeń unikalności. Obejmuje to m.in. unikalny indeks `core_crop.name`, unikalną parę (`owner_id`, `name`) pola oraz unikalną trójkę (`field_id`, `crop_id`, `season_year`) uprawy. Django/MySQL indeksuje także kolumny ForeignKey: `owner_id`, `user_id`, `field_id`, `crop_id` i `cultivation_id`. Modele nie deklarują dodatkowych indeksów przez `Meta.indexes`.
 
 ## 7. Bezpieczeństwo
 
@@ -293,7 +293,14 @@ python manage.py runserver --noreload
 - `python manage.py showmigrations` pokazuje listę migracji oraz oznacza wykonane pozycje symbolem `[X]`;
 - `python manage.py sqlmigrate core 0001` wyświetla SQL, który Django planuje wykonać dla wskazanej migracji i bieżącego silnika bazy.
 
-Pliku istniejącej migracji `core/migrations/0001_initial.py` nie należy edytować po zastosowaniu na współdzielonych bazach. Kolejne zmiany schematu powinny powstawać jako nowe migracje.
+Aplikacja `core` ma cztery migracje, wykonywane kolejno:
+
+- `0001_initial` — tabele, klucze obce, indeksy oraz nazwane ograniczenia `CHECK` i `UNIQUE`;
+- `0002_harvest_disposition_and_more` — kolumna `disposition` w `core_harvest` i ograniczenie `core_harvest_unsold_revenue_zero`;
+- `0003_alter_cultivation_season_year` — walidatory roku sezonu 1980–2100, tylko na poziomie Django;
+- `0004_english_verbose_names` — angielskie nazwy modeli i pól (`verbose_name`) oraz etykiety wyborów, tłumaczone przez `locale/`; nie generuje SQL i nie zmienia struktury tabel ani zapisanych wartości.
+
+Plików zastosowanych migracji (`core/migrations/0001_initial.py` – `0004_english_verbose_names.py`) nie należy edytować po zastosowaniu na współdzielonych bazach. Kolejne zmiany schematu powinny powstawać jako nowe migracje.
 
 ## 11. Dane demonstracyjne
 
@@ -303,16 +310,23 @@ Komenda:
 python manage.py seed_demo_data --username admin
 ```
 
-pobiera istniejącego użytkownika i w jednej transakcji przygotowuje:
+pobiera istniejącego użytkownika (parametr `--username`, wymagany) i w jednej transakcji przygotowuje dane demonstracyjne dla wszystkich modeli:
 
-- rodzaje upraw: Pszenica, Kukurydza, Rzepak i Ziemniaki;
-- Pole Północne (12,50 ha, gleba ilasta, GPS) oraz Pole Południowe (8,75 ha, gleba piaszczysta, adres w Bydgoszczy);
-- aktywną pszenicę na Polu Północnym i aktywną kukurydzę na Polu Południowym w sezonie 2026;
-- cztery prace: orkę i siew dla każdej uprawy;
-- dwa opryski: preparaty „Herbicyd Demo” i „Fungicyd Demo”;
-- po jednym zbiorze dla każdej uprawy wraz z ilością, przychodem i kosztem.
+- rodzaje upraw ze wspólnego katalogu: Pszenica, Kukurydza, Rzepak i Ziemniaki (istniejące są wykorzystywane bez zmian);
+- trzy pola: `[DEMO] Pole Północne` (12,50 ha, gleba ilasta, GPS), `[DEMO] Pole Południowe` (8,75 ha, gleba piaszczysta, adres w Bydgoszczy) i `[DEMO] Pole przy lesie` (5,20 ha, gleba gliniasta, identyfikator działki);
+- cztery uprawy: zakończone ziemniaki (2025) i pszenica (2026), aktywna kukurydza (2026) i planowany rzepak (2027);
+- prace wszystkich rodzajów, opryski we wszystkich jednostkach (l, ml, kg, g) oraz zbiory sprzedane, pozostawione w magazynie i stracone;
+- trzy zgłoszenia błędów o statusach: nowe, w trakcie, rozwiązane.
 
-Komenda korzysta z `get_or_create` i `update_or_create`, dlatego ponowne uruchomienie dla tego samego użytkownika aktualizuje dane zamiast tworzyć duplikaty. Dla nieistniejącego użytkownika kończy się czytelnym błędem i nie tworzy konta.
+Zasady działania:
+
+- każdy nowy obiekt przechodzi `full_clean()` przed zapisem. Błąd walidacji albo bazy wycofuje całą transakcję;
+- rekord jest wyszukiwany po danych identyfikujących (np. pole: właściciel i nazwa; uprawa: pole, rodzaj i sezon; zbiór: uprawa, data i przeznaczenie). Jeśli istnieje i ma takie same wartości, zostaje wykorzystany ponownie. Jeśli ma inne wartości, komenda go nie zmienia, wypisuje ostrzeżenie i pomija go razem z zależnymi rekordami;
+- komenda nie używa `update_or_create`, więc nie nadpisuje danych użytkownika;
+- ponowne uruchomienie dla tego samego użytkownika nie tworzy duplikatów. Dla innego użytkownika powstaje jego własny zestaw danych;
+- `--dry-run` wykonuje cały scenariusz z walidacją, wypisuje, co zostałoby utworzone lub wykorzystane, i wycofuje transakcję. Jedynym śladem w MySQL może być przesunięty licznik `AUTO_INCREMENT`;
+- podsumowanie podaje dla każdego modelu faktyczne liczby rekordów utworzonych, wykorzystanych ponownie i pominiętych;
+- dla nieistniejącego użytkownika komenda kończy się czytelnym błędem, nie tworzy konta ani żadnych danych.
 
 ## 12. Testowanie
 
