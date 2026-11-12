@@ -163,8 +163,9 @@ class FieldForm(forms.ModelForm):
             "name",
             "area_ha",
             "soil_type",
-            "parcel_identifier",
+            # The method comes first; the page then shows only its own fields.
             "location_method",
+            "parcel_identifier",
             "address",
             "latitude",
             "longitude",
@@ -201,9 +202,21 @@ class FieldForm(forms.ModelForm):
             "longitude": {"invalid": _("Enter a valid longitude.")},
         }
 
+    # Location method -> fields that belong to it. core/static/core/forms.js shows
+    # only these fields (plus fields that already hold a value).
+    LOCATION_FIELDS = {
+        "parcel_identifier": (Field.LocationMethod.PARCEL,),
+        "address": (Field.LocationMethod.ADDRESS,),
+        "latitude": (Field.LocationMethod.GPS, Field.LocationMethod.MAP),
+        "longitude": (Field.LocationMethod.GPS, Field.LocationMethod.MAP),
+    }
+
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
+        self.fields["location_method"].widget.attrs["data-location-method"] = ""
+        for name, methods in self.LOCATION_FIELDS.items():
+            self.fields[name].widget.attrs["data-location-for"] = " ".join(methods)
 
     def clean_name(self):
         name = self.cleaned_data["name"].strip()

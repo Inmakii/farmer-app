@@ -53,9 +53,42 @@
         });
     }
 
+    // Field form: after "How the location is given" only the fields of the chosen
+    // method are shown. A field that already had a value or an error stays visible,
+    // so saved data is never hidden. Hidden fields are disabled and not sent.
+    function initLocationFields() {
+        var selects = document.querySelectorAll("select[data-location-method]");
+        Array.prototype.forEach.call(selects, function (select) {
+            var form = select.form;
+            if (!form) {
+                return;
+            }
+            var inputs = form.querySelectorAll("[data-location-for]");
+
+            function update() {
+                Array.prototype.forEach.call(inputs, function (input) {
+                    var wrapper = input.closest(".field");
+                    if (!wrapper) {
+                        return;
+                    }
+                    var methods = input.getAttribute("data-location-for").split(" ");
+                    var show = methods.indexOf(select.value) !== -1
+                        || input.defaultValue.trim() !== ""
+                        || wrapper.classList.contains("has-error");
+                    wrapper.hidden = !show;
+                    input.disabled = !show;
+                });
+            }
+
+            select.addEventListener("change", update);
+            update();
+        });
+    }
+
     function init() {
         initPasswordToggles();
         initBusyForms();
+        initLocationFields();
     }
 
     if (document.readyState === "loading") {
