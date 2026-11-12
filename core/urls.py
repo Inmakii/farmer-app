@@ -8,6 +8,7 @@ from .views import (
     CultivationDetailView,
     CultivationListView,
     CultivationUpdateView,
+    ErrorReportAttachmentView,
     ErrorReportCreateView,
     ErrorReportDetailView,
     ErrorReportListView,
@@ -113,5 +114,10 @@ urlpatterns = [
         "error-reports/<int:pk>/",
         ErrorReportDetailView.as_view(),
         name="error_report_detail",
+    ),
+    path(
+        "error-reports/attachments/<int:pk>/",
+        ErrorReportAttachmentView.as_view(),
+        name="error_report_attachment",
     ),
 ]

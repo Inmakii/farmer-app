@@ -1,0 +1,101 @@
+{% extends "admin/index.html" %}
+{% load i18n l10n log admin_dashboard %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}
+    {% admin_dashboard app_list as sections %}
+    {% new_error_report_count as new_reports %}
+    {% admin_farm_stats as stats %}
+
+    <div class="fa-dashboard">
+        <header class="fa-hero">
+            <div>
+                <p class="fa-kicker">{% translate "Administration panel" %}</p>
+                <h1>{% blocktranslate with name=user.get_short_name|default:user.get_username %}Hello, {{ name }}!{% endblocktranslate %}</h1>
+                <p class="fa-hero-lead">{% translate "Here you can see and manage all data of the farms and answer reports from users." %}</p>
+            </div>
+            <a class="fa-button fa-button-light" href="{% url 'core:home' %}">
+                <svg class="fa-icon" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg>{% translate "Open the site" %}
+            </a>
+        </header>
+
+        <section class="fa-stats" aria-label="{% translate "Summary" %}">
+            <div class="fa-stat">
+                <span class="fa-stat-label">{% translate "Fields" %}</span>
+                <strong class="fa-stat-value">{{ stats.fields }}</strong>
+            </div>
+            <div class="fa-stat">
+                <span class="fa-stat-label">{% translate "Total area" %}</span>
+                <strong class="fa-stat-value">{{ stats.area|floatformat:"1g" }}<small>ha</small></strong>
+            </div>
+            <div class="fa-stat">
+                <span class="fa-stat-label">{% translate "Active cultivations" %}</span>
+                <strong class="fa-stat-value">{{ stats.active_cultivations }}</strong>
+            </div>
+            {% if perms.core.view_errorreport %}
+                {% url 'admin:core_errorreport_changelist' as reports_url %}
+                <a class="fa-stat{% if new_reports %} fa-stat-alert{% endif %}" href="{{ reports_url }}{% if new_reports %}?status__exact=NEW{% endif %}">
+                    <span class="fa-stat-label">{% translate "New error reports" %}</span>
+                    <strong class="fa-stat-value">{{ new_reports }}</strong>
+                    <span class="fa-stat-link">{% if new_reports %}{% translate "Review new reports" %}{% else %}{% translate "Everything has been reviewed" %}{% endif %}<svg class="fa-icon" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></span>
+                </a>
+            {% endif %}
+        </section>
+
+        <div class="fa-sections">
+        {% for section in sections %}
+            <section class="fa-section" aria-labelledby="fa-section-{{ section.key }}">
+                <h2 id="fa-section-{{ section.key }}">{{ section.title }}</h2>
+                <div class="fa-tiles">
+                    {% for tile in section.tiles %}
+                        <article class="fa-tile{% if tile.is_reports and new_reports %} fa-tile-alert{% endif %}">
+                            <span class="fa-tile-icon"><svg class="fa-icon" aria-hidden="true" focusable="false"><use href="#{{ tile.icon }}"/></svg></span>
+                            <div class="fa-tile-body">
+                                <h3>
+                                    {% if tile.url %}<a class="fa-tile-link" href="{{ tile.url }}">{{ tile.name }}</a>{% else %}{{ tile.name }}{% endif %}
+                                </h3>
+                                {% if tile.description %}<p>{{ tile.description }}</p>{% endif %}
+                                {% if tile.is_reports and new_reports %}
+                                    <p class="fa-tile-note">{% blocktranslate with count=new_reports %}New reports waiting for review: {{ count }}{% endblocktranslate %}</p>
+                                {% endif %}
+                            </div>
+                            <span class="fa-tile-count" title="{% translate "Number of records" %}">{{ tile.count|unlocalize }}</span>
+                            {% if tile.add_url %}
+                                <a class="fa-button fa-button-small fa-tile-add" href="{{ tile.add_url }}" title="{% translate "Add" %}"><svg class="fa-icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg><span class="visually-hidden">{% translate "Add" %}</span></a>
+                            {% endif %}
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% empty %}
+            <p class="fa-empty">{% translate "You don't have permission to view or edit anything." %}</p>
+        {% endfor %}
+        </div>
+
+        <section class="fa-section fa-section-recent" aria-labelledby="fa-section-recent">
+            <h2 id="fa-section-recent">{% translate "My recent actions" %}</h2>
+            {% get_admin_log 8 as admin_log for_user user %}
+            {% if admin_log %}
+                <ul class="fa-activity">
+                    {% for entry in admin_log %}
+                        <li class="fa-activity-{% if entry.is_addition %}add{% elif entry.is_change %}change{% else %}delete{% endif %}">
+                            <span class="fa-activity-kind">{% if entry.is_addition %}{% translate "Added" %}{% elif entry.is_change %}{% translate "Changed" %}{% else %}{% translate "Deleted" %}{% endif %}</span>
+                            <span class="fa-activity-object">
+                                {% if entry.is_deletion or not entry.get_admin_url %}{{ entry.object_repr }}{% else %}<a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>{% endif %}
+                                {% if entry.content_type %}<small>{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</small>{% endif %}
+                            </span>
+                            <time datetime="{{ entry.action_time|date:"c" }}">{{ entry.action_time|date:"d.m.Y H:i" }}</time>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="fa-empty">{% translate "Nothing yet. Changes you make here will be listed in this place." %}</p>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

@@ -9,12 +9,12 @@
         <div>
             <p class="kicker">{% translate "Help" %}</p>
             <h1>{% translate "Report a bug" %}</h1>
-            <p class="page-head-lead">{% if source_page %}{% translate "The address of the page with the problem is already in the description. Add what happened and what should have happened." %}{% else %}{% translate "Describe what happened and on which page." %}{% endif %} {% translate "After you send the report, its status will be changed by an administrator." %}</p>
+            <p class="page-head-lead">{% if source_page %}{% translate "Describe what happened and what should have happened." %}{% else %}{% translate "Describe what happened and on which page." %}{% endif %} {% translate "A screenshot helps us find the problem faster." %} {% translate "After you send the report, its status will be changed by an administrator." %}</p>
         </div>
     </header>
 
     <div class="sheet app-form">
-        <form method="post" data-busy-form>
+        <form method="post" enctype="multipart/form-data" data-busy-form>
             {% csrf_token %}
             {% include "core/partials/form_body.html" %}
             <div class="form-actions">

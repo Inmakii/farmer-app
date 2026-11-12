@@ -22,8 +22,30 @@
             <div><dt>{% translate "Status" %}</dt><dd>{{ error_report.get_status_display }}</dd></div>
             <div><dt>{% translate "Created at" %}</dt><dd>{{ error_report.created_at|date:"d.m.Y H:i" }}</dd></div>
             <div><dt>{% translate "Updated at" %}</dt><dd>{{ error_report.updated_at|date:"d.m.Y H:i" }}</dd></div>
+            {% if error_report.page %}<div class="fact-wide"><dt>{% translate "Page" %}</dt><dd>{{ error_report.page }}</dd></div>{% endif %}
             <div class="fact-wide"><dt>{% translate "Description" %}</dt><dd>{{ error_report.description|linebreaksbr }}</dd></div>
         </dl>
+        {% with attachments=error_report.attachments.all %}
+            {% if attachments %}
+                <h3 class="attachments-title">{% translate "Attachments" %}</h3>
+                <ul class="attachments">
+                    {% for attachment in attachments %}
+                        {% url 'core:error_report_attachment' attachment.pk as attachment_url %}
+                        <li>
+                            <a class="attachment" href="{{ attachment_url }}"{% if attachment.is_image %} target="_blank" rel="noopener"{% endif %}>
+                                {% if attachment.is_image %}
+                                    <img src="{{ attachment_url }}" alt="{{ attachment.original_name }}" loading="lazy">
+                                {% else %}
+                                    <span class="attachment-pdf" aria-hidden="true">PDF</span>
+                                {% endif %}
+                                <span class="attachment-name">{{ attachment.original_name }}</span>
+                                <span class="attachment-size">{{ attachment.size|filesizeformat }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
         <p class="note">{% translate "The report status is changed by an administrator." %}</p>
     </article>
 {% endblock %}

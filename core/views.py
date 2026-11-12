@@ -14,7 +14,8 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, models, transaction
 from django.db.models import Prefetch, Q
 from django.db.models.functions import Lower
-from django.shortcuts import redirect, render
+from django.http import FileResponse, Http404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.dateparse import parse_date
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -28,6 +29,7 @@ from django.views.generic import (
     ListView,
     TemplateView,
     UpdateView,
+    View,
 )
 
 from .forms import (
@@ -48,6 +50,7 @@ from .models import (
     Crop,
     Cultivation,
     ErrorReport,
+    ErrorReportAttachment,
     Field,
     FieldWork,
     Harvest,
@@ -969,13 +972,6 @@ class ErrorReportCreateView(LoginRequiredMixin, CreateView):
             return source
         return ""
 
-    def get_initial(self):
-        initial = super().get_initial()
-        source = self.get_source_page()
-        if source:
-            initial["description"] = gettext("Page: %(path)s") % {"path": source} + "\n\n"
-        return initial
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["source_page"] = self.get_source_page()
@@ -984,9 +980,39 @@ class ErrorReportCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.status = ErrorReport.Status.NEW
+        # The page is kept next to the report, not written into the description.
+        form.instance.page = self.get_source_page()[:500]
         response = super().form_valid(form)
         messages.success(self.request, gettext("The error report has been created."))
         return response
 
     def get_success_url(self):
         return reverse("core:error_report_detail", kwargs={"pk": self.object.pk})
+
+
+class ErrorReportAttachmentView(LoginRequiredMixin, View):
+    """Sends an attachment to the report's author or to an administrator who may view
+    reports. Images open in the browser, PDF files are downloaded."""
+
+    def get(self, request, pk):
+        attachment = get_object_or_404(
+            ErrorReportAttachment.objects.select_related("report"), pk=pk
+        )
+        user = request.user
+        allowed = attachment.report.user_id == user.pk or (
+            user.is_staff and user.has_perm("core.view_errorreport")
+        )
+        if not allowed:
+            raise Http404
+        try:
+            handle = attachment.file.open("rb")
+        except FileNotFoundError as error:
+            raise Http404 from error
+        response = FileResponse(
+            handle,
+            content_type=attachment.content_type,
+            as_attachment=not attachment.is_image,
+            filename=attachment.original_name,
+        )
+        response["Cache-Control"] = "private, no-store"
+        return response

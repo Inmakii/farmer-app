@@ -1,9 +1,12 @@
+import os
 import re
 
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.template.defaultfilters import filesizeformat
 from django.utils.text import format_lazy
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
@@ -13,7 +16,9 @@ from .models import (
     SEASON_YEAR_MIN,
     Crop,
     Cultivation,
+    ATTACHMENT_EXTENSIONS,
     ErrorReport,
+    ErrorReportAttachment,
     Field,
     FieldWork,
     Harvest,
@@ -753,7 +758,68 @@ class CropForm(forms.ModelForm):
 SOURCE_PAGE_LINE = re.compile(r"^[^\s:]+: /\S*")
 
 
+ATTACHMENT_MAX_FILES = 3
+ATTACHMENT_MAX_SIZE = 5 * 1024 * 1024
+# Extensions a user may send, mapped to the file type their content must have.
+ATTACHMENT_TYPES_BY_EXTENSION = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".webp": "image/webp",
+    ".gif": "image/gif",
+    ".pdf": "application/pdf",
+}
+
+
+def detect_attachment_type(uploaded_file):
+    """File type read from the first bytes of the file, not from its name or the browser."""
+    uploaded_file.seek(0)
+    head = uploaded_file.read(16)
+    uploaded_file.seek(0)
+    if head.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if head.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if head.startswith((b"GIF87a", b"GIF89a")):
+        return "image/gif"
+    if head[:4] == b"RIFF" and head[8:12] == b"WEBP":
+        return "image/webp"
+    if head.startswith(b"%PDF-"):
+        return "application/pdf"
+    return None
+
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    """A file field that accepts several files and returns them as a list."""
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        if not data:
+            return []
+        files = data if isinstance(data, (list, tuple)) else [data]
+        return [super(MultipleFileField, self).clean(item, initial) for item in files]
+
+
 class ErrorReportForm(forms.ModelForm):
+    attachments = MultipleFileField(
+        label=_("Screenshots or PDF"),
+        required=False,
+        help_text=format_lazy(
+            _("Optional. Up to {count} files: PNG, JPG, WEBP, GIF or PDF, each up to {size}."),
+            count=ATTACHMENT_MAX_FILES, size="5 MB",
+        ),
+        widget=MultipleFileInput(attrs={
+            "accept": ",".join(sorted(ATTACHMENT_TYPES_BY_EXTENSION)),
+        }),
+    )
+
     class Meta:
         model = ErrorReport
         fields = ("category", "description")
@@ -779,3 +845,42 @@ class ErrorReportForm(forms.ModelForm):
         if len(description) > 5000:
             raise ValidationError(gettext("The description cannot have more than 5000 characters."))
         return description
+
+    def clean_attachments(self):
+        files = self.cleaned_data.get("attachments") or []
+        if len(files) > ATTACHMENT_MAX_FILES:
+            raise ValidationError(
+                gettext("You can attach at most %(count)s files.") % {"count": ATTACHMENT_MAX_FILES}
+            )
+        checked = []
+        for uploaded in files:
+            name = os.path.basename(uploaded.name or "")[:255] or "file"
+            if uploaded.size > ATTACHMENT_MAX_SIZE:
+                raise ValidationError(
+                    gettext("The file %(name)s is larger than %(size)s.")
+                    % {"name": name, "size": filesizeformat(ATTACHMENT_MAX_SIZE)}
+                )
+            extension = os.path.splitext(name)[1].lower()
+            content_type = detect_attachment_type(uploaded)
+            if (content_type is None
+                    or ATTACHMENT_TYPES_BY_EXTENSION.get(extension) != content_type):
+                raise ValidationError(
+                    gettext("The file %(name)s is not a PNG, JPG, WEBP, GIF or PDF file.")
+                    % {"name": name}
+                )
+            checked.append((uploaded, name, content_type))
+        return checked
+
+    def save(self, commit=True):
+        if not commit:
+            return super().save(commit=False)
+        with transaction.atomic():
+            report = super().save()
+            for uploaded, name, content_type in self.cleaned_data.get("attachments", []):
+                attachment = ErrorReportAttachment(
+                    report=report, original_name=name, content_type=content_type,
+                    size=uploaded.size,
+                )
+                attachment.file.save(ATTACHMENT_EXTENSIONS[content_type], uploaded, save=False)
+                attachment.save()
+        return report

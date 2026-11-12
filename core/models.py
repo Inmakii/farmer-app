@@ -1,3 +1,4 @@
+import uuid
 from decimal import Decimal
 
 from django.conf import settings
@@ -5,6 +6,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Q
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.utils.translation import gettext, pgettext_lazy
 from django.utils.translation import gettext_lazy as _
 
@@ -322,6 +325,8 @@ class ErrorReport(models.Model):
     )
     category = models.CharField(_("category"), max_length=10, choices=Category.choices)
     description = models.TextField(_("description"))
+    # Address of the page the report was sent from, filled in by the site.
+    page = models.CharField(_("page"), max_length=500, blank=True)
     status = models.CharField(_("status"), max_length=11, choices=Status.choices)
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("updated at"), auto_now=True)
@@ -336,3 +341,53 @@ class ErrorReport(models.Model):
             "number": self.pk or gettext("new"),
             "category": self.get_category_display(),
         }
+
+
+def attachment_upload_to(attachment, filename):
+    """Random file name, so the user's own name never reaches the file system."""
+    extension = ATTACHMENT_EXTENSIONS.get(attachment.content_type, "")
+    return f"error_reports/{attachment.report_id}/{uuid.uuid4().hex}{extension}"
+
+
+# File types accepted as attachments, with the extension used on disk.
+ATTACHMENT_EXTENSIONS = {
+    "image/png": ".png",
+    "image/jpeg": ".jpg",
+    "image/webp": ".webp",
+    "image/gif": ".gif",
+    "application/pdf": ".pdf",
+}
+
+
+class ErrorReportAttachment(models.Model):
+    """A screenshot or PDF sent with an error report. Stored outside the public
+    static files and served only to the report's author and administrators."""
+
+    report = models.ForeignKey(
+        ErrorReport, on_delete=models.CASCADE, related_name="attachments",
+        verbose_name=_("error report"),
+    )
+    file = models.FileField(_("file"), upload_to=attachment_upload_to, max_length=255)
+    original_name = models.CharField(_("file name"), max_length=255)
+    content_type = models.CharField(_("file type"), max_length=50)
+    size = models.PositiveIntegerField(_("size (bytes)"))
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("attachment")
+        verbose_name_plural = _("attachments")
+        ordering = ["created_at", "pk"]
+
+    @property
+    def is_image(self):
+        return self.content_type.startswith("image/")
+
+    def __str__(self):
+        return self.original_name
+
+
+@receiver(post_delete, sender=ErrorReportAttachment)
+def delete_attachment_file(sender, instance, **kwargs):
+    # Also runs when the report or its user is deleted (cascade).
+    if instance.file:
+        instance.file.delete(save=False)

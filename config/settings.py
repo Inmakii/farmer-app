@@ -211,6 +211,7 @@ MIDDLEWARE = [
     'django.middleware.csp.ContentSecurityPolicyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'core.middleware.AdminLanguageMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -307,6 +308,10 @@ LANGUAGES = [
     ("uk", "Українська"),
 ]
 
+# The admin panel is only translated to these languages; Ukrainian visitors of
+# the site see the admin in Polish (see core.middleware.AdminLanguageMiddleware).
+ADMIN_LANGUAGES = ["pl", "en"]
+
 LOCALE_PATHS = [BASE_DIR / "locale"]
 
 TIME_ZONE = "Europe/Warsaw"
@@ -320,6 +325,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Uploaded files (error report attachments). The folder is not served by a public
+# URL; core.views.ErrorReportAttachmentView checks who may open each file.
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Speeds up tests: a fast password hasher, only during `manage.py test`.
 if len(sys.argv) > 1 and sys.argv[1] == 'test':

@@ -89,7 +89,9 @@ class ErrorReportTests(TestCase):
         self.assertEqual(ErrorReport.objects.filter(user=self.user).latest("pk").status, ErrorReport.Status.NEW)
 
     def test_form_excludes_protected_fields(self):
-        self.assertEqual(tuple(ErrorReportForm().fields), ("category", "description"))
+        self.assertEqual(
+            tuple(ErrorReportForm().fields), ("category", "description", "attachments")
+        )
 
     def test_short_description_is_rejected(self):
         form = ErrorReportForm(data=self.valid_data(description="Za krótki"))
@@ -111,13 +113,17 @@ class ErrorReportTests(TestCase):
         response = self.client.get(reverse("core:login"))
         self.assertNotContains(response, 'class="report-fab"')
 
-    def test_create_prefills_source_page(self):
+    def test_create_keeps_source_page_out_of_the_description(self):
         self.client.force_login(self.user)
-        response = self.client.get(reverse("core:error_report_create"), {"from": "/fields/?q=pole"})
-        self.assertEqual(
-            response.context["form"].initial["description"], "Strona: /fields/?q=pole\n\n"
-        )
+        url = f"{reverse('core:error_report_create')}?from=/fields/%3Fq%3Dpole"
+        response = self.client.get(url)
+        self.assertNotIn("description", response.context["form"].initial)
+        self.assertNotContains(response, "Strona: /")
         self.assertNotContains(response, 'class="report-fab"')
+        self.client.post(url, self.valid_data())
+        created = ErrorReport.objects.filter(user=self.user).latest("pk")
+        self.assertEqual(created.page, "/fields/?q=pole")
+        self.assertEqual(created.description, "Szczegółowy opis problemu z interfejsem.")
 
     def test_create_ignores_external_source(self):
         self.client.force_login(self.user)
@@ -163,9 +169,12 @@ class ErrorReportTests(TestCase):
     def test_admin_configuration(self):
         model_admin = admin.site._registry[ErrorReport]
         self.assertIsInstance(model_admin, ErrorReportAdmin)
-        self.assertEqual(model_admin.list_display, ("user", "category", "status", "created_at", "updated_at"))
-        self.assertEqual(model_admin.list_filter, ("category", "status", "created_at"))
+        self.assertEqual(
+            model_admin.list_display,
+            ("__str__", "user", "category_badge", "status_badge", "short_description", "created_at"),
+        )
+        self.assertEqual(model_admin.list_filter, ("status", "category", "created_at"))
         self.assertEqual(model_admin.search_fields, ("user__username", "user__email", "description"))
-        self.assertIn("status", model_admin.list_editable)
+        self.assertEqual(model_admin.actions, ("mark_in_progress", "mark_resolved"))
         self.assertNotIn("user", model_admin.get_readonly_fields(None, None))
         self.assertIn("user", model_admin.get_readonly_fields(None, self.report))
