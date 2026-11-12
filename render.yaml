@@ -1,0 +1,51 @@
+# Render Blueprint: free Docker web service. The database is TiDB Cloud Starter
+# (MySQL compatible, free). Values marked sync: false are entered in the Render
+# dashboard when the Blueprint is created. Step-by-step guide: docs/hosting.md.
+services:
+  - type: web
+    name: farmer-app
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      # RENDER_EXTERNAL_HOSTNAME is added to ALLOWED_HOSTS and
+      # CSRF_TRUSTED_ORIGINS automatically (config/settings.py).
+      - key: DJANGO_ALLOWED_HOSTS
+        value: localhost
+      - key: DJANGO_TRUST_X_FORWARDED_PROTO
+        value: "True"
+      - key: DJANGO_SECURE_SSL_REDIRECT
+        value: "True"
+      - key: DJANGO_SECURE_HSTS_SECONDS
+        value: "3600"
+      # Database (TiDB Cloud Starter, "Connect" dialog).
+      - key: DB_ENGINE
+        value: tidb
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "4000"
+      - key: DB_NAME
+        value: farmer_db
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSL_CA
+        value: /etc/ssl/certs/ca-certificates.crt
+      # First administrator, created on start-up when the account does not exist.
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      # Optional: user name that gets the demo data on every start (idempotent).
+      - key: SEED_DEMO_DATA_FOR
+        sync: false

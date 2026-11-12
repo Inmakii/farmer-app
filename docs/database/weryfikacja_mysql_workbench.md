@@ -216,3 +216,31 @@ z `information_schema` bazy `farmer_db`, tak jak w sekcji 6.1.
 
 Wszystkie materiały bazy danych (`.mwb`, PNG i eksport SQL) są zgodne z aktualną strukturą
 `farmer_db`, modelami Django i migracjami `core` 0001–0004.
+
+## 8. Aktualizacja po migracji 0005 (2026-11-12)
+
+Migracja `0005_error_report_page_and_attachments` zmieniła strukturę bazy:
+
+- `core_errorreport`: nowa kolumna `page VARCHAR(500) NOT NULL` (po `description`);
+- nowa tabela `core_errorreportattachment` (`id`, `file`, `original_name`, `content_type`,
+  `size INT UNSIGNED` z `CHECK (size >= 0)`, `created_at`, `report_id`) z kluczem obcym
+  `report_id` → `core_errorreport.id`.
+
+| Artefakt | Stan |
+|---|---|
+| `farmer_db_schema.sql` | zaktualizowany: wygenerowany ponownie (`mysqldump` 8.4.9, `--no-data`); różnica względem poprzedniej wersji to wyłącznie powyższe zmiany |
+| `dokumentacja_bazy_danych.md` | zaktualizowana (sekcje 4.8, 4.9, 5, 10) |
+| `farmer_db_model.mwb` i `erd_farmer_app.png` | **do zrobienia w MySQL Workbench** |
+
+Kroki w MySQL Workbench (tylko model, bez zmian w bazie):
+
+1. Otwórz `docs/diagrams/farmer_db_model.mwb`.
+2. W tabeli `core_errorreport` dodaj kolumnę `page`, typ `VARCHAR(500)`, *NN*.
+3. Dodaj tabelę `core_errorreportattachment` z kolumnami jak w `farmer_db_schema.sql`
+   (najprościej: **File → Import → Reverse Engineer MySQL Create Script**, zaimportować
+   eksport SQL do nowego modelu i skopiować tabelę) i połącz ją relacją 1:N z
+   `core_errorreport` (**Place a Relationship Using Existing Columns**, `report_id` → `id`).
+4. Zapisz model, wyeksportuj diagram: **File → Export → Export as PNG** do
+   `docs/diagrams/erd_farmer_app.png`.
+5. Tak jak wcześniej: nie używaj **Forward Engineer** ani **Synchronize Model** wobec `farmer_db`.
+

@@ -1,0 +1,59 @@
+{% load i18n admin_urls admin_dashboard %}
+{% comment %}
+Related records shown on the parent's page as a plain list. They are edited on their own
+pages; the hidden formset fields stay so that saving the parent still works.
+{% endcomment %}
+{% with formset=inline_admin_formset.formset %}
+<div class="js-inline-admin-formset inline-group fa-records" id="{{ formset.prefix }}-group"
+     data-inline-type="tabular"
+     data-inline-formset="{{ inline_admin_formset.inline_formset_data }}">
+  {{ formset.management_form }}
+  <section class="module" aria-labelledby="{{ formset.prefix }}-heading">
+    <div class="fa-records-head">
+      <h2 id="{{ formset.prefix }}-heading" class="inline-heading">
+        {{ inline_admin_formset.opts.verbose_name_plural|capfirst }}
+        <span class="fa-records-count">{{ formset.forms|length }}</span>
+      </h2>
+      {% inline_add_url inline_admin_formset original as add_url %}
+      {% if add_url %}
+        <a class="fa-button fa-button-small fa-button-quiet" href="{{ add_url }}">
+          <svg class="fa-icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Add" %}
+        </a>
+      {% endif %}
+    </div>
+    {{ formset.non_form_errors }}
+    {% if formset.forms %}
+      <div class="fa-records-scroll">
+        <table>
+          <thead><tr>
+            {% for field in inline_admin_formset.fields %}
+              {% if not field.widget.is_hidden %}<th scope="col" class="column-{{ field.name }}">{{ field.label|capfirst }}</th>{% endif %}
+            {% endfor %}
+            <th scope="col"><span class="visually-hidden">{% translate "Open" %}</span></th>
+          </tr></thead>
+          <tbody>
+          {% for inline_admin_form in inline_admin_formset %}
+            <tr id="{{ formset.prefix }}-{{ forloop.counter0 }}">
+              {% for fieldset in inline_admin_form %}{% for line in fieldset %}{% for field in line %}
+                {% if not field.field.is_hidden %}
+                  <td class="field-{{ field.field.name }}">{% if field.is_readonly %}{{ field.contents }}{% else %}{{ field.field }}{% endif %}</td>
+                {% endif %}
+              {% endfor %}{% endfor %}{% endfor %}
+              <td class="fa-records-open">
+                {% if inline_admin_form.needs_explicit_pk_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
+                {% if inline_admin_form.fk_field %}{{ inline_admin_form.fk_field.field }}{% endif %}
+                {% if inline_admin_form.original and inline_admin_form.model_admin.has_registered_model %}
+                  <a href="{% url inline_admin_form.model_admin.opts|admin_urlname:'change' inline_admin_form.original.pk|admin_urlquote %}">{% translate "Open" %}<span class="visually-hidden">: {{ inline_admin_form.original }}</span><svg class="fa-icon" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="fa-records-empty">{% translate "Nothing here yet." %}</p>
+    {% endif %}
+  </section>
+</div>
+{% endwith %}

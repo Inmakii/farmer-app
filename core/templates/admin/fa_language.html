@@ -1,0 +1,8 @@
+{% load i18n admin_dashboard %}{% get_current_language as LANGUAGE_CODE %}{% admin_languages as languages %}
+<form class="fa-lang" action="{% url 'set_language' %}" method="post" aria-label="{% translate "Language" %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    {% for code, name in languages %}
+        <button type="submit" name="language" value="{{ code }}" lang="{{ code }}" title="{{ name }}"{% if code == LANGUAGE_CODE %} aria-current="true"{% endif %}>{{ code|upper }}</button>
+    {% endfor %}
+</form>

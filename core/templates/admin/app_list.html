@@ -1,0 +1,25 @@
+{% load i18n admin_dashboard %}
+{% comment %}
+Side menu of the admin: the same sections and icons as the start page. The table markup
+is kept because Django's menu filter looks for th[scope=row] > a and hides its row.
+{% endcomment %}
+{% admin_nav app_list as sections %}
+{% for section in sections %}
+    <div class="module fa-nav-section">
+        <table>
+            <caption>{{ section.title }}</caption>
+            <tbody>
+            {% for tile in section.tiles %}
+                <tr class="fa-nav-item{% if tile.url and tile.url in request.path|urlencode %} current-model{% endif %}">
+                    <th scope="row">
+                        <svg class="fa-icon" aria-hidden="true" focusable="false"><use href="#{{ tile.icon }}"/></svg>
+                        {% if tile.url %}<a href="{{ tile.url }}"{% if tile.url in request.path|urlencode %} aria-current="page"{% endif %}>{{ tile.name }}</a>{% else %}<span>{{ tile.name }}</span>{% endif %}
+                    </th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% empty %}
+    <p class="fa-empty">{% translate "You don't have permission to view or edit anything." %}</p>
+{% endfor %}

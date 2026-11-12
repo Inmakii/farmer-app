@@ -1,5 +1,5 @@
 -- Farmer App: MySQL 8 schema export (structure only, no data).
--- Source: database with Django migrations applied (core 0001-0004), MySQL 8.0.46.
+-- Source: database with Django migrations applied (core 0001-0005), MySQL 8.4.9.
 -- Generated with mysqldump --no-data; AUTO_INCREMENT counters removed.
 -- The file does not create, select or drop any database or table:
 -- import it only into a new, empty database (see docs/database/weryfikacja_mysql_workbench.md).
@@ -133,9 +133,26 @@ CREATE TABLE `core_errorreport` (
   `created_at` datetime(6) NOT NULL,
   `updated_at` datetime(6) NOT NULL,
   `user_id` int NOT NULL,
+  `page` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `core_errorreport_user_id_8867a966_fk_auth_user_id` (`user_id`),
   CONSTRAINT `core_errorreport_user_id_8867a966_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `core_errorreportattachment` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `file` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `original_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content_type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `size` int unsigned NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `report_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `core_errorreportatta_report_id_f7bf0dda_fk_core_erro` (`report_id`),
+  CONSTRAINT `core_errorreportatta_report_id_f7bf0dda_fk_core_erro` FOREIGN KEY (`report_id`) REFERENCES `core_errorreport` (`id`),
+  CONSTRAINT `core_errorreportattachment_chk_1` CHECK ((`size` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

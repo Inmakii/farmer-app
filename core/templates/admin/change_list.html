@@ -1,0 +1,31 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_list admin_dashboard %}
+
+{% block title %}{% if cl.formset and cl.formset.errors %}{% translate "Error:" %} {% endif %}{% if is_popup %}{{ title }}{% else %}{{ cl.opts.verbose_name_plural|capfirst }}{% endif %} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block content_title %}
+    {% if is_popup %}
+        {{ block.super }}
+    {% else %}
+        {% admin_model_info cl.opts as info %}
+        <header class="fa-page-head">
+            <span class="fa-page-icon"><svg class="fa-icon" aria-hidden="true" focusable="false"><use href="#{{ info.icon }}"/></svg></span>
+            <div class="fa-page-title">
+                <h1>{{ cl.opts.verbose_name_plural|capfirst }}</h1>
+                <p>
+                    {% if cl.full_result_count is not None and cl.result_count != cl.full_result_count %}
+                        <strong>{% blocktranslate with shown=cl.result_count total=cl.full_result_count %}Shown: {{ shown }} of {{ total }}{% endblocktranslate %}</strong>
+                    {% else %}
+                        <strong>{% blocktranslate with count=cl.result_count %}Records: {{ count }}{% endblocktranslate %}</strong>
+                    {% endif %}
+                    {% if info.description %}<span aria-hidden="true"> · </span>{{ info.description }}{% endif %}
+                </p>
+            </div>
+            <ul class="object-tools fa-page-actions">
+                {% change_list_object_tools %}
+            </ul>
+        </header>
+    {% endif %}
+{% endblock %}
+
+{% block object-tools %}{% if is_popup %}{{ block.super }}{% endif %}{% endblock %}

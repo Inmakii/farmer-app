@@ -3,7 +3,7 @@
 Dokument opisuje, jak aplikacja jest zabezpieczona: jakie dobre praktyki zastosowano,
 które z nich istniały wcześniej, które wdrożono w gałęzi `security/application-hardening`
 i jak każde zabezpieczenie zostało sprawdzone. Opis dotyczy poziomu aplikacji Django.
-Konfiguracja konkretnego hostingu nie jest jeszcze wybrana.
+Wybrany hosting (Render + TiDB Cloud) i jego konfiguracja: [hosting.md](hosting.md).
 
 ## 1. Krótki model zagrożeń
 
@@ -234,6 +234,13 @@ aplikację uruchamia się przez serwer WSGI/ASGI (np. Gunicorn, uWSGI, Waitress 
 mod_wsgi) za reverse proxy z TLS. Pliki statyczne serwuje proxy albo osobna usługa
 (`collectstatic`).
 
+W wybranym hostingu (Render) aplikację uruchamia Gunicorn w kontenerze Docker jako użytkownik
+bez uprawnień root (`Dockerfile`, `docker-entrypoint.sh`). TLS kończy się na proxy Render,
+które ustawia nagłówek `X-Forwarded-Proto`; dlatego tam włączone jest
+`DJANGO_TRUST_X_FORWARDED_PROTO=True`. Pliki statyczne serwuje WhiteNoise z nazwami
+zawierającymi hash i długim cache. Połączenie z bazą TiDB jest szyfrowane i weryfikuje
+certyfikat serwera (`DB_SSL_CA`, `ssl_mode=VERIFY_IDENTITY`).
+
 ## 10. MySQL: minimalne uprawnienia i kopie zapasowe
 
 - Aplikacja łączy się jako osobny użytkownik (`farmer_app_user`), nigdy jako `root`.
@@ -255,6 +262,9 @@ Projekt nie ustawia `CACHES`, więc używany jest domyślny `LocMemCache`: pami�
 procesu. Przy kilku procesach serwera (np. kilku workerach Gunicorna) lub kilku serwerach
 każdy proces liczy próby osobno, więc rzeczywisty limit się mnoży, a restart zeruje liczniki.
 Na produkcji potrzebny jest wspólny cache, np. Redis (`django.core.cache.backends.redis.RedisCache`).
+
+Na darmowym hostingu Render uruchamiany jest jeden proces Gunicorna (z wątkami), więc liczniki
+są wspólne dla wszystkich żądań. Restart lub uśpienie aplikacji je zeruje.
 
 ## 12. Polecenia kontrolne
 
@@ -288,14 +298,23 @@ przekierowanie HTTPS, cookie `Secure`, `X-Frame-Options` i `nosniff` są poprawn
 Konfiguracja sprzeczna (`DJANGO_SECURE_SSL_REDIRECT=True` z `DJANGO_SESSION_COOKIE_SECURE=False`)
 nie dochodzi do `check --deploy`: start kończy się błędem `ImproperlyConfigured`.
 
-## 13. Ryzyka resztkowe i ustawienia po wyborze hostingu
+## 13. Ryzyka resztkowe i ustawienia hostingu
 
-- Domena, certyfikat TLS i reverse proxy: ustawić `DJANGO_ALLOWED_HOSTS`,
-  `DJANGO_CSRF_TRUSTED_ORIGINS`, flagi HTTPS i ewentualnie `SECURE_PROXY_SSL_HEADER`
-  (sekcja 6) zgodnie z rzeczywistą konfiguracją proxy.
-- HSTS: włączać etapami (sekcja 7).
-- Serwer aplikacji: WSGI/ASGI zamiast `runserver`, pliki statyczne przez proxy.
+Ustawione dla Render (`render.yaml`, szczegóły w [hosting.md](hosting.md)):
+
+- host `*.onrender.com` dopisywany automatycznie do `ALLOWED_HOSTS` i `CSRF_TRUSTED_ORIGINS`;
+- przekierowanie na HTTPS, cookie `Secure`, `SECURE_PROXY_SSL_HEADER` (proxy Render);
+- HSTS etapowo: na start 1 godzina, bez `includeSubDomains` i `preload` (sekcja 7);
+- Gunicorn zamiast `runserver`, pliki statyczne przez WhiteNoise;
+- losowy `DJANGO_SECRET_KEY` generowany przez Render, sekrety bazy tylko w panelu Render;
+- szyfrowane połączenie z bazą z weryfikacją certyfikatu.
+
+Pozostaje do zrobienia lub zaakceptowania:
+
 - Wspólny cache (Redis) dla blokady logowania i limitów API przy więcej niż jednym procesie.
+- Za proxy Render `REMOTE_ADDR` to adres proxy, więc blokada logowania działa praktycznie
+  dla samej nazwy użytkownika, a limity DRF opierają się na nagłówku `X-Forwarded-For`.
+  Przy własnej domenie i znanym łańcuchu proxy warto ustawić `NUM_PROXIES` w DRF.
 - Konto MySQL z minimalnymi uprawnieniami, osobne konto do migracji, kopie zapasowe.
 - Blokada logowania jest liczona dla pary IP + nazwa użytkownika. Rozproszony atak z wielu
   adresów nie zostanie zatrzymany. Pomogłyby limity na poziomie proxy albo usługa typu WAF.

@@ -32,7 +32,7 @@ Oznaczenia na diagramie:
 
 Diagram przedstawia tabele i relacje wynikające z modelu Django. Szczegółowe, nazwane ograniczenia `CHECK` i złożone ograniczenia `UNIQUE` są zdefiniowane w migracjach `0001_initial` i `0002_harvest_disposition_and_more` i opisane w dalszych sekcjach.
 
-Diagram, model `diagrams/farmer_db_model.mwb` i eksport `database/farmer_db_schema.sql` są zgodne z aktualną strukturą bazy (migracje `core` 0001–0004). Wynik weryfikacji i procedurę aktualizacji w MySQL Workbench opisuje [raport weryfikacji](database/weryfikacja_mysql_workbench.md).
+Eksport `database/farmer_db_schema.sql` jest zgodny z aktualną strukturą bazy (migracje `core` 0001–0005). Diagram i model `diagrams/farmer_db_model.mwb` odpowiadają migracjom 0001–0004; zmiany z migracji 0005 (kolumna `core_errorreport.page` i tabela `core_errorreportattachment`) trzeba jeszcze nanieść w MySQL Workbench według sekcji 8 raportu. Wynik weryfikacji i procedurę aktualizacji w MySQL Workbench opisuje [raport weryfikacji](database/weryfikacja_mysql_workbench.md).
 
 ## 4. Opis tabel
 
@@ -174,11 +174,31 @@ Zgłoszenia problemów przekazywane przez użytkowników.
 | `user_id` | INT | Tak | FK → `auth_user.id`, CASCADE | Autor zgłoszenia. |
 | `category` | VARCHAR(10) | Tak | wybór Django | `TECHNICAL`, `DATA`, `INTERFACE` albo `OTHER`. |
 | `description` | LONGTEXT | Tak | — | Treść zgłoszenia. |
+| `page` | VARCHAR(500) | Tak, może być pusty | — | Adres strony, z której wysłano zgłoszenie; uzupełniany przez aplikację. |
 | `status` | VARCHAR(11) | Tak | wybór Django | `NEW`, `IN_PROGRESS` albo `RESOLVED`. |
 | `created_at` | DATETIME(6) | Tak | `auto_now_add` | Data i czas utworzenia. |
 | `updated_at` | DATETIME(6) | Tak | `auto_now` | Data i czas ostatniej aktualizacji. |
 
 Domyślne sortowanie: od najnowszego zgłoszenia.
+
+### 4.9. Tabela `core_errorreportattachment`
+
+Zrzuty ekranu i pliki PDF dołączone do zgłoszeń błędów. Sam plik leży na dysku serwera
+w katalogu `media/error_reports/<id zgłoszenia>/` pod losową nazwą; w bazie jest tylko ścieżka
+i metadane. Plik otrzymuje wyłącznie autor zgłoszenia albo administrator z prawem podglądu zgłoszeń.
+
+| Nazwa pola | Typ danych | Wymagane | Klucz lub ograniczenie | Opis |
+|---|---|---:|---|---|
+| `id` | BIGINT, auto increment | Tak | PK | Identyfikator załącznika. |
+| `report_id` | BIGINT | Tak | FK → `core_errorreport.id`, CASCADE | Zgłoszenie, do którego należy plik. |
+| `file` | VARCHAR(255) | Tak | — | Ścieżka pliku względem `MEDIA_ROOT` (losowa nazwa). |
+| `original_name` | VARCHAR(255) | Tak | — | Nazwa pliku podana przez użytkownika, używana przy pobieraniu. |
+| `content_type` | VARCHAR(50) | Tak | — | Typ pliku: PNG, JPEG, WebP, GIF albo PDF. |
+| `size` | INT UNSIGNED | Tak | `CHECK (size >= 0)` | Rozmiar w bajtach. |
+| `created_at` | DATETIME(6) | Tak | `auto_now_add` | Data dodania. |
+
+Domyślne sortowanie: od najstarszego załącznika. Usunięcie rekordu (także kaskadowe, razem
+ze zgłoszeniem lub użytkownikiem) usuwa również plik z dysku.
 
 ## 5. Relacje
 
@@ -186,6 +206,7 @@ Domyślne sortowanie: od najnowszego zgłoszenia.
 |---|---|---|---|---|
 | `Field.owner` | `auth_user` 1:N `core_field` | CASCADE | `fields` | Usunięcie użytkownika usuwa jego pola. |
 | `ErrorReport.user` | `auth_user` 1:N `core_errorreport` | CASCADE | `error_reports` | Usunięcie użytkownika usuwa jego zgłoszenia. |
+| `ErrorReportAttachment.report` | `core_errorreport` 1:N `core_errorreportattachment` | CASCADE | `attachments` | Usunięcie zgłoszenia usuwa jego załączniki i pliki. |
 | `Cultivation.field` | `core_field` 1:N `core_cultivation` | CASCADE | `cultivations` | Usunięcie pola usuwa prowadzone na nim uprawy. |
 | `Cultivation.crop` | `core_crop` 1:N `core_cultivation` | PROTECT | `cultivations` | Nie można usunąć rodzaju uprawy używanego przez uprawę sezonową. |
 | `FieldWork.cultivation` | `core_cultivation` 1:N `core_fieldwork` | CASCADE | `works` | Usunięcie uprawy usuwa jej prace. |
@@ -295,14 +316,15 @@ python manage.py runserver --noreload
 - `python manage.py showmigrations` pokazuje listę migracji oraz oznacza wykonane pozycje symbolem `[X]`;
 - `python manage.py sqlmigrate core 0001` wyświetla SQL, który Django planuje wykonać dla wskazanej migracji i bieżącego silnika bazy.
 
-Aplikacja `core` ma cztery migracje, wykonywane kolejno:
+Aplikacja `core` ma pięć migracji, wykonywanych kolejno:
 
 - `0001_initial` — tabele, klucze obce, indeksy oraz nazwane ograniczenia `CHECK` i `UNIQUE`;
 - `0002_harvest_disposition_and_more` — kolumna `disposition` w `core_harvest` i ograniczenie `core_harvest_unsold_revenue_zero`;
 - `0003_alter_cultivation_season_year` — walidatory roku sezonu 1980–2100, tylko na poziomie Django;
-- `0004_english_verbose_names` — angielskie nazwy modeli i pól (`verbose_name`) oraz etykiety wyborów, tłumaczone przez `locale/`; nie generuje SQL i nie zmienia struktury tabel ani zapisanych wartości.
+- `0004_english_verbose_names` — angielskie nazwy modeli i pól (`verbose_name`) oraz etykiety wyborów, tłumaczone przez `locale/`; nie generuje SQL i nie zmienia struktury tabel ani zapisanych wartości;
+- `0005_error_report_page_and_attachments` — kolumna `page` w `core_errorreport` i tabela `core_errorreportattachment`.
 
-Plików zastosowanych migracji (`core/migrations/0001_initial.py` – `0004_english_verbose_names.py`) nie należy edytować po zastosowaniu na współdzielonych bazach. Kolejne zmiany schematu powinny powstawać jako nowe migracje.
+Plików zastosowanych migracji (`core/migrations/0001_initial.py` – `0005_error_report_page_and_attachments.py`) nie należy edytować po zastosowaniu na współdzielonych bazach. Kolejne zmiany schematu powinny powstawać jako nowe migracje.
 
 ## 11. Dane demonstracyjne
 
