@@ -60,11 +60,26 @@ Nowe zmienne środowiskowe:
 2. Utwórz instancję **Starter**, region AWS **Frankfurt (eu-central-1)** – blisko serwera Render.
 3. W oknie **Connect** wygeneruj hasło i zanotuj: *Host*, *Port* (4000), *User*
    (w postaci `xxxxxxxx.root`), *Password*.
-4. W **SQL Editor** wykonaj:
+4. W **SQL Editor** wykonaj (przed pierwszym wdrożeniem, czyli przed migracjami):
 
    ```sql
+   SET GLOBAL tidb_enable_check_constraint = ON;
    CREATE DATABASE farmer_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
    ```
+
+   **Ważne:** TiDB domyślnie ignoruje ograniczenia `CHECK` (np. `area_ha > 0`). Jeśli migracje
+   wykonają się przy wyłączonej zmiennej, ograniczenia nie zostaną utworzone i trzeba założyć
+   bazę od nowa. Zmienna jest tylko globalna (`SET SESSION` zwraca błąd 1229), dlatego nie
+   ustawia jej aplikacja. Sprawdzenie po migracjach (oczekiwane 11):
+
+   ```sql
+   SELECT count(*) FROM information_schema.check_constraints
+   WHERE constraint_schema = 'farmer_db';
+   ```
+
+Sprawdzono 2026-11-12 na TiDB `v8.5.3-serverless`: wszystkie migracje, polecenie
+`seed_demo_data`, strony list, formularzy, raportów i zgłoszeń działają, a ograniczenie
+`core_field_area_ha_gt_zero` odrzuca ujemną powierzchnię.
 
 ### 4.2. Aplikacja w Render
 
@@ -112,3 +127,8 @@ Każdy kolejny `push` (merge PR) do `main` automatycznie buduje i wdraża nową 
 *Database → Manage Connections → New*: Hostname i Port z TiDB Cloud, Username jak wyżej.
 W zakładce **SSL** ustaw *Use SSL: Require*. Workbench może pokazać ostrzeżenie o nieznanej
 wersji serwera, które można zignorować.
+
+Uwaga dla Windows: sterownik `mysqlclient` z pakietu dla Windows (TLS przez Schannel) nie łączy
+się z TiDB Cloud (błąd `SEC_E_DECRYPT_FAILURE`). Dotyczy to tylko uruchamiania Django lokalnie
+na Windows z bazą w chmurze. Na Render (Linux, OpenSSL) problem nie występuje. Klient
+`mysql.exe` i MySQL Workbench łączą się poprawnie.
