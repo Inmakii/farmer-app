@@ -213,7 +213,9 @@
             };
             street.addEventListener("input", debounce(function () {
                 chooseStreet();
-                if (!hidden.sym.value) {
+                // A street chosen from the list keeps its code; searching again for the
+                // full label ("ul. ...") finds nothing and would clear the code.
+                if (!hidden.sym.value || (hidden.streetSym && hidden.streetSym.value)) {
                     return;
                 }
                 request(form.getAttribute("data-geo-streets"), {sym: hidden.sym.value, q: street.value.trim()}, function (items) {
