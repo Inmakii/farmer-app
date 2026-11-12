@@ -132,3 +132,22 @@ Uwaga dla Windows: sterownik `mysqlclient` z pakietu dla Windows (TLS przez Scha
 się z TiDB Cloud (błąd `SEC_E_DECRYPT_FAILURE`). Dotyczy to tylko uruchamiania Django lokalnie
 na Windows z bazą w chmurze. Na Render (Linux, OpenSSL) problem nie występuje. Klient
 `mysql.exe` i MySQL Workbench łączą się poprawnie.
+
+## 7. Zewnętrzne usługi adresów i działek
+
+Formularz pola podpowiada miejscowości, ulice i numery budynków oraz sprawdza działki:
+
+| Usługa | Do czego | Dostęp |
+|---|---|---|
+| [Adresy.app](https://adresy.app) (dane PRG GUGiK) | podpowiedzi miejscowości, ulic i numerów; adres z kodem pocztowym i współrzędne | bez klucza 20 zapytań/min z jednego IP; darmowy klucz: 30/min, 3000/mies. |
+| [ULDK GUGiK](https://uldk.gugik.gov.pl) | obręb po nazwie, sprawdzenie działki, współrzędne środka działki | bezpłatnie, bez rejestracji |
+
+- Przeglądarka łączy się tylko z aplikacją (`/geo/localities/`, `/geo/streets/`, `/geo/numbers/`);
+  zapytania do usług wysyła serwer, więc CSP pozostaje bez zmian.
+- Endpointy wymagają zalogowania i mają limit 60 zapytań na minutę na użytkownika.
+  Odpowiedzi usług są przechowywane w cache przez 24 godziny.
+- Do usług trafia tylko wpisywana nazwa miejscowości, ulicy, numer lub identyfikator działki,
+  bez danych użytkownika.
+- Gdy usługa nie odpowiada (limit czasu 6 s), adres lub pełny identyfikator działki można wpisać ręcznie.
+- Na Render wszystkie aplikacje mogą dzielić adres IP, dlatego warto dodać darmowy klucz
+  Adresy.app w zmiennej `ADRESY_API_KEY` (*Environment*). `GEODATA_ENABLED=False` wyłącza usługi.

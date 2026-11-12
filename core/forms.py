@@ -2,6 +2,7 @@ import os
 import re
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
@@ -24,6 +25,7 @@ from .models import (
     Harvest,
     Spraying,
 )
+from .services import geodata
 
 
 class SkipDuplicateModelErrorsMixin:
@@ -185,8 +187,14 @@ class FieldForm(forms.ModelForm):
         help_texts = {
             "name": _("The name must be unique among your fields."),
             "area_ha": _("Enter a positive area in hectares."),
-            "parcel_identifier": _("Required when the location is a parcel."),
-            "address": _("Required when the location is an address."),
+            "parcel_identifier": _(
+                "Filled in after choosing the locality and parcel number. You can also "
+                "enter the full identifier, e.g. 040306_2.0008.100/1."
+            ),
+            "address": _(
+                "Filled in after choosing the locality, street and number. You can also "
+                "type the address yourself."
+            ),
             "latitude": _("Required for GPS and a point on a map; range -90 to 90."),
             "longitude": _("Required for GPS and a point on a map; range -180 to 180."),
         }
@@ -202,21 +210,55 @@ class FieldForm(forms.ModelForm):
             "longitude": {"invalid": _("Enter a valid longitude.")},
         }
 
+    # Helper fields (not stored): the locality, street and house number or parcel
+    # number are looked up in the national registers (core.services.geodata) and
+    # fill in the address or parcel identifier and the coordinates.
+    locality = forms.CharField(
+        label=_("Locality"), required=False, max_length=200,
+        help_text=_("Start typing and choose the locality from the list."),
+    )
+    street = forms.CharField(
+        label=_("Street"), required=False, max_length=200,
+        help_text=_("Leave empty in a village without street names."),
+    )
+    house_number = forms.CharField(label=_("House number"), required=False, max_length=20)
+    parcel_number = forms.CharField(
+        label=_("Parcel number"), required=False, max_length=30,
+        help_text=_("The number from the land register, e.g. 100/1."),
+    )
+    locality_sym = forms.CharField(required=False, widget=forms.HiddenInput, max_length=7)
+    locality_name = forms.CharField(required=False, widget=forms.HiddenInput, max_length=100)
+    locality_commune = forms.CharField(required=False, widget=forms.HiddenInput, max_length=100)
+    street_sym = forms.CharField(required=False, widget=forms.HiddenInput, max_length=5)
+
     # Location method -> fields that belong to it. core/static/core/forms.js shows
     # only these fields (plus fields that already hold a value).
     LOCATION_FIELDS = {
+        "locality": (Field.LocationMethod.ADDRESS, Field.LocationMethod.PARCEL),
+        "street": (Field.LocationMethod.ADDRESS,),
+        "house_number": (Field.LocationMethod.ADDRESS,),
+        "parcel_number": (Field.LocationMethod.PARCEL,),
         "parcel_identifier": (Field.LocationMethod.PARCEL,),
         "address": (Field.LocationMethod.ADDRESS,),
         "latitude": (Field.LocationMethod.GPS, Field.LocationMethod.MAP),
         "longitude": (Field.LocationMethod.GPS, Field.LocationMethod.MAP),
     }
+    # Inputs that get hints from core/geo_views.py.
+    HINT_INPUTS = {"locality": "locality", "street": "street", "house_number": "number"}
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
+        self.order_fields([
+            "name", "area_ha", "soil_type", "location_method",
+            "locality", "street", "house_number", "parcel_number",
+            "parcel_identifier", "address", "latitude", "longitude", "description",
+        ])
         self.fields["location_method"].widget.attrs["data-location-method"] = ""
         for name, methods in self.LOCATION_FIELDS.items():
             self.fields[name].widget.attrs["data-location-for"] = " ".join(methods)
+        for name, kind in self.HINT_INPUTS.items():
+            self.fields[name].widget.attrs.update({"data-geo": kind, "autocomplete": "off"})
 
     def clean_name(self):
         name = self.cleaned_data["name"].strip()
@@ -234,9 +276,111 @@ class FieldForm(forms.ModelForm):
             raise ValidationError(gettext("Field area must be greater than zero."))
         return area_ha
 
+    def _set_coordinates(self, found):
+        # Coordinates follow the address or parcel unless the user typed them.
+        if "latitude" in self.changed_data or "longitude" in self.changed_data:
+            return
+        self.cleaned_data["latitude"] = found["latitude"]
+        self.cleaned_data["longitude"] = found["longitude"]
+
+    def _lookup_address(self):
+        data = self.cleaned_data
+        sym = data.get("locality_sym", "")
+        number = data.get("house_number", "").strip()
+        typed_address = data.get("address", "")
+        if sym and number:
+            try:
+                found = geodata.find_address(sym, data.get("street_sym", ""), number)
+            except geodata.GeoServiceError:
+                if not typed_address:
+                    self.add_error("address", gettext(
+                        "The address register is not available right now. "
+                        "Type the address yourself."
+                    ))
+                return
+            if found is None:
+                self.add_error("house_number", gettext(
+                    "This address was not found in the address register."
+                ))
+                return
+            data["address"] = found["address"]
+            self._set_coordinates(found)
+        elif not typed_address and (data.get("locality") or number):
+            field = "house_number" if sym else "locality"
+            message = (
+                gettext("Enter the house number.") if sym
+                else gettext("Choose the locality from the list.")
+            )
+            self.add_error(field, message)
+        elif typed_address and "address" in self.changed_data:
+            try:
+                found = geodata.geocode_address(typed_address)
+            except geodata.GeoServiceError:
+                return
+            if found:
+                self._set_coordinates(found)
+
+    def _lookup_parcel(self):
+        data = self.cleaned_data
+        number = data.get("parcel_number", "").strip()
+        typed_id = data.get("parcel_identifier", "")
+        if number:
+            if not geodata.PARCEL_NUMBER_RE.match(number):
+                self.add_error("parcel_number", gettext("Enter a parcel number such as 100 or 100/1."))
+                return
+            name = data.get("locality_name", "")
+            if not name:
+                self.add_error("locality", gettext("Choose the locality from the list."))
+                return
+            try:
+                region = geodata.find_region(name, data.get("locality_commune", ""))
+                parcel = geodata.get_parcel(f"{region}.{number}") if region else None
+            except geodata.GeoServiceError:
+                if not typed_id:
+                    self.add_error("parcel_number", gettext(
+                        "The parcel register is not available right now. "
+                        "Enter the full parcel identifier yourself."
+                    ))
+                return
+            if region is None:
+                self.add_error("locality", gettext(
+                    "No cadastral region with this name was found in this commune. "
+                    "Enter the full parcel identifier yourself."
+                ))
+                return
+            if parcel is None:
+                self.add_error("parcel_number", gettext(
+                    "There is no parcel with this number in %(region)s."
+                ) % {"region": name})
+                return
+            data["parcel_identifier"] = parcel["id"]
+            self._set_coordinates(parcel)
+        elif typed_id and "parcel_identifier" in self.changed_data:
+            if not geodata.PARCEL_ID_RE.match(typed_id):
+                return  # a free-form identifier is kept as it is
+            try:
+                parcel = geodata.get_parcel(typed_id)
+            except geodata.GeoServiceError:
+                return
+            if parcel is None:
+                self.add_error("parcel_identifier", gettext(
+                    "This parcel was not found in the land register."
+                ))
+                return
+            self._set_coordinates(parcel)
+
     def clean(self):
         cleaned_data = super().clean()
         location_method = cleaned_data.get("location_method")
+        errors_before = len(self.errors)
+        if settings.GEODATA_ENABLED:
+            if location_method == Field.LocationMethod.ADDRESS:
+                self._lookup_address()
+            elif location_method == Field.LocationMethod.PARCEL:
+                self._lookup_parcel()
+        if len(self.errors) > errors_before:
+            # The lookup already explained what is missing; no second "required" error.
+            return cleaned_data
         address = cleaned_data.get("address")
         latitude = cleaned_data.get("latitude")
         longitude = cleaned_data.get("longitude")

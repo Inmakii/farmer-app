@@ -3336,3 +3336,78 @@ msgstr "Opisz, co się stało i co powinno było się wydarzyć."
 
 msgid "A screenshot helps us find the problem faster."
 msgstr "Zrzut ekranu pomoże nam szybciej znaleźć problem."
+
+msgid ""
+"Filled in after choosing the locality and parcel number. You can also enter "
+"the full identifier, e.g. 040306_2.0008.100/1."
+msgstr ""
+"Uzupełnia się po wybraniu miejscowości i numeru działki. Możesz też wpisać "
+"pełny identyfikator, np. 040306_2.0008.100/1."
+
+msgid ""
+"Filled in after choosing the locality, street and number. You can also type "
+"the address yourself."
+msgstr ""
+"Uzupełnia się po wybraniu miejscowości, ulicy i numeru. Możesz też wpisać "
+"adres samodzielnie."
+
+msgid "Locality"
+msgstr "Miejscowość"
+
+msgid "Start typing and choose the locality from the list."
+msgstr "Zacznij pisać i wybierz miejscowość z listy."
+
+msgid "Street"
+msgstr "Ulica"
+
+msgid "Leave empty in a village without street names."
+msgstr "Zostaw puste w miejscowości bez nazw ulic."
+
+msgid "House number"
+msgstr "Numer budynku"
+
+msgid "Parcel number"
+msgstr "Numer działki"
+
+msgid "The number from the land register, e.g. 100/1."
+msgstr "Numer z ewidencji gruntów, np. 100/1."
+
+msgid ""
+"The address register is not available right now. Type the address yourself."
+msgstr "Rejestr adresów jest teraz niedostępny. Wpisz adres samodzielnie."
+
+msgid "This address was not found in the address register."
+msgstr "Nie znaleziono tego adresu w rejestrze adresów."
+
+msgid "Enter the house number."
+msgstr "Podaj numer budynku."
+
+msgid "Choose the locality from the list."
+msgstr "Wybierz miejscowość z listy."
+
+msgid "Enter a parcel number such as 100 or 100/1."
+msgstr "Podaj numer działki, np. 100 albo 100/1."
+
+msgid ""
+"The parcel register is not available right now. Enter the full parcel "
+"identifier yourself."
+msgstr ""
+"Rejestr działek jest teraz niedostępny. Wpisz pełny identyfikator działki "
+"samodzielnie."
+
+msgid ""
+"No cadastral region with this name was found in this commune. Enter the full"
+" parcel identifier yourself."
+msgstr ""
+"W tej gminie nie znaleziono obrębu o tej nazwie. Wpisz pełny identyfikator "
+"działki samodzielnie."
+
+#, python-format
+msgid "There is no parcel with this number in %(region)s."
+msgstr "W obrębie %(region)s nie ma działki o tym numerze."
+
+msgid "This parcel was not found in the land register."
+msgstr "Nie znaleziono tej działki w ewidencji gruntów."
+
+msgid "Address and parcel hints: Adresy.app (PRG register) and ULDK by GUGiK."
+msgstr "Podpowiedzi adresów i działek: Adresy.app (rejestr PRG) i ULDK GUGiK."
