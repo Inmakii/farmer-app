@@ -290,7 +290,11 @@ class FieldForm(forms.ModelForm):
         typed_address = data.get("address", "")
         if sym and number:
             try:
-                found = geodata.find_address(sym, data.get("street_sym", ""), number)
+                street_sym = data.get("street_sym", "")
+                if not street_sym and data.get("street"):
+                    # The street was typed, not chosen from the list: find its code.
+                    street_sym = geodata.find_street(sym, data["street"])
+                found = geodata.find_address(sym, street_sym, number)
             except geodata.GeoServiceError:
                 if not typed_address:
                     self.add_error("address", gettext(

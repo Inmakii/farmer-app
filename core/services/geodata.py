@@ -130,6 +130,24 @@ def search_streets(sym, query=""):
     ]
 
 
+STREET_PREFIX_RE = re.compile(r"^(ul|al|pl|os|rondo|skwer|bulw|droga)\.?\s+", re.IGNORECASE)
+
+
+def find_street(sym, name):
+    """Street code (sym_ul) for a street name typed or chosen in a locality, or ""."""
+    name = (name or "").strip()
+    if not SYM_RE.match(sym or "") or not name:
+        return ""
+    bare = STREET_PREFIX_RE.sub("", name).strip().lower()
+    streets = search_streets(sym, bare)
+    exact = [
+        street for street in streets
+        if street["label"].strip().lower() in (name.lower(), bare)
+        or STREET_PREFIX_RE.sub("", street["label"]).strip().lower() == bare
+    ]
+    return exact[0]["sym_ul"] if len(exact) == 1 else ""
+
+
 def list_house_numbers(sym, sym_ul=""):
     if not SYM_RE.match(sym or "") or (sym_ul and not SYM_UL_RE.match(sym_ul)):
         return []

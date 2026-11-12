@@ -231,3 +231,18 @@ class FieldFormLookupTests(TestCase):
 
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(form.cleaned_data["latitude"], Decimal("50.000000"))
+
+    def test_typed_street_without_code_is_found_by_name(self):
+        # Regression: the street code was lost in the browser; the server finds it by name.
+        streets = [{"sym_ul": "16681", "nazwa_pelna": "ul. Pod Wierzbami", "label": "ul. Pod Wierzbami"}]
+
+        def autofill(params):
+            return ADDRESS_FOUND if params.get("sym_ul") == "16681" else {"found": False}
+
+        form = self.form(
+            {"ulice": streets, "lookup/autofill": autofill}, location_method="ADDRESS",
+            locality_sym="0093562", locality_name="Niemcz",
+            street="ul. Pod Wierzbami", street_sym="", house_number="11",
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
