@@ -70,6 +70,8 @@ farmer-app-main/
 - [Model MySQL Workbench](docs/diagrams/farmer_db_model.mwb)
 - [Eksport schematu SQL](docs/database/farmer_db_schema.sql)
 - [Weryfikacja materiałów MySQL Workbench](docs/database/weryfikacja_mysql_workbench.md)
+- [Hosting i wdrożenie (Render + TiDB Cloud)](docs/hosting.md)
+- [Bezpieczeństwo aplikacji](docs/bezpieczenstwo_aplikacji.md)
 
 ![Diagram ERD](docs/diagrams/erd_farmer_app.png)
 
@@ -272,6 +274,14 @@ Przed scaleniem uruchom pełne testy, `git diff --check` i sprawdź konflikty. `
 - na produkcji należy uruchomić także `python manage.py check --deploy` i skonfigurować HTTPS.
 
 Szczegóły, model zagrożeń, sposób weryfikacji i etapowe włączanie HSTS: [docs/bezpieczenstwo_aplikacji.md](docs/bezpieczenstwo_aplikacji.md).
+
+## Hosting
+
+Aplikacja jest przygotowana do bezpłatnego wdrożenia: **Render** (Docker, Gunicorn,
+WhiteNoise, HTTPS) + **TiDB Cloud Starter** (baza zgodna z MySQL, połączenie TLS).
+Konfiguracja jest w plikach `Dockerfile`, `docker-entrypoint.sh` i `render.yaml`.
+Porównanie dostawców, instrukcja krok po kroku i ograniczenia darmowych planów:
+[docs/hosting.md](docs/hosting.md).
 
 ## Autorzy
 

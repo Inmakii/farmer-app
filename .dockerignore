@@ -1,0 +1,15 @@
+.git
+.venv
+venv
+env
+.env
+.env.*
+!.env.example
+media
+staticfiles
+**/__pycache__
+*.py[cod]
+.coverage
+htmlcov
+docs/diagrams
+*.log

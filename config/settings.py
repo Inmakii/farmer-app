@@ -117,6 +117,17 @@ ALLOWED_HOSTS = [
 # e.g. behind a proxy or on a separate domain. Empty by default.
 CSRF_TRUSTED_ORIGINS = _env_trusted_origins("DJANGO_CSRF_TRUSTED_ORIGINS")
 
+# Render sets RENDER_EXTERNAL_HOSTNAME (e.g. farmer-app.onrender.com) on its
+# servers. The host is added automatically so the address does not have to be
+# known before the first deploy (see docs/hosting.md).
+RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME", "").strip()
+if RENDER_EXTERNAL_HOSTNAME:
+    if RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    _render_origin = f"https://{RENDER_EXTERNAL_HOSTNAME}"
+    if _render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_render_origin)
+
 
 # HTTPS and HTTP security headers
 # https://docs.djangoproject.com/en/6.0/ref/middleware/#module-django.middleware.security
@@ -124,8 +135,11 @@ CSRF_TRUSTED_ORIGINS = _env_trusted_origins("DJANGO_CSRF_TRUSTED_ORIGINS")
 # The HTTPS flags are off by default so that local development over
 # http://127.0.0.1:8000 keeps working. Turn them on in production through the
 # environment once the site is served over HTTPS. SECURE_PROXY_SSL_HEADER is
-# deliberately not set: it is only safe when the real reverse proxy is known to
-# strip and set that header itself.
+# off by default: it is only safe when the real reverse proxy is known to strip
+# and set that header itself. Render's proxy does, so the Render configuration
+# turns it on with DJANGO_TRUST_X_FORWARDED_PROTO=True.
+if _env_bool("DJANGO_TRUST_X_FORWARDED_PROTO", False):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = _env_bool("DJANGO_SECURE_SSL_REDIRECT", False)
 # When the HTTPS redirect is on, the cookies are Secure unless explicitly
 # disabled, and disabling them together with the redirect is rejected.
@@ -209,6 +223,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.csp.ContentSecurityPolicyMiddleware',
+    # Serves the collected static files in production (no separate web server).
+    # Placed after the security and CSP middleware so static responses get their headers.
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'core.middleware.AdminLanguageMiddleware',
@@ -257,9 +274,17 @@ def _required_db_setting(name):
     return value
 
 
+# DB_ENGINE=tidb selects the TiDB dialect (django-tidb) for the MySQL-compatible
+# TiDB Cloud database used on the free hosting. Every other value keeps MySQL.
+_DB_ENGINE = (
+    "django_tidb"
+    if os.getenv("DB_ENGINE", "").strip().lower() == "tidb"
+    else "django.db.backends.mysql"
+)
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': _DB_ENGINE,
         'NAME': _required_db_setting('DB_NAME'),
         'USER': _required_db_setting('DB_USER'),
         'PASSWORD': _required_db_setting('DB_PASSWORD'),
@@ -274,6 +299,14 @@ DATABASES = {
         },
     }
 }
+
+# Encrypted connection to a remote database. DB_SSL_CA is the path to the CA
+# certificate bundle, e.g. /etc/ssl/certs/ca-certificates.crt in the Docker image.
+# The server certificate and host name are then verified.
+_DB_SSL_CA = os.getenv("DB_SSL_CA", "").strip()
+if _DB_SSL_CA:
+    DATABASES["default"]["OPTIONS"]["ssl"] = {"ca": _DB_SSL_CA}
+    DATABASES["default"]["OPTIONS"]["ssl_mode"] = "VERIFY_IDENTITY"
 
 
 # Password validation
@@ -326,6 +359,17 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# `collectstatic` puts all static files here; WhiteNoise serves them with
+# compressed copies and file names that contain a content hash (long caching).
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 # Uploaded files (error report attachments). The folder is not served by a public
 # URL; core.views.ErrorReportAttachmentView checks who may open each file.
 MEDIA_ROOT = BASE_DIR / "media"
@@ -333,6 +377,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Speeds up tests: a fast password hasher, only during `manage.py test`.
 if len(sys.argv) > 1 and sys.argv[1] == 'test':
     PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
+    # Tests do not run `collectstatic`, so they use plain static file names.
+    STORAGES["staticfiles"] = {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    }
 
 # Authentication redirects
 LOGIN_URL = 'core:login'
