@@ -32,10 +32,17 @@
             <div class="fact-key"><dt>{% translate "Area" %}</dt><dd>{{ field.area_ha|floatformat:"2g" }} ha</dd></div>
             <div><dt>{% translate "Soil type" %}</dt><dd>{{ field.get_soil_type_display }}</dd></div>
             <div><dt>{% translate "Location method" %}</dt><dd>{{ field.get_location_method_display }}</dd></div>
-            <div><dt>{% translate "Parcel identifier" %}</dt><dd>{{ field.parcel_identifier|default:"—" }}</dd></div>
-            <div><dt>{% translate "Address" %}</dt><dd>{{ field.address|default:"—" }}</dd></div>
-            <div><dt>{% translate "Latitude" %}</dt><dd>{{ field.latitude|default_if_none:"—" }}</dd></div>
-            <div><dt>{% translate "Longitude" %}</dt><dd>{{ field.longitude|default_if_none:"—" }}</dd></div>
+            {# Only the location data of the chosen method, plus anything else that was filled in. #}
+            {% if field.location_method == "PARCEL" or field.parcel_identifier %}
+                <div><dt>{% translate "Parcel identifier" %}</dt><dd>{{ field.parcel_identifier|default:"—" }}</dd></div>
+            {% endif %}
+            {% if field.location_method == "ADDRESS" or field.address %}
+                <div><dt>{% translate "Address" %}</dt><dd>{{ field.address|default:"—" }}</dd></div>
+            {% endif %}
+            {% if field.location_method == "GPS" or field.location_method == "MAP" or field.latitude is not None or field.longitude is not None %}
+                <div><dt>{% translate "Latitude" %}</dt><dd>{{ field.latitude|default_if_none:"—" }}</dd></div>
+                <div><dt>{% translate "Longitude" %}</dt><dd>{{ field.longitude|default_if_none:"—" }}</dd></div>
+            {% endif %}
             <div class="fact-wide"><dt>{% translate "Description" %}</dt><dd>{{ field.description|default:"—"|linebreaksbr }}</dd></div>
         </dl>
     </article>
