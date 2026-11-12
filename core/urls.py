@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .geo_views import HouseNumberHintView, LocalityHintView, StreetHintView
 from .views import (
     CropCreateView,
     CropListView,
@@ -120,4 +121,8 @@ urlpatterns = [
         ErrorReportAttachmentView.as_view(),
         name="error_report_attachment",
     ),
+    # Address hints for the field form (JSON).
+    path("geo/localities/", LocalityHintView.as_view(), name="geo_localities"),
+    path("geo/streets/", StreetHintView.as_view(), name="geo_streets"),
+    path("geo/numbers/", HouseNumberHintView.as_view(), name="geo_numbers"),
 ]

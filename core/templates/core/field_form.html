@@ -18,9 +18,13 @@
     </header>
 
     <div class="sheet app-form">
-        <form method="post" data-busy-form>
+        <form method="post" data-busy-form
+              data-geo-localities="{% url 'core:geo_localities' %}"
+              data-geo-streets="{% url 'core:geo_streets' %}"
+              data-geo-numbers="{% url 'core:geo_numbers' %}">
             {% csrf_token %}
             {% include "core/partials/form_body.html" %}
+            <p class="field-hint">{% translate "Address and parcel hints: Adresy.app (PRG register) and ULDK by GUGiK." %}</p>
             <div class="form-actions">
                 <button class="button" type="submit" data-busy-label="{% translate "Saving…" %}">{% translate "Save" %}</button>
                 {% if field %}

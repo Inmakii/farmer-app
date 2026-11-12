@@ -3328,3 +3328,78 @@ msgstr "Опишіть, що сталося і що мало статися."
 
 msgid "A screenshot helps us find the problem faster."
 msgstr "Скріншот допоможе нам швидше знайти проблему."
+
+msgid ""
+"Filled in after choosing the locality and parcel number. You can also enter "
+"the full identifier, e.g. 040306_2.0008.100/1."
+msgstr ""
+"Заповнюється після вибору населеного пункту й номера ділянки. Можна також "
+"вписати повний ідентифікатор, напр. 040306_2.0008.100/1."
+
+msgid ""
+"Filled in after choosing the locality, street and number. You can also type "
+"the address yourself."
+msgstr ""
+"Заповнюється після вибору населеного пункту, вулиці й номера. Можна також "
+"вписати адресу самостійно."
+
+msgid "Locality"
+msgstr "Населений пункт"
+
+msgid "Start typing and choose the locality from the list."
+msgstr "Почніть вводити й виберіть населений пункт зі списку."
+
+msgid "Street"
+msgstr "Вулиця"
+
+msgid "Leave empty in a village without street names."
+msgstr "Залиште порожнім, якщо в населеному пункті немає назв вулиць."
+
+msgid "House number"
+msgstr "Номер будинку"
+
+msgid "Parcel number"
+msgstr "Номер ділянки"
+
+msgid "The number from the land register, e.g. 100/1."
+msgstr "Номер із земельного кадастру, напр. 100/1."
+
+msgid ""
+"The address register is not available right now. Type the address yourself."
+msgstr "Реєстр адрес зараз недоступний. Впишіть адресу самостійно."
+
+msgid "This address was not found in the address register."
+msgstr "Цієї адреси не знайдено в реєстрі адрес."
+
+msgid "Enter the house number."
+msgstr "Вкажіть номер будинку."
+
+msgid "Choose the locality from the list."
+msgstr "Виберіть населений пункт зі списку."
+
+msgid "Enter a parcel number such as 100 or 100/1."
+msgstr "Вкажіть номер ділянки, напр. 100 або 100/1."
+
+msgid ""
+"The parcel register is not available right now. Enter the full parcel "
+"identifier yourself."
+msgstr ""
+"Реєстр ділянок зараз недоступний. Впишіть повний ідентифікатор ділянки "
+"самостійно."
+
+msgid ""
+"No cadastral region with this name was found in this commune. Enter the full"
+" parcel identifier yourself."
+msgstr ""
+"У цій гміні не знайдено кадастрового обрєбу з такою назвою. Впишіть повний "
+"ідентифікатор ділянки самостійно."
+
+#, python-format
+msgid "There is no parcel with this number in %(region)s."
+msgstr "В обрєбі %(region)s немає ділянки з таким номером."
+
+msgid "This parcel was not found in the land register."
+msgstr "Цієї ділянки не знайдено в земельному кадастрі."
+
+msgid "Address and parcel hints: Adresy.app (PRG register) and ULDK by GUGiK."
+msgstr "Підказки адрес і ділянок: Adresy.app (реєстр PRG) і ULDK від GUGiK."

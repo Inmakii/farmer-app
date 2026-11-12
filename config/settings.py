@@ -374,9 +374,17 @@ STORAGES = {
 # URL; core.views.ErrorReportAttachmentView checks who may open each file.
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Address hints and parcel checks in the field form (core.services.geodata):
+# Adresy.app (PRG addresses) and ULDK by GUGiK (parcels). An optional free
+# Adresy.app key raises the limit of 20 requests per minute per server IP.
+GEODATA_ENABLED = _env_bool("GEODATA_ENABLED", True)
+ADRESY_API_KEY = os.getenv("ADRESY_API_KEY", "").strip()
+
 # Speeds up tests: a fast password hasher, only during `manage.py test`.
 if len(sys.argv) > 1 and sys.argv[1] == 'test':
     PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
+    # Tests never call the external address and parcel services (core.services.geodata).
+    GEODATA_ENABLED = False
     # Tests do not run `collectstatic`, so they use plain static file names.
     STORAGES["staticfiles"] = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
