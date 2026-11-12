@@ -230,9 +230,18 @@ Migracja `0005_error_report_page_and_attachments` zmieniła strukturę bazy:
 |---|---|
 | `farmer_db_schema.sql` | zaktualizowany: wygenerowany ponownie (`mysqldump` 8.4.9, `--no-data`); różnica względem poprzedniej wersji to wyłącznie powyższe zmiany |
 | `dokumentacja_bazy_danych.md` | zaktualizowana (sekcje 4.8, 4.9, 5, 10) |
-| `farmer_db_model.mwb` i `erd_farmer_app.png` | **do zrobienia w MySQL Workbench** |
+| `farmer_db_model.mwb` | zaktualizowany w MySQL Workbench 8.0.47: kolumna `page` i tabela `core_errorreportattachment` z kluczem obcym `report_id` → `core_errorreport.id` (`NO ACTION`) na diagramie **EER Diagram1** |
+| `erd_farmer_app.png` | wyeksportowany ponownie z **EER Diagram1** |
 
-Kroki w MySQL Workbench (tylko model, bez zmian w bazie):
+Weryfikacja po aktualizacji: kolumny wszystkich tabel `core_*` i `auth_user` z
+`document.mwb.xml` porównano z `information_schema.columns` bazy `farmer_db`
+(nazwa, typ, `NOT NULL`, `UNSIGNED`). Porównano 78 kolumn, bez różnic. Model, PNG i eksport SQL
+są zgodne z migracjami `core` 0001–0005.
+
+Uwaga: nowy MySQL Workbench 26.x nie obsługuje modelowania ani plików `.mwb`. Model edytuje się
+w MySQL Workbench 8.0 (archiwum: <https://downloads.mysql.com/archives/workbench/>).
+
+Wykonane kroki w MySQL Workbench (tylko model, bez zmian w bazie):
 
 1. Otwórz `docs/diagrams/farmer_db_model.mwb`.
 2. W tabeli `core_errorreport` dodaj kolumnę `page`, typ `VARCHAR(500)`, *NN*.

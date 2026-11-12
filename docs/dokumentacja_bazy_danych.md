@@ -32,7 +32,7 @@ Oznaczenia na diagramie:
 
 Diagram przedstawia tabele i relacje wynikające z modelu Django. Szczegółowe, nazwane ograniczenia `CHECK` i złożone ograniczenia `UNIQUE` są zdefiniowane w migracjach `0001_initial` i `0002_harvest_disposition_and_more` i opisane w dalszych sekcjach.
 
-Eksport `database/farmer_db_schema.sql` jest zgodny z aktualną strukturą bazy (migracje `core` 0001–0005). Diagram i model `diagrams/farmer_db_model.mwb` odpowiadają migracjom 0001–0004; zmiany z migracji 0005 (kolumna `core_errorreport.page` i tabela `core_errorreportattachment`) trzeba jeszcze nanieść w MySQL Workbench według sekcji 8 raportu. Wynik weryfikacji i procedurę aktualizacji w MySQL Workbench opisuje [raport weryfikacji](database/weryfikacja_mysql_workbench.md).
+Diagram, model `diagrams/farmer_db_model.mwb` i eksport `database/farmer_db_schema.sql` są zgodne z aktualną strukturą bazy (migracje `core` 0001–0005). Wynik weryfikacji i procedurę aktualizacji w MySQL Workbench opisuje [raport weryfikacji](database/weryfikacja_mysql_workbench.md).
 
 ## 4. Opis tabel
 
