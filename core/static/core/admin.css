@@ -371,6 +371,29 @@ html[data-theme="dark"] {
     color: var(--fa-alert-fg);
 }
 
+/* User activity before an error report */
+
+.activity-table {
+    width: 100%;
+    margin: 8px 0;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.activity-table th,
+.activity-table td {
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--hairline-color, #ddd);
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.activity-table tr.activity-error td {
+    background: var(--fa-alert-bg);
+    color: var(--fa-alert-fg);
+}
+
 /* Bigger, easier to read pages */
 
 body {

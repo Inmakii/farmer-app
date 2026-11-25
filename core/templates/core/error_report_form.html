@@ -10,6 +10,7 @@
             <p class="kicker">{% translate "Help" %}</p>
             <h1>{% translate "Report a bug" %}</h1>
             <p class="page-head-lead">{% if source_page %}{% translate "Describe what happened and what should have happened." %}{% else %}{% translate "Describe what happened and on which page." %}{% endif %} {% translate "A screenshot helps us find the problem faster." %} {% translate "After you send the report, its status will be changed by an administrator." %}</p>
+            {% if error_code %}<p class="page-head-lead">{% translate "Error code" %}: <strong class="error-code">{{ error_code }}</strong> — {% translate "it is attached to the report." %}</p>{% endif %}
         </div>
     </header>
 

@@ -7,6 +7,12 @@ set -e
 
 python manage.py migrate --noinput
 
+# Common crop types in the shared catalog (only adds the missing ones).
+python manage.py seed_crops
+
+# User activity is kept only for ACTIVITY_RETENTION_DAYS days (GDPR: storage limitation).
+python manage.py prune_activity
+
 # Creates the administrator once, when DJANGO_SUPERUSER_USERNAME and
 # DJANGO_SUPERUSER_PASSWORD are set. Later starts skip an existing account.
 if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then

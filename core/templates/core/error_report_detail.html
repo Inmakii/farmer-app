@@ -22,6 +22,7 @@
             <div><dt>{% translate "Status" %}</dt><dd>{{ error_report.get_status_display }}</dd></div>
             <div><dt>{% translate "Created at" %}</dt><dd>{{ error_report.created_at|date:"d.m.Y H:i" }}</dd></div>
             <div><dt>{% translate "Updated at" %}</dt><dd>{{ error_report.updated_at|date:"d.m.Y H:i" }}</dd></div>
+            {% if error_report.error_code %}<div><dt>{% translate "Error code" %}</dt><dd>{{ error_report.error_code }}</dd></div>{% endif %}
             {% if error_report.page %}<div class="fact-wide"><dt>{% translate "Page" %}</dt><dd>{{ error_report.page }}</dd></div>{% endif %}
             <div class="fact-wide"><dt>{% translate "Description" %}</dt><dd>{{ error_report.description|linebreaksbr }}</dd></div>
         </dl>

@@ -33,3 +33,5 @@ urlpatterns = [
     path('api/auth/me/', CurrentUserView.as_view(), name='api_current_user'),
     path('', include('core.urls')),
 ]
+
+handler500 = 'core.views.server_error'

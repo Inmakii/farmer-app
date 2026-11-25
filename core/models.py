@@ -327,6 +327,8 @@ class ErrorReport(models.Model):
     description = models.TextField(_("description"))
     # Address of the page the report was sent from, filled in by the site.
     page = models.CharField(_("page"), max_length=500, blank=True)
+    # Request code shown on the error page the report was sent from (core/activity.py).
+    error_code = models.CharField(_("error code"), max_length=12, blank=True)
     status = models.CharField(_("status"), max_length=11, choices=Status.choices)
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("updated at"), auto_now=True)
@@ -391,3 +393,56 @@ def delete_attachment_file(sender, instance, **kwargs):
     # Also runs when the report or its user is deleted (cascade).
     if instance.file:
         instance.file.delete(save=False)
+
+
+class PrivacyAcceptance(models.Model):
+    """When a user accepted the privacy policy and which version (accountability,
+    GDPR art. 5(2) and 7(1)). Set at sign-up; deleted with the account."""
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name="privacy_acceptance", verbose_name=_("user"),
+    )
+    policy_version = models.CharField(_("policy version"), max_length=20)
+    accepted_at = models.DateTimeField(_("accepted at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("privacy policy acceptance")
+        verbose_name_plural = _("privacy policy acceptances")
+
+    def __str__(self):
+        return f"{self.user} – {self.policy_version}"
+
+
+class UserActivity(models.Model):
+    """One request of a user (page opened, form sent, browser error), kept for a
+    limited time (settings.ACTIVITY_RETENTION_DAYS) to find out what a user did
+    before reporting a problem. Written by core.activity.RequestLogMiddleware.
+
+    Form values are never stored, only the names of fields with errors.
+    """
+
+    created_at = models.DateTimeField(_("time"), auto_now_add=True, db_index=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
+        related_name="activities", verbose_name=_("user"),
+    )
+    # The login typed on the login page (also for failed attempts without a user).
+    username = models.CharField(_("username"), max_length=150, blank=True, db_index=True)
+    request_id = models.CharField(_("request code"), max_length=12, db_index=True)
+    method = models.CharField(_("method"), max_length=8)
+    path = models.CharField(_("address"), max_length=500)
+    view_name = models.CharField(_("page"), max_length=100, blank=True)
+    status = models.PositiveSmallIntegerField(_("status"))
+    duration_ms = models.PositiveIntegerField(_("duration (ms)"), default=0)
+    form_errors = models.CharField(_("fields with errors"), max_length=300, blank=True)
+    error = models.CharField(_("error"), max_length=300, blank=True)
+
+    class Meta:
+        verbose_name = _("user activity")
+        verbose_name_plural = _("user activity")
+        ordering = ["-created_at", "-pk"]
+        indexes = [models.Index(fields=["user", "-created_at"], name="core_activity_user_time")]
+
+    def __str__(self):
+        return f"{self.request_id} {self.method} {self.path} → {self.status}"

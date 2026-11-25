@@ -2,8 +2,9 @@ import hashlib
 import re
 from itertools import groupby
 
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView
@@ -14,12 +15,13 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, models, transaction
 from django.db.models import Prefetch, Q
 from django.db.models.functions import Lower
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponseServerError, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.dateparse import parse_date
+from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.utils.translation import gettext
+from django.utils.translation import get_language, gettext
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -32,7 +34,9 @@ from django.views.generic import (
     View,
 )
 
+from .data_export import export_user_data
 from .forms import (
+    AccountDeleteForm,
     CropForm,
     CultivationForm,
     ErrorReportForm,
@@ -54,7 +58,9 @@ from .models import (
     Field,
     FieldWork,
     Harvest,
+    PrivacyAcceptance,
     Spraying,
+    UserActivity,
 )
 from .services.reports import (
     calculate_totals,
@@ -136,7 +142,11 @@ class RegisterView(FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.save()
+        with transaction.atomic():
+            user = form.save()
+            PrivacyAcceptance.objects.create(
+                user=user, policy_version=settings.PRIVACY_POLICY_VERSION
+            )
         messages.success(
             self.request,
             gettext("Your account has been created. You can log in now."),
@@ -233,6 +243,95 @@ class PasswordChangeView(LoginRequiredMixin, FormView):
         update_session_auth_hash(self.request, user)
         messages.success(self.request, gettext("Your password has been changed."))
         return super().form_valid(form)
+
+
+def text_template(folder):
+    """Long texts (privacy policy, flyer) are a template per language: core/<folder>/<lang>.html."""
+    language = (get_language() or "pl").split("-")[0]
+    if language not in ("pl", "uk", "en"):
+        language = "pl"
+    return f"core/{folder}/{language}.html"
+
+
+class AboutView(TemplateView):
+    """What the app is and what it is for, as a one-page A4 flyer (open to everyone)."""
+
+    template_name = "core/about.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["flyer_text_template"] = text_template("about")
+        context["site_host"] = self.request.get_host()
+        return context
+
+
+class PrivacyPolicyView(TemplateView):
+    """The privacy policy; its text is a separate template per language."""
+
+    template_name = "core/privacy.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            "policy_text_template": text_template("privacy"),
+            "policy_version": settings.PRIVACY_POLICY_VERSION,
+            "controller": settings.PRIVACY_CONTROLLER,
+            "contact_email": settings.PRIVACY_CONTACT_EMAIL,
+            "retention_days": settings.ACTIVITY_RETENTION_DAYS,
+        })
+        return context
+
+
+class DataExportView(LoginRequiredMixin, View):
+    """Downloads all data of the signed-in user as a JSON file (GDPR art. 15, 20)."""
+
+    def get(self, request):
+        data = export_user_data(request.user)
+        filename = f"farmer-app-data-{request.user.pk}-{timezone.localdate():%Y-%m-%d}.json"
+        response = JsonResponse(
+            data, json_dumps_params={"ensure_ascii": False, "indent": 2}
+        )
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
+        response["Cache-Control"] = "no-store"
+        return response
+
+
+class AccountDeleteView(LoginRequiredMixin, FormView):
+    """Deletes the signed-in user's account with all their data (GDPR art. 17).
+
+    Fields (with their cultivations, works, sprayings and harvests), error
+    reports (with their attachment files) and the activity trail go with the
+    user through CASCADE.
+    The shared crop catalog is not personal data and stays.
+    """
+
+    template_name = "core/account_delete.html"
+    form_class = AccountDeleteForm
+    success_url = reverse_lazy("core:home")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["field_count"] = user.fields.count()
+        context["error_report_count"] = user.error_reports.count()
+        return context
+
+    def form_valid(self, form):
+        user = self.request.user
+        with transaction.atomic():
+            # Login attempts are stored by the typed login only, without the user link.
+            UserActivity.objects.filter(user__isnull=True, username=user.get_username()).delete()
+            user.delete()
+        logout(self.request)
+        messages.success(
+            self.request, gettext("Your account and all its data have been deleted.")
+        )
+        return redirect(self.get_success_url())
 
 
 class UniqueConflictMixin:
@@ -972,9 +1071,15 @@ class ErrorReportCreateView(LoginRequiredMixin, CreateView):
             return source
         return ""
 
+    def get_error_code(self):
+        """Request code from the error page (core/500.html), only when it looks like one."""
+        code = self.request.GET.get("code", "")
+        return code if re.fullmatch(r"[0-9a-f]{10}", code) else ""
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["source_page"] = self.get_source_page()
+        context["error_code"] = self.get_error_code()
         return context
 
     def form_valid(self, form):
@@ -982,6 +1087,7 @@ class ErrorReportCreateView(LoginRequiredMixin, CreateView):
         form.instance.status = ErrorReport.Status.NEW
         # The page is kept next to the report, not written into the description.
         form.instance.page = self.get_source_page()[:500]
+        form.instance.error_code = self.get_error_code()
         response = super().form_valid(form)
         messages.success(self.request, gettext("The error report has been created."))
         return response
@@ -1016,3 +1122,21 @@ class ErrorReportAttachmentView(LoginRequiredMixin, View):
         )
         response["Cache-Control"] = "private, no-store"
         return response
+
+
+def server_error(request):
+    """Error 500 page with the request code (core/activity.py), so the user can
+    give it in a report and the log lines of that request can be found."""
+    from django.template import loader
+    from django.utils.translation import get_language
+
+    request_id = getattr(request, "request_id", "")
+    try:
+        # No context processors: they could hit the same broken database.
+        body = loader.render_to_string("core/500.html", {
+            "request": request, "request_id": request_id, "LANGUAGE_CODE": get_language(),
+        })
+    except Exception:  # noqa: BLE001 - the error page itself must not fail
+        body = f"Server error. Error code: {request_id}" if request_id else "Server error."
+        return HttpResponseServerError(body, content_type="text/plain; charset=utf-8")
+    return HttpResponseServerError(body)

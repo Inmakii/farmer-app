@@ -26,6 +26,7 @@ class AuthenticationViewsTests(TestCase):
             "email": "anna@example.com",
             "password1": self.password,
             "password2": self.password,
+            "accept_privacy": "on",
         }
         data.update(overrides)
         return data

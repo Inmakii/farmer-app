@@ -23,8 +23,6 @@ ENFORCED_CSP = override_settings(SECURE_CSP=PRODUCTION_CSP, SECURE_CSP_REPORT_ON
 REPORT_ONLY_CSP = override_settings(SECURE_CSP={}, SECURE_CSP_REPORT_ONLY=PRODUCTION_CSP)
 JSON_RENDERER = "rest_framework.renderers.JSONRenderer"
 BROWSABLE_RENDERER = "rest_framework.renderers.BrowsableAPIRenderer"
-GOOGLE_FONTS_CSS = "https://fonts.googleapis.com"
-GOOGLE_FONTS_FILES = "https://fonts.gstatic.com"
 
 
 def parse_csp(header):
@@ -278,9 +276,12 @@ class SecurityHeadersTests(TestCase):
 
         self.assertEqual(policy["default-src"], ["'self'"])
         self.assertEqual(policy["script-src"], ["'self'"])
-        self.assertEqual(policy["style-src"], ["'self'", GOOGLE_FONTS_CSS])
-        self.assertEqual(policy["font-src"], ["'self'", GOOGLE_FONTS_FILES])
-        self.assertEqual(policy["img-src"], ["'self'", "data:"])
+        self.assertEqual(policy["style-src"], ["'self'"])
+        self.assertEqual(policy["font-src"], ["'self'"])
+        self.assertEqual(policy["img-src"], [
+            "'self'", "data:",
+            "https://tile.openstreetmap.org", "https://mapy.geoportal.gov.pl",
+        ])
         self.assertEqual(policy["object-src"], ["'none'"])
         self.assertEqual(policy["base-uri"], ["'self'"])
         self.assertEqual(policy["form-action"], ["'self'"])
@@ -513,7 +514,7 @@ class InlineCodeCollector(HTMLParser):
                 self.problems.append(f"script from disallowed source {src}")
         elif tag == "link" and "stylesheet" in (attributes.get("rel") or "").split():
             href = attributes.get("href", "")
-            if not (self.is_same_origin(href) or href.startswith(GOOGLE_FONTS_CSS + "/")):
+            if not self.is_same_origin(href):
                 self.problems.append(f"stylesheet from disallowed source {href}")
         elif tag == "img":
             src = attributes.get("src", "")
@@ -644,7 +645,8 @@ class CspCompatibilityTests(TestCase):
         for script in ("core/theme-init.js", "core/theme.js", "core/forms.js"):
             self.assertIn(f'src="{settings.STATIC_URL}{script}"', content)
         self.assertIn(f'href="{settings.STATIC_URL}core/styles.css"', content)
-        self.assertIn(f'href="{GOOGLE_FONTS_CSS}/css2?', content)
+        self.assertIn(f'href="{settings.STATIC_URL}core/vendor/fonts/fonts.css"', content)
+        self.assertNotIn("fonts.googleapis.com", content)
 
     def test_language_switch_still_works(self):
         response = self.client.post(

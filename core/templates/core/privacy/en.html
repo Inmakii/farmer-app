@@ -1,0 +1,63 @@
+{# Privacy policy text in English. Keep pl.html, uk.html and en.html in step; bump PRIVACY_POLICY_VERSION when the meaning changes. #}
+<p class="policy-intro">Farmer App is a farm notebook for your fields, cultivations, works and harvests. This page explains what data about you we keep, why, for how long, and what rights you have under the GDPR (EU Regulation 2016/679).</p>
+
+<h2>1. Who processes your data</h2>
+<p>The data controller is {% if controller %}{{ controller }}{% else %}the author of Farmer App (an educational project){% endif %}.
+For questions about your personal data, write {% if contact_email %}to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>{% else %}through the <a href="{% url 'core:error_report_create' %}">“Report a problem”</a> form (after logging in) with the category “Other”{% endif %}.</p>
+
+<h2>2. What data we keep</h2>
+<div class="table-wrap">
+<table class="policy-table">
+    <thead><tr><th scope="col">Data</th><th scope="col">Why</th><th scope="col">How long</th></tr></thead>
+    <tbody>
+        <tr><td>Account: username, first and last name, email address, password (only as an encrypted hash), sign-up and last login dates</td><td>creating the account and logging in</td><td>until the account is deleted</td></tr>
+        <tr><td>Farm data: fields (name, area, soil, address, coordinates, parcel number), cultivations, works, sprayings, harvests, costs and revenue</td><td>running the app – it is your notebook</td><td>until you delete it or delete the account</td></tr>
+        <tr><td>Error reports with their description and attachments (screenshots, PDFs)</td><td>solving the problem you reported</td><td>until the account is deleted</td></tr>
+        <tr><td>Activity record: time, page opened or form sent, request code, result and names of fields with errors; for logins also the username typed</td><td>finding the cause of a bug you report and protecting accounts from break-ins</td><td>{{ retention_days }} days, then deleted automatically</td></tr>
+        <tr><td>Server logs: the same as above plus the IP address</td><td>security and diagnosing failures</td><td>briefly, as set by the hosting provider</td></tr>
+        <tr><td>Confirmation that you read this policy (version and date)</td><td>showing GDPR compliance</td><td>until the account is deleted</td></tr>
+    </tbody>
+</table>
+</div>
+<p>What you type into forms (such as descriptions and passwords) is <strong>not stored</strong> in the activity record or in the logs. We use no advertising, analytics or tracking, and we do not sell data.</p>
+
+<h2>3. Legal basis</h2>
+<ul>
+    <li>Account, farm data and reports – Art. 6(1)(b) GDPR: they are needed for the app to work as you ask.</li>
+    <li>Activity record, server logs and the lockout after failed logins – Art. 6(1)(f) GDPR: our legitimate interest in account security and fixing bugs.</li>
+</ul>
+
+<h2>4. Who receives the data</h2>
+<p>Other users cannot see your data – only you see your fields and records. The app's administrators can access it when handling reports. The data also reaches the providers the app cannot run without:</p>
+<ul>
+    <li><strong>Render</strong> – the application server (data centre in Frankfurt, EU);</li>
+    <li><strong>TiDB Cloud (PingCAP)</strong> – the database (AWS, Frankfurt, EU).</li>
+</ul>
+<p>These companies are based outside the EU; any transfer of data relies on the safeguards the GDPR provides, such as standard contractual clauses.</p>
+<p>When you add a field we use public map and address services. The server sends <strong>Adresy.app</strong> and <strong>GUGiK ULDK</strong> only the address text or parcel number you typed, with no data about you. Your browser loads map tiles directly from <strong>OpenStreetMap</strong> and the <strong>GUGiK Geoportal</strong>, so these services see your IP address and the area you view. Fonts and all other page files come from our server.</p>
+
+<h2>5. Cookies and browser storage</h2>
+<p>We use only strictly necessary cookies, which need no consent:</p>
+<ul>
+    <li><code>sessionid</code> – keeps you logged in, until you log out or at most 2 weeks;</li>
+    <li><code>csrftoken</code> – protects forms against forgery, up to 1 year;</li>
+    <li><code>django_language</code> – the language you chose, until you close the browser;</li>
+    <li><code>messages</code> – a one-time notice after a form is saved (such as “The field has been added”), removed once shown.</li>
+</ul>
+<p>The theme you choose (light or dark) is kept only in your browser's storage (<code>localStorage</code>) and is not sent to the server.</p>
+
+<h2>6. Your rights</h2>
+<ul>
+    <li><strong>Access and portability</strong> – <a href="{% url 'core:data_export' %}">download all your data</a> as a JSON file (in your profile: “Download my data”).</li>
+    <li><strong>Rectification</strong> – change your details in <a href="{% url 'core:profile_edit' %}">Edit profile</a>, and farm data on its own pages.</li>
+    <li><strong>Erasure (“right to be forgotten”)</strong> – <a href="{% url 'core:account_delete' %}">delete your account</a>; it is deleted at once with all its data and the activity record.</li>
+    <li><strong>Restriction and objection</strong> – write to us (section 1).</li>
+    <li><strong>Complaint</strong> – you can lodge one with the Polish data protection authority, the President of UODO (ul. Stawki 2, 00-193 Warszawa, <a href="https://uodo.gov.pl" rel="noopener">uodo.gov.pl</a>).</li>
+</ul>
+<p>Giving your data is voluntary, but without a username, first and last name, email address and password an account cannot be created. We make no automated decisions about you and do no profiling.</p>
+
+<h2>7. Security</h2>
+<p>The connection to the site is encrypted (HTTPS), passwords are stored as hashes, and the connection to the database is encrypted. After several failed login attempts the account is locked for a while.</p>
+
+<h2>8. Changes to this policy</h2>
+<p>When we change this policy, we update the version date at the top of the page. We announce important changes in the app.</p>

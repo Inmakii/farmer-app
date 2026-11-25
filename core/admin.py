@@ -4,7 +4,7 @@ from django.template.defaultfilters import filesizeformat
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import number_format
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from django.utils.text import Truncator
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
@@ -17,7 +17,9 @@ from .models import (
     Field,
     FieldWork,
     Harvest,
+    PrivacyAcceptance,
     Spraying,
+    UserActivity,
 )
 
 admin.site.site_header = _("Farmer App – administration")
@@ -303,13 +305,53 @@ class ErrorReportAdmin(admin.ModelAdmin):
     list_select_related = ("user",)
     search_fields = ("user__username", "user__email", "description")
     list_filter = ("status", "category", "created_at")
-    readonly_fields = ("page", "created_at", "updated_at")
+    readonly_fields = ("page", "error_code", "created_at", "updated_at", "activity_before_report")
     actions = ("mark_in_progress", "mark_resolved")
     inlines = (ErrorReportAttachmentInline,)
     fieldsets = (
-        (_("Report"), {"fields": ("user", ("category", "status"), "page")}),
+        (_("Report"), {"fields": ("user", ("category", "status"), "page", "error_code")}),
         (_("What the user wrote"), {"fields": ("description",)}),
+        (_("What the user did before the report"), {"fields": ("activity_before_report",)}),
     )
+
+    ACTIVITY_ROWS = 40
+
+    @admin.display(description=_("last actions"))
+    def activity_before_report(self, report):
+        if not report.pk or not report.user_id:
+            return "—"
+        rows = list(
+            UserActivity.objects.filter(user_id=report.user_id, created_at__lte=report.created_at)
+            .order_by("-created_at", "-pk")[: self.ACTIVITY_ROWS]
+        )
+        link = format_html(
+            '<p><a href="{}?user__id__exact={}">{}</a></p>',
+            reverse("admin:core_useractivity_changelist"), report.user_id,
+            gettext("All activity of this user"),
+        )
+        if not rows:
+            return format_html("<p>{}</p>{}", gettext("No recorded activity."), link)
+        body = format_html_join(
+            "", "<tr{}><td>{}</td><td><code>{}</code></td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>",
+            (
+                (
+                    format_html(' class="activity-error"') if a.status >= 400 or a.status == 0 or a.error else "",
+                    timezone.localtime(a.created_at).strftime("%d.%m %H:%M:%S"),
+                    a.request_id, a.method, a.path, a.view_name or "—",
+                    a.status or "—", a.error or a.form_errors or "",
+                )
+                for a in rows
+            ),
+        )
+        head = format_html(
+            "<tr><th>{}</th><th>{}</th><th>{}</th><th>{}</th><th>{}</th><th>{}</th><th>{}</th></tr>",
+            gettext("time"), gettext("request code"), gettext("method"), gettext("address"),
+            gettext("page"), gettext("status"), gettext("errors"),
+        )
+        return format_html(
+            '<p>{}</p><table class="activity-table"><thead>{}</thead><tbody>{}</tbody></table>{}',
+            gettext("Newest first, up to the moment the report was sent."), head, body, link,
+        )
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(super().get_readonly_fields(request, obj))
@@ -345,3 +387,65 @@ class ErrorReportAdmin(admin.ModelAdmin):
     @admin.action(description=_("Mark selected reports as resolved"))
     def mark_resolved(self, request, queryset):
         self.update_status(request, queryset, ErrorReport.Status.RESOLVED)
+
+
+
+@admin.register(UserActivity)
+class UserActivityAdmin(admin.ModelAdmin):
+    """Read-only trail of user requests (core/activity.py). Search by login,
+    user number, request code or address."""
+
+    list_display = (
+        "created_at", "user_cell", "method", "path", "view_name", "status_badge",
+        "duration_ms", "problem",
+    )
+    list_filter = ("method", "status", "created_at")
+    search_fields = ("username", "request_id", "path", "view_name", "error", "form_errors")
+    list_select_related = ("user",)
+    list_per_page = 100
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, may_have_duplicates = super().get_search_results(request, queryset, search_term)
+        term = search_term.strip().lstrip("#")
+        if term.isdigit():
+            queryset |= self.model.objects.filter(user_id=int(term))
+        return queryset, may_have_duplicates
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    @admin.display(description=_("user"), ordering="username")
+    def user_cell(self, activity):
+        if activity.user_id:
+            return two_lines(activity.username or str(activity.user), f"#{activity.user_id}")
+        return two_lines(activity.username or "—", gettext("not signed in"))
+
+    @admin.display(description=_("status"), ordering="status")
+    def status_badge(self, activity):
+        if activity.method == "JS":
+            return badge("TECHNICAL", gettext("browser error"))
+        kind = "RESOLVED" if activity.status < 400 else ("IN_PROGRESS" if activity.status < 500 else "TECHNICAL")
+        return badge(kind, str(activity.status))
+
+    @admin.display(description=_("errors"))
+    def problem(self, activity):
+        return Truncator(activity.error or activity.form_errors).chars(80) or "—"
+
+
+@admin.register(PrivacyAcceptance)
+class PrivacyAcceptanceAdmin(admin.ModelAdmin):
+    """Read-only record of who accepted which privacy policy version and when."""
+
+    list_display = ("user", "policy_version", "accepted_at")
+    list_filter = ("policy_version",)
+    search_fields = ("user__username", "user__email")
+    readonly_fields = ("user", "policy_version", "accepted_at")
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False

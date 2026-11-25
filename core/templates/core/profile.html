@@ -22,6 +22,7 @@
                 <h2 id="profile-data-title">{% translate "Account details" %}</h2>
             </div>
             <dl class="facts">
+                <div><dt>{% translate "Account number" %}</dt><dd>#{{ user.pk }}</dd></div>
                 <div><dt>{% translate "Username" %}</dt><dd>{{ user.username }}</dd></div>
                 <div><dt>{% translate "Email address" %}</dt><dd>{{ user.email|default:"—" }}</dd></div>
                 <div><dt>{% translate "First name" %}</dt><dd>{{ user.first_name|default:"—" }}</dd></div>
@@ -36,8 +37,13 @@
                 <li><a href="{% url 'core:password_change' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-key"/></svg>{% translate "Change password" %}<svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
                 <li><a href="{% url 'core:error_report_list' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bug"/></svg>{% translate "My reports" %}<span class="side-count">{{ error_report_count }}</span><svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
                 <li><a href="{% url 'core:error_report_create' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>{% translate "Create a report" %}<svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+                <li><a href="{% url 'core:data_export' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>{% translate "Download my data" %}<svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+                <li><a href="{% url 'core:privacy' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shield"/></svg>{% translate "Privacy policy" %}<svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
             </ul>
             <p class="note">{% blocktranslate with count=error_report_count %}Number of your reports: {{ count }}{% endblocktranslate %}</p>
+            <ul class="side-links side-links-danger">
+                <li><a href="{% url 'core:account_delete' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg>{% translate "Delete account" %}<svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+            </ul>
         </section>
     </div>
 {% endblock %}

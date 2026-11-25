@@ -1,7 +1,14 @@
 from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
 
-from .geo_views import HouseNumberHintView, LocalityHintView, StreetHintView
+from .activity import client_error_view
+
+from .geo_views import HouseNumberHintView, LocalityHintView, PlaceSearchView, StreetHintView
 from .views import (
+    AboutView,
+    DataExportView,
+    PrivacyPolicyView,
+    AccountDeleteView,
     CropCreateView,
     CropListView,
     CultivationCreateView,
@@ -59,6 +66,10 @@ urlpatterns = [
         PasswordChangeView.as_view(),
         name="password_change",
     ),
+    path("accounts/delete/", AccountDeleteView.as_view(), name="account_delete"),
+    path("accounts/export/", DataExportView.as_view(), name="data_export"),
+    path("privacy/", PrivacyPolicyView.as_view(), name="privacy"),
+    path("about/", AboutView.as_view(), name="about"),
     path("fields/", FieldListView.as_view(), name="field_list"),
     path("fields/add/", FieldCreateView.as_view(), name="field_create"),
     path("fields/<int:pk>/", FieldDetailView.as_view(), name="field_detail"),
@@ -125,4 +136,7 @@ urlpatterns = [
     path("geo/localities/", LocalityHintView.as_view(), name="geo_localities"),
     path("geo/streets/", StreetHintView.as_view(), name="geo_streets"),
     path("geo/numbers/", HouseNumberHintView.as_view(), name="geo_numbers"),
+    path("geo/place/", PlaceSearchView.as_view(), name="geo_place"),
+    # JavaScript errors from the browser (sendBeacon, no CSRF token; only logged).
+    path("log/client/", csrf_exempt(client_error_view), name="client_error"),
 ]

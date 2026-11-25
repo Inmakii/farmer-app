@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Delete account" context "page title" %} – Farmer App{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{% url 'core:profile' %}"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"/></svg>{% translate "Back to profile" %}</a>
+    <div class="sheet confirm confirm-account">
+        <span class="confirm-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg></span>
+        <h1>{% translate "Delete account" %}</h1>
+        <p class="confirm-text">{% blocktranslate with username=user.username %}The account “{{ username }}” and all its data will be deleted permanently.{% endblocktranslate %}</p>
+        <ul class="confirm-list">
+            <li>{% blocktranslate with count=field_count %}Fields: {{ count }}, with their cultivations, works, sprayings and harvests{% endblocktranslate %}</li>
+            <li>{% blocktranslate with count=error_report_count %}Error reports: {{ count }}, with their attachments{% endblocktranslate %}</li>
+            <li>{% translate "your name, email address and password" %}</li>
+            <li>{% translate "the record of your activity in the app" %}</li>
+        </ul>
+        <p class="confirm-note">{% translate "This cannot be undone. Crop types you added stay in the shared catalog, because other users can use them." %}</p>
+        <p class="confirm-note">{% url 'core:data_export' as export_url %}{% blocktranslate %}If you want to keep a copy, <a href="{{ export_url }}">download your data</a> first.{% endblocktranslate %}</p>
+        <form method="post" class="confirm-form" data-busy-form>
+            {% csrf_token %}
+            {% include "core/partials/form_body.html" %}
+            <div class="form-actions">
+                <button class="button button-danger" type="submit" data-confirm-submit data-busy-label="{% translate "Deleting…" %}">{% translate "Delete my account" %}</button>
+                <a class="button button-text" href="{% url 'core:profile' %}">{% translate "Cancel" %}</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

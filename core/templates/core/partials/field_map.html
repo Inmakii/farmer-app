@@ -1,0 +1,37 @@
+{# Map of a field (Leaflet, core/static/core/field-map.js). mode="pick": search, #}
+{# "my location" and a draggable marker that fills the latitude and longitude inputs. #}
+{# mode="view": a small map with the saved point. Needs field_map_scripts.html. #}
+{% load i18n static %}
+<div class="map-picker"
+     data-field-map="{{ mode }}"
+     {% if mode == "view" %}data-lat="{{ field.latitude|stringformat:"s" }}" data-lng="{{ field.longitude|stringformat:"s" }}"{% endif %}
+     data-icon="{% static 'core/vendor/leaflet/images/marker-icon.png' %}"
+     data-icon-2x="{% static 'core/vendor/leaflet/images/marker-icon-2x.png' %}"
+     data-icon-shadow="{% static 'core/vendor/leaflet/images/marker-shadow.png' %}"
+     data-label-map="{% translate "Map" %}"
+     data-label-photo="{% translate "Aerial photo" %}"
+     {% if mode == "pick" %}
+     data-search-url="{% url 'core:geo_place' %}"
+     data-msg-searching="{% translate "Searching…" %}"
+     data-msg-not-found="{% translate "Nothing was found. Try the locality name or move the map yourself." %}"
+     data-msg-unavailable="{% translate "Search is not available right now. Find the field on the map yourself." %}"
+     data-msg-found="{% translate "Found. Now click the exact place of the field on the map." %}"
+     data-msg-locating="{% translate "Finding your location…" %}"
+     data-msg-no-location="{% translate "Your location is not available. Allow location access in the browser or click the map." %}"
+     data-msg-picked="{% translate "Point chosen. You can drag the marker to correct it." %}"
+     hidden
+     {% endif %}>
+    {% if mode == "pick" %}
+        <label class="map-picker-label" for="id_map_search">{% translate "Find the field on the map" %}</label>
+        <div class="map-picker-search">
+            <input id="id_map_search" type="search" data-map-search autocomplete="off"
+                   placeholder="{% translate "Address or locality, e.g. Wiejska 4, Warszawa" %}">
+            <button class="button button-secondary" type="button" data-map-search-button>{% translate "Search" %}</button>
+            <button class="button button-secondary" type="button" data-map-locate>{% translate "My location" %}</button>
+        </div>
+        <div class="map-canvas" data-map-canvas role="application" aria-label="{% translate "Map: click to mark the field" %}"></div>
+        <p class="field-hint map-picker-status" data-map-status aria-live="polite">{% translate "Click the map where the field is. You can drag the marker afterwards; the coordinates fill in by themselves." %}</p>
+    {% else %}
+        <div class="map-canvas map-canvas-small" data-map-canvas role="img" aria-label="{% translate "Map with the location of the field" %}"></div>
+    {% endif %}
+</div>
