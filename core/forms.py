@@ -247,8 +247,8 @@ class FieldForm(forms.ModelForm):
                 "Filled in after choosing the locality, street and number. You can also "
                 "type the address yourself."
             ),
-            "latitude": _("Required for GPS and a point on a map; range -90 to 90."),
-            "longitude": _("Required for GPS and a point on a map; range -180 to 180."),
+            "latitude": _("Required for a point on a map; range -90 to 90."),
+            "longitude": _("Required for a point on a map; range -180 to 180."),
         }
         error_messages = {
             "name": {"required": _("Field name is required.")},
@@ -292,8 +292,8 @@ class FieldForm(forms.ModelForm):
         "parcel_number": (Field.LocationMethod.PARCEL,),
         "parcel_identifier": (Field.LocationMethod.PARCEL,),
         "address": (Field.LocationMethod.ADDRESS,),
-        "latitude": (Field.LocationMethod.GPS, Field.LocationMethod.MAP),
-        "longitude": (Field.LocationMethod.GPS, Field.LocationMethod.MAP),
+        "latitude": (Field.LocationMethod.MAP,),
+        "longitude": (Field.LocationMethod.MAP,),
     }
     # Inputs that get hints from core/geo_views.py.
     HINT_INPUTS = {"locality": "locality", "street": "street", "house_number": "number"}
@@ -446,7 +446,7 @@ class FieldForm(forms.ModelForm):
             self.add_error(
                 "address", gettext("Address is required for this location method.")
             )
-        if location_method in (Field.LocationMethod.GPS, Field.LocationMethod.MAP):
+        if location_method == Field.LocationMethod.MAP:
             if latitude is None:
                 self.add_error(
                     "latitude", gettext("Latitude is required for this location.")

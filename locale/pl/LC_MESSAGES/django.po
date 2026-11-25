@@ -1897,12 +1897,12 @@ msgid "Reports"
 msgstr "Raporty"
 
 #: core\forms.py:185
-msgid "Required for GPS and a point on a map; range -180 to 180."
-msgstr "Wymagana dla GPS i punktu na mapie; zakres od -180 do 180."
+msgid "Required for a point on a map; range -180 to 180."
+msgstr "Wymagana dla punktu na mapie; zakres od -180 do 180."
 
 #: core\forms.py:184
-msgid "Required for GPS and a point on a map; range -90 to 90."
-msgstr "Wymagana dla GPS i punktu na mapie; zakres od -90 do 90."
+msgid "Required for a point on a map; range -90 to 90."
+msgstr "Wymagana dla punktu na mapie; zakres od -90 do 90."
 
 #: core\forms.py:182
 msgid "Required when the location is a parcel."

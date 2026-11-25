@@ -31,7 +31,7 @@ class FieldCrudTests(TestCase):
             name="Tajne Pole Sąsiada",
             area_ha=Decimal("7.00"),
             soil_type=Field.SoilType.SANDY,
-            location_method=Field.LocationMethod.GPS,
+            location_method=Field.LocationMethod.MAP,
             latitude=Decimal("53.100000"),
             longitude=Decimal("18.100000"),
             parcel_identifier="OTHER-456",
@@ -103,7 +103,7 @@ class FieldCrudTests(TestCase):
             name="Pole GPS",
             area_ha=Decimal("3.00"),
             soil_type=Field.SoilType.PEAT,
-            location_method=Field.LocationMethod.GPS,
+            location_method=Field.LocationMethod.MAP,
             latitude=Decimal("52.000000"),
             longitude=Decimal("19.000000"),
         )
@@ -111,7 +111,7 @@ class FieldCrudTests(TestCase):
 
         response = self.client.get(
             reverse("core:field_list"),
-            {"location_method": Field.LocationMethod.GPS},
+            {"location_method": Field.LocationMethod.MAP},
         )
 
         self.assertQuerySetEqual(response.context["fields"], [gps_field])
@@ -161,10 +161,10 @@ class FieldCrudTests(TestCase):
         self.assertIn("address", invalid_form.errors)
         self.assertTrue(valid_form.is_valid(), valid_form.errors)
 
-    def test_gps_location_requires_both_coordinates(self):
+    def test_map_location_requires_both_coordinates(self):
         invalid_form = FieldForm(
             data=self.valid_field_data(
-                location_method=Field.LocationMethod.GPS,
+                location_method=Field.LocationMethod.MAP,
                 address="",
                 latitude="",
                 longitude="",
@@ -173,7 +173,7 @@ class FieldCrudTests(TestCase):
         )
         valid_form = FieldForm(
             data=self.valid_field_data(
-                location_method=Field.LocationMethod.GPS,
+                location_method=Field.LocationMethod.MAP,
                 address="",
                 latitude="52.123456",
                 longitude="18.123456",

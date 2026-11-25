@@ -541,7 +541,7 @@ class CspCompatibilityTests(TestCase):
             name="Pole testowe",
             area_ha=Decimal("4.00"),
             soil_type=Field.SoilType.LOAMY,
-            location_method=Field.LocationMethod.GPS,
+            location_method=Field.LocationMethod.MAP,
             latitude=Decimal("53.100000"),
             longitude=Decimal("18.000000"),
         )

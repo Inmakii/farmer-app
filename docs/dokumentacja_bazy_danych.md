@@ -83,7 +83,7 @@ Rejestr pól rolnych należących do użytkowników.
 | `area_ha` | DECIMAL(10,2) | Tak | CHECK `area_ha > 0` | Powierzchnia pola w hektarach. |
 | `soil_type` | VARCHAR(10) | Tak | wybór Django | Kod gleby: `SANDY`, `CLAY`, `LOAMY`, `SILT`, `PEAT` lub `OTHER`. |
 | `parcel_identifier` | VARCHAR(100) | Nie | pusty ciąg dozwolony | Identyfikator działki ewidencyjnej. |
-| `location_method` | VARCHAR(10) | Tak | wybór Django | Metoda lokalizacji: `ADDRESS`, `GPS`, `MAP` albo `PARCEL`. |
+| `location_method` | VARCHAR(10) | Tak | wybór Django | Metoda lokalizacji: `ADDRESS`, `MAP` (punkt na mapie, współrzędne) albo `PARCEL`. Dawne `GPS` zamienia na `MAP` migracja 0008. |
 | `address` | VARCHAR(255) | Nie | pusty ciąg dozwolony | Adres opisowy pola. |
 | `latitude` | DECIMAL(9,6) | Nie | NULL; walidator −90…90 | Szerokość geograficzna. |
 | `longitude` | DECIMAL(9,6) | Nie | NULL; walidator −180…180 | Długość geograficzna. |
@@ -337,7 +337,7 @@ python manage.py seed_demo_data --username admin
 pobiera istniejącego użytkownika (parametr `--username`, wymagany) i w jednej transakcji przygotowuje dane demonstracyjne dla wszystkich modeli:
 
 - rodzaje upraw ze wspólnego katalogu: Pszenica, Kukurydza, Rzepak i Ziemniaki (istniejące są wykorzystywane bez zmian);
-- trzy pola: `[DEMO] Pole Północne` (12,50 ha, gleba ilasta, GPS), `[DEMO] Pole Południowe` (8,75 ha, gleba piaszczysta, adres w Bydgoszczy) i `[DEMO] Pole przy lesie` (5,20 ha, gleba gliniasta, identyfikator działki);
+- trzy pola: `[DEMO] Pole Północne` (12,50 ha, gleba ilasta, punkt na mapie), `[DEMO] Pole Południowe` (8,75 ha, gleba piaszczysta, adres w Bydgoszczy) i `[DEMO] Pole przy lesie` (5,20 ha, gleba gliniasta, identyfikator działki);
 - cztery uprawy: zakończone ziemniaki (2025) i pszenica (2026), aktywna kukurydza (2026) i planowany rzepak (2027);
 - prace wszystkich rodzajów, opryski we wszystkich jednostkach (l, ml, kg, g) oraz zbiory sprzedane, pozostawione w magazynie i stracone;
 - trzy zgłoszenia błędów o statusach: nowe, w trakcie, rozwiązane.
