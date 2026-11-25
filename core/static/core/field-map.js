@@ -11,7 +11,10 @@
     var METHODS_WITH_MAP = ["GPS", "MAP"];
 
     function layers(root) {
+        // OSM blocks tile requests without a Referer (403 "Access blocked"). The site's
+        // Referrer-Policy is same-origin, so the tiles send just the site's origin.
         var map = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            referrerPolicy: "strict-origin-when-cross-origin",
             maxZoom: 19,
             attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
         });
