@@ -1,4 +1,5 @@
-// Forms: show/hide password and a busy state on submit.
+// Forms: show/hide password, a busy state on submit, location fields and hints,
+// and the confirmation word of account deletion.
 (function () {
     "use strict";
 
@@ -231,11 +232,41 @@
         }
     }
 
+    // Account deletion: the delete button stays off until the confirmation word
+    // is typed (letter case does not matter). The server checks it again.
+    function initConfirmWord() {
+        var inputs = document.querySelectorAll("input[data-confirm-word]");
+        Array.prototype.forEach.call(inputs, function (input) {
+            var button = input.form && input.form.querySelector("[data-confirm-submit]");
+            if (!button) {
+                return;
+            }
+            var word = input.getAttribute("data-confirm-word").toUpperCase();
+            function update() {
+                button.disabled = input.value.trim().toUpperCase() !== word;
+            }
+            input.addEventListener("input", update);
+            window.addEventListener("pageshow", update);
+            update();
+        });
+    }
+
+    // "Print or save as PDF" buttons (the flyer page).
+    function initPrintButtons() {
+        Array.prototype.forEach.call(document.querySelectorAll("[data-print]"), function (button) {
+            button.addEventListener("click", function () {
+                window.print();
+            });
+        });
+    }
+
     function init() {
+        initPrintButtons();
         initPasswordToggles();
         initBusyForms();
         initLocationFields();
         initGeoHints();
+        initConfirmWord();
     }
 
     if (document.readyState === "loading") {

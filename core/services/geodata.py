@@ -208,6 +208,40 @@ def geocode_address(text):
     return {"latitude": _coord(match["lat"]), "longitude": _coord(match["lon"])}
 
 
+def search_place(text):
+    """A point to centre the field map on, for an address or just a locality.
+
+    Unlike geocode_address() this also accepts a low-confidence match: the map
+    only moves there and the user still clicks the exact place of the field.
+    Returns [] or a one-item list with the coordinates, a label and a zoom level.
+    """
+    text = (text or "").strip()
+    if len(text) < 3:
+        return []
+    data = _adresy("match", {"q": text[:255]})
+    results = data.get("results") if isinstance(data, dict) else None
+    if not results:
+        return []
+    first = results[0]
+    match = first.get("match") or {}
+    if first.get("status") not in ("matched", "low_confidence") or match.get("lat") is None:
+        return []
+    street = " ".join(
+        part for part in (match.get("ulica_norm"), match.get("nr_budynku")) if part
+    )
+    parts = []
+    for part in (street, match.get("miejscowosc"), match.get("gmina")):
+        if part and part not in parts:
+            parts.append(part)
+    label = ", ".join(parts)
+    return [{
+        "latitude": str(_coord(match["lat"])),
+        "longitude": str(_coord(match["lon"])),
+        "label": label or text,
+        "zoom": 17 if match.get("nr_budynku") else 14,
+    }]
+
+
 # Parcels ---------------------------------------------------------------------
 
 

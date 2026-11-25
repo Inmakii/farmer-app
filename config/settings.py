@@ -182,14 +182,18 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
 
 # Content Security Policy (django.middleware.csp.ContentSecurityPolicyMiddleware).
 # The templates contain no inline scripts, inline styles or style attributes;
-# the only external resources are Google Fonts. data: images are needed for the
-# SVG background in styles.css.
+# the only external resources are Google Fonts and the map tiles of the field
+# map (OpenStreetMap and the GUGiK orthophoto, see core/static/core/field-map.js).
+# data: images are needed for the SVG background in styles.css.
 _CSP_POLICY = {
     "default-src": [CSP.SELF],
     "script-src": [CSP.SELF],
-    "style-src": [CSP.SELF, "https://fonts.googleapis.com"],
-    "font-src": [CSP.SELF, "https://fonts.gstatic.com"],
-    "img-src": [CSP.SELF, "data:"],
+    "style-src": [CSP.SELF],
+    "font-src": [CSP.SELF],
+    "img-src": [
+        CSP.SELF, "data:",
+        "https://tile.openstreetmap.org", "https://mapy.geoportal.gov.pl",
+    ],
     "connect-src": [CSP.SELF],
     "object-src": [CSP.NONE],
     "base-uri": [CSP.SELF],
@@ -226,6 +230,8 @@ MIDDLEWARE = [
     # Serves the collected static files in production (no separate web server).
     # Placed after the security and CSP middleware so static responses get their headers.
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    # Request code, one log line per request and the user activity trail.
+    'core.activity.RequestLogMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'core.middleware.AdminLanguageMiddleware',
@@ -380,11 +386,57 @@ MEDIA_ROOT = BASE_DIR / "media"
 GEODATA_ENABLED = _env_bool("GEODATA_ENABLED", True)
 ADRESY_API_KEY = os.getenv("ADRESY_API_KEY", "").strip()
 
+# Logs (Render shows the standard output under "Logs"). Every line carries the
+# request code and the user ("[req=3f9a1c2b7d user=42:jan]"), see core/activity.py.
+LOG_LEVEL = os.getenv("DJANGO_LOG_LEVEL", "INFO").strip().upper() or "INFO"
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "request_context": {"()": "core.activity.RequestContextFilter"},
+    },
+    "formatters": {
+        "app": {
+            "format": "%(asctime)s %(levelname)s [req=%(request_id)s user=%(user)s] %(name)s: %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "filters": ["request_context"],
+            "formatter": "app",
+        },
+    },
+    "loggers": {
+        "farmer": {"handlers": ["console"], "level": LOG_LEVEL, "propagate": False},
+        "core": {"handlers": ["console"], "level": LOG_LEVEL, "propagate": False},
+        # Unhandled errors with the full traceback, under the same request code.
+        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": False},
+        "django.security": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+    },
+}
+# User activity (core.models.UserActivity) older than this is removed by
+# `manage.py prune_activity` (run on every start, see docker-entrypoint.sh).
+ACTIVITY_RETENTION_DAYS = _env_non_negative_int("ACTIVITY_RETENTION_DAYS", 30)
+
+# Privacy policy (core/templates/core/privacy/). The version is the date of the
+# current text; it is saved with each user's acceptance at sign-up. Change it
+# when the policy text changes in a way users should know about.
+PRIVACY_POLICY_VERSION = "2026-11-25"
+# Who runs the site (the data controller) and the contact for data questions.
+# Empty values make the policy point to the in-app "Report a problem" form.
+PRIVACY_CONTROLLER = os.getenv("PRIVACY_CONTROLLER", "").strip()
+PRIVACY_CONTACT_EMAIL = os.getenv("PRIVACY_CONTACT_EMAIL", "").strip()
+
 # Speeds up tests: a fast password hasher, only during `manage.py test`.
 if len(sys.argv) > 1 and sys.argv[1] == 'test':
     PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
     # Tests never call the external address and parcel services (core.services.geodata).
     GEODATA_ENABLED = False
+    # Request log lines would fill the test output; tests that check them use assertLogs.
+    for _logger in LOGGING["loggers"].values():
+        _logger["level"] = "CRITICAL"
     # Tests do not run `collectstatic`, so they use plain static file names.
     STORAGES["staticfiles"] = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",

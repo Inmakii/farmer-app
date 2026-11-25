@@ -1,0 +1,26 @@
+{% load i18n static %}<!DOCTYPE html>
+{# Standalone page: it must work even when the error came from the database or a template. #}
+<html lang="{{ LANGUAGE_CODE|default:"pl" }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% translate "Something went wrong" %} – Farmer App</title>
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+<body>
+    <main class="container page-content">
+        <div class="sheet confirm">
+            <h1>{% translate "Something went wrong" %}</h1>
+            <p class="confirm-text">{% translate "The page could not be shown because of an error on our side. Try again in a moment." %}</p>
+            {% if request_id %}
+                <p class="confirm-text">{% translate "Error code" %}: <strong class="error-code">{{ request_id }}</strong></p>
+                <p class="confirm-note">{% translate "If the problem comes back, send us a report. The code helps us find exactly what happened." %}</p>
+            {% endif %}
+            <div class="form-actions">
+                <a class="button" href="{% url 'core:error_report_create' %}?from={{ request.get_full_path|urlencode }}{% if request_id %}&amp;code={{ request_id }}{% endif %}">{% translate "Report a problem" %}</a>
+                <a class="button button-text" href="{% url 'core:home' %}">{% translate "Home page" %}</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

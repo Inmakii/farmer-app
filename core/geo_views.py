@@ -51,3 +51,10 @@ class StreetHintView(GeoHintView):
 class HouseNumberHintView(GeoHintView):
     def lookup(self, params):
         return geodata.list_house_numbers(params.get("sym", ""), params.get("sym_ul", ""))
+
+
+class PlaceSearchView(GeoHintView):
+    """Centre point for the map in the field form (address or locality)."""
+
+    def lookup(self, params):
+        return geodata.search_place(params.get("q", ""))

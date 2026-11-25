@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "About the app" context "page title" %} – Farmer App{% endblock %}
+{% block body_class %}page-flyer{% endblock %}
+
+{% block content %}
+    <header class="page-head flyer-head">
+        <div>
+            <p class="kicker">{% translate "Flyer" %}</p>
+            <h1>{% translate "About the app" %}</h1>
+            <p class="page-head-lead">{% translate "What Farmer App is and what it is for. The page fits on one A4 sheet, so you can print it or save it as a PDF." %}</p>
+        </div>
+        <div class="page-actions">
+            <button class="button" type="button" data-print>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-printer"/></svg>{% translate "Print or save as PDF" %}
+            </button>
+        </div>
+    </header>
+
+    {# A sheet of paper in its own light colours, the same on screen and on print. #}
+    <article class="flyer" aria-label="{% translate "Farmer App flyer" %}">
+        {% include flyer_text_template %}
+    </article>
+{% endblock %}

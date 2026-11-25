@@ -50,6 +50,11 @@ class RegistrationForm(UserCreationForm):
     error_messages = {
         "password_mismatch": _("The passwords do not match."),
     }
+    # The label with the link to the policy is in register.html.
+    accept_privacy = forms.BooleanField(
+        label=_("I have read the privacy policy"),
+        error_messages={"required": _("To create an account, confirm that you have read the privacy policy.")},
+    )
 
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
@@ -156,6 +161,53 @@ class ProfileEditForm(forms.ModelForm):
         if users.exists():
             raise ValidationError(gettext("A user with this email address already exists."))
         return email
+
+
+def account_delete_word():
+    """The word the user types to confirm deleting the account, in their language."""
+    # Translators: typed by the user in capitals to confirm deleting the account.
+    return gettext("DELETE")
+
+
+class AccountDeleteForm(forms.Form):
+    """Deleting the account (right to be forgotten): the password and a typed word,
+    so the account cannot be deleted by one accidental click."""
+
+    password = forms.CharField(
+        label=_("Your password"), strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
+        error_messages={"required": _("Enter your password.")},
+    )
+    confirmation = forms.CharField(
+        label=_("Confirmation"), max_length=50,
+        error_messages={"required": _("Type the confirmation word.")},
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        word = account_delete_word()
+        self.fields["confirmation"].help_text = gettext(
+            "Type the word %(word)s."
+        ) % {"word": word}
+        self.fields["confirmation"].widget.attrs.update({
+            "autocomplete": "off", "autocapitalize": "characters", "spellcheck": "false",
+            "data-confirm-word": word,
+        })
+
+    def clean_password(self):
+        password = self.cleaned_data["password"]
+        if self.user is None or not self.user.check_password(password):
+            raise ValidationError(gettext("The password is incorrect."))
+        return password
+
+    def clean_confirmation(self):
+        typed = self.cleaned_data["confirmation"].strip()
+        if typed.upper() != account_delete_word().upper():
+            raise ValidationError(gettext(
+                "Type %(word)s exactly as shown to confirm."
+            ) % {"word": account_delete_word()})
+        return typed
 
 
 class FieldForm(forms.ModelForm):

@@ -23,8 +23,19 @@
               data-geo-streets="{% url 'core:geo_streets' %}"
               data-geo-numbers="{% url 'core:geo_numbers' %}">
             {% csrf_token %}
-            {% include "core/partials/form_body.html" %}
-            <p class="field-hint">{% translate "Address and parcel hints: Adresy.app (PRG register) and ULDK by GUGiK." %}</p>
+            {% if form.non_field_errors %}
+                <div class="form-alert" role="alert">
+                    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+            {% endif %}
+            {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+            {% for field in form.visible_fields %}
+                {# Latitude and longitude side by side, with the map picker under them. #}
+                {% if field.name == "latitude" %}<div class="field-row">{% endif %}
+                {% include "core/partials/form_field.html" %}
+                {% if field.name == "longitude" %}</div>{% include "core/partials/field_map.html" with mode="pick" %}{% endif %}
+            {% endfor %}
+            <p class="field-hint">{% translate "Address and parcel hints: Adresy.app (PRG register) and ULDK by GUGiK. Map: OpenStreetMap and the GUGiK orthophoto." %}</p>
             <div class="form-actions">
                 <button class="button" type="submit" data-busy-label="{% translate "Saving…" %}">{% translate "Save" %}</button>
                 {% if field %}
@@ -36,3 +47,5 @@
         </form>
     </div>
 {% endblock %}
+
+{% block scripts %}{% include "core/partials/field_map_scripts.html" %}{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Privacy policy" context "page title" %} – Farmer App{% endblock %}
+
+{% block content %}
+    <header class="page-head">
+        <div>
+            <p class="kicker">{% translate "Your data" %}</p>
+            <h1>{% translate "Privacy policy" %}</h1>
+            <p class="page-head-lead">{% blocktranslate with version=policy_version %}Version of {{ version }}{% endblocktranslate %}</p>
+        </div>
+        {% if user.is_authenticated %}
+            <div class="page-actions">
+                <a class="button button-secondary" href="{% url 'core:data_export' %}">
+                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>{% translate "Download my data" %}
+                </a>
+            </div>
+        {% endif %}
+    </header>
+
+    <article class="sheet policy">
+        {% include policy_text_template %}
+    </article>
+{% endblock %}

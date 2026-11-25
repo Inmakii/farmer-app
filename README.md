@@ -6,6 +6,10 @@ Farmer App to studencka aplikacja internetowa dla właścicieli i osób zarządz
 
 - rejestracja, logowanie i bezpieczne wylogowanie przez POST;
 - profil użytkownika, edycja danych i zmiana hasła z zachowaniem sesji;
+- usunięcie konta ze wszystkimi danymi (prawo do bycia zapomnianym, RODO art. 17) po podaniu hasła i wpisaniu słowa „USUŃ”;
+- ulotka „O aplikacji” (`/about/`, PL/UK/EN): czym jest aplikacja i do czego służy, na jednej kartce A4 z przyciskiem „Drukuj lub zapisz jako PDF”; dostępna dla wszystkich, w menu po zalogowaniu i w stopce;
+- RODO: polityka prywatności (`/privacy/`, PL/UK/EN), wymagana akceptacja przy rejestracji (zapisywana z wersją i datą), pobranie wszystkich swoich danych w pliku JSON (RODO art. 15 i 20), czcionki serwowane lokalnie bez Google Fonts;
+- wybór położenia pola na mapie (OpenStreetMap i ortofotomapa GUGiK, Leaflet): wyszukiwanie adresu lub miejscowości, „Moja lokalizacja”, przeciągany znacznik; podgląd punktu na stronie pola i link do Map Google;
 - CRUD własnych pól, upraw sezonowych, prac, oprysków i zbiorów;
 - wspólny katalog „Rodzaje upraw” z możliwością dodawania nowych pozycji przez zalogowanych użytkowników;
 - sezony upraw z zakresu lat 1980–2100;
@@ -46,7 +50,7 @@ Aplikacja obsługuje wyłącznie MySQL — zarówno podczas lokalnego uruchamian
 farmer-app-main/
 ├── config/                       # ustawienia projektu i główne trasy
 ├── core/
-│   ├── management/commands/      # seed_demo_data
+│   ├── management/commands/      # seed_demo_data, seed_crops
 │   ├── migrations/               # migracje aplikacji
 │   ├── services/                 # agregacje raportów finansowych
 │   ├── static/core/              # style CSS i skrypty motywu
@@ -99,7 +103,8 @@ farmer-app-main/
 - katalog jest wspólny dla wszystkich użytkowników i nie należy do konkretnego właściciela;
 - zwykły użytkownik może dodawać pozycje, ale nie może ich edytować ani usuwać;
 - edycja i usuwanie rodzajów upraw pozostają w panelu Django Admin;
-- duplikaty nazw są wykrywane bez uwzględniania wielkości liter, również dla polskich znaków (np. „Łubin” i „łubin”).
+- duplikaty nazw są wykrywane bez uwzględniania wielkości liter, również dla polskich znaków (np. „Łubin” i „łubin”);
+- `python manage.py seed_crops` dodaje ok. 60 popularnych upraw (zboża, oleiste, strączkowe, okopowe, pastewne, warzywa, owoce) z `core/crop_catalog.py`; istniejących pozycji nie zmienia. Na Renderze komenda uruchamia się przy każdym starcie (`docker-entrypoint.sh`).
 
 ## Jasny i ciemny motyw
 
@@ -162,6 +167,7 @@ Aplikacja powinna używać dedykowanego konta `farmer_app_user`, a nie `root`. U
 ```powershell
 python manage.py check
 python manage.py migrate
+python manage.py seed_crops
 python manage.py createsuperuser
 python manage.py runserver --noreload
 ```
@@ -198,6 +204,31 @@ Scenariusz obejmuje wszystkie modele: wspólne rodzaje upraw, trzy pola, uprawy 
 Komenda jest idempotentna. Ponowne uruchomienie dla tego samego użytkownika nie tworzy duplikatów, tylko wykorzystuje istniejące rekordy demonstracyjne. Dla innego użytkownika powstaje jego własny zestaw pól, upraw i zdarzeń, a rodzaje upraw z katalogu są wspólne.
 
 Komenda nie zmienia istniejących rekordów. Jeśli rekord o tych samych danych identyfikujących (np. pole `[DEMO] Pole Północne`) istnieje, ale ma inne wartości, zostaje bez zmian. Komenda wypisuje wtedy ostrzeżenie i pomija go razem z zależnymi danymi demonstracyjnymi. Podsumowanie pokazuje dla każdego modelu faktyczną liczbę rekordów utworzonych, wykorzystanych ponownie i pominiętych.
+
+## Logi i aktywność użytkowników
+
+Każde żądanie dostaje krótki **kod żądania** (nagłówek `X-Request-ID`). Na Renderze (zakładka *Logs*) każde żądanie to jedna linia:
+
+```
+2026-11-24 20:23:46 INFO [req=c41d83cee3 user=42:jan] farmer.requests: POST /fields/add/ (core:field_create) 200 in 54 ms; form errors: area_ha; ip 203.0.113.5
+```
+
+- wyszukiwanie w logach: `user=42:` (wszystko danego użytkownika) albo `req=c41d83cee3` (jedno żądanie, także traceback błędu 500);
+- strona błędu 500 pokazuje kod, a przycisk „Zgłoś problem” dołącza go do zgłoszenia;
+- błędy JavaScript z przeglądarki trafiają do logu jako `Browser error on ...` (`core/static/core/client-log.js`);
+- działania zalogowanych użytkowników zapisują się też w bazie (**Admin → Aktywność użytkowników**, wyszukiwanie po loginie, `#numer`, kodzie lub adresie); na stronie zgłoszenia błędu w adminie widać ostatnie 40 działań autora przed wysłaniem zgłoszenia;
+- nie zapisujemy wartości formularzy ani haseł, tylko nazwy pól z błędami; przy logowaniu zapisywany jest wpisany login;
+- aktywność starsza niż `ACTIVITY_RETENTION_DAYS` (domyślnie 30 dni) jest usuwana przez `python manage.py prune_activity` (uruchamiane przy każdym starcie), a przy usunięciu konta znika razem z nim;
+- poziom logów: `DJANGO_LOG_LEVEL` (domyślnie `INFO`).
+
+## RODO
+
+- **Polityka prywatności** – `/privacy/`, link w stopce i w profilu. Treść jest w szablonach `core/templates/core/privacy/{pl,uk,en}.html` (trzymaj je zgodne). Okres przechowywania aktywności pochodzi z `ACTIVITY_RETENTION_DAYS`.
+- **Administrator i kontakt** – zmienne `PRIVACY_CONTROLLER` (np. imię i nazwisko lub nazwa szkoły) i `PRIVACY_CONTACT_EMAIL`. Bez nich polityka kieruje do formularza „Zgłoś problem”.
+- **Akceptacja przy rejestracji** – checkbox jest wymagany; wersja polityki (`PRIVACY_POLICY_VERSION` w `config/settings.py`) i data trafiają do modelu `PrivacyAcceptance` (podgląd w adminie). Po zmianie treści polityki zmień też wersję.
+- **Pobranie danych** – `/accounts/export/` (profil → „Pobierz moje dane”): konto, pola z uprawami, pracami, opryskami i zbiorami, zgłoszenia, aktywność; bez hasła (`core/data_export.py`).
+- **Usunięcie konta** – usuwa wszystko, także akceptację i aktywność.
+- **Czcionki** – pliki w `core/static/core/vendor/fonts/`, więc przeglądarki nie łączą się z Google; CSP pozwala na style i czcionki tylko z `'self'`.
 
 ## Uwierzytelnianie JWT
 

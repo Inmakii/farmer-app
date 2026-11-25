@@ -1,0 +1,63 @@
+{# Privacy policy text in Polish. Keep pl.html, uk.html and en.html in step; bump PRIVACY_POLICY_VERSION when the meaning changes. #}
+<p class="policy-intro">Farmer App to aplikacja do prowadzenia notatnika gospodarstwa: pól, upraw, zabiegów i zbiorów. Ta strona wyjaśnia, jakie dane o Tobie zapisujemy, po co, jak długo je przechowujemy i jakie masz prawa zgodnie z RODO (rozporządzenie UE 2016/679).</p>
+
+<h2>1. Kto przetwarza Twoje dane</h2>
+<p>Administratorem danych jest {% if controller %}{{ controller }}{% else %}autor aplikacji Farmer App (projekt edukacyjny){% endif %}.
+W sprawach danych osobowych napisz {% if contact_email %}na adres <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>{% else %}przez formularz <a href="{% url 'core:error_report_create' %}">„Zgłoś problem”</a> (po zalogowaniu) z kategorią „Inny”{% endif %}.</p>
+
+<h2>2. Jakie dane zapisujemy</h2>
+<div class="table-wrap">
+<table class="policy-table">
+    <thead><tr><th scope="col">Dane</th><th scope="col">Po co</th><th scope="col">Jak długo</th></tr></thead>
+    <tbody>
+        <tr><td>Konto: login, imię, nazwisko, adres e-mail, hasło (tylko w postaci zaszyfrowanego skrótu), data rejestracji i ostatniego logowania</td><td>założenie konta i logowanie</td><td>do usunięcia konta</td></tr>
+        <tr><td>Dane gospodarstwa: pola (nazwa, powierzchnia, gleba, adres, współrzędne, numer działki), uprawy, prace, opryski, zbiory, koszty i przychody</td><td>działanie aplikacji – to Twój notatnik</td><td>do usunięcia przez Ciebie lub usunięcia konta</td></tr>
+        <tr><td>Zgłoszenia błędów z opisem i załącznikami (zrzuty ekranu, PDF)</td><td>rozwiązanie zgłoszonego problemu</td><td>do usunięcia konta</td></tr>
+        <tr><td>Dziennik aktywności: czas, otwarta strona lub wysłany formularz, kod żądania, wynik i nazwy pól z błędami; przy logowaniu także wpisany login</td><td>znalezienie przyczyny błędu, który zgłosisz, i ochrona przed włamaniem</td><td>{{ retention_days }} dni, potem usuwany automatycznie</td></tr>
+        <tr><td>Logi serwera: te same informacje co wyżej oraz adres IP</td><td>bezpieczeństwo i diagnozowanie awarii</td><td>krótko, według ustawień dostawcy hostingu</td></tr>
+        <tr><td>Potwierdzenie zapoznania się z tą polityką (wersja i data)</td><td>wykazanie zgodności z RODO</td><td>do usunięcia konta</td></tr>
+    </tbody>
+</table>
+</div>
+<p>Treści wpisywanych w formularze (na przykład opisów i haseł) <strong>nie zapisujemy</strong> w dzienniku aktywności ani w logach. Nie używamy reklam, narzędzi analitycznych ani śledzących i nie sprzedajemy danych.</p>
+
+<h2>3. Podstawa prawna</h2>
+<ul>
+    <li>Konto, dane gospodarstwa i zgłoszenia – art. 6 ust. 1 lit. b RODO: są potrzebne, żeby aplikacja działała tak, jak o to prosisz.</li>
+    <li>Dziennik aktywności, logi serwera i blokada po nieudanych logowaniach – art. 6 ust. 1 lit. f RODO: nasz prawnie uzasadniony interes, czyli bezpieczeństwo kont i usuwanie błędów.</li>
+</ul>
+
+<h2>4. Komu przekazujemy dane</h2>
+<p>Danych nie udostępniamy innym użytkownikom – Twoje pola i zapisy widzisz tylko Ty. Dostęp mają administratorzy aplikacji, gdy obsługują zgłoszenia. Dane trafiają też do dostawców, bez których aplikacja nie działa:</p>
+<ul>
+    <li><strong>Render</strong> – serwer aplikacji (centrum danych we Frankfurcie, UE);</li>
+    <li><strong>TiDB Cloud (PingCAP)</strong> – baza danych (AWS, Frankfurt, UE).</li>
+</ul>
+<p>Firmy te mają siedziby poza UE; ewentualne przekazanie danych odbywa się na podstawie mechanizmów przewidzianych w RODO, takich jak standardowe klauzule umowne.</p>
+<p>Przy dodawaniu pola korzystamy z publicznych usług map i adresów. Serwer wysyła do <strong>Adresy.app</strong> i <strong>ULDK GUGiK</strong> tylko wpisany tekst adresu lub numer działki, bez danych o Tobie. Fragmenty mapy Twoja przeglądarka pobiera bezpośrednio z <strong>OpenStreetMap</strong> i <strong>Geoportalu GUGiK</strong>, więc te serwisy widzą Twój adres IP i oglądany obszar. Czcionki i pozostałe pliki strony pochodzą z naszego serwera.</p>
+
+<h2>5. Pliki cookie i pamięć przeglądarki</h2>
+<p>Używamy wyłącznie niezbędnych plików cookie, które nie wymagają zgody:</p>
+<ul>
+    <li><code>sessionid</code> – utrzymuje zalogowanie, do wylogowania lub najdłużej 2 tygodnie;</li>
+    <li><code>csrftoken</code> – chroni formularze przed podszywaniem się, do 1 roku;</li>
+    <li><code>django_language</code> – wybrany język, do zamknięcia przeglądarki;</li>
+    <li><code>messages</code> – jednorazowy komunikat po zapisaniu formularza (na przykład „Pole zostało dodane”), usuwany po wyświetleniu.</li>
+</ul>
+<p>Wybrany motyw (jasny lub ciemny) jest zapisany tylko w pamięci Twojej przeglądarki (<code>localStorage</code>) i nie trafia na serwer.</p>
+
+<h2>6. Twoje prawa</h2>
+<ul>
+    <li><strong>Dostęp do danych i ich przeniesienie</strong> – <a href="{% url 'core:data_export' %}">pobierz wszystkie swoje dane</a> w pliku JSON (w profilu: „Pobierz moje dane”).</li>
+    <li><strong>Sprostowanie</strong> – zmień dane w <a href="{% url 'core:profile_edit' %}">edycji profilu</a>, a dane gospodarstwa na ich stronach.</li>
+    <li><strong>Usunięcie („prawo do bycia zapomnianym”)</strong> – <a href="{% url 'core:account_delete' %}">usuń konto</a>; usuwamy je od razu razem ze wszystkimi danymi i dziennikiem aktywności.</li>
+    <li><strong>Ograniczenie przetwarzania i sprzeciw</strong> – napisz do nas (punkt 1).</li>
+    <li><strong>Skarga</strong> – możesz ją złożyć do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa, <a href="https://uodo.gov.pl" rel="noopener">uodo.gov.pl</a>).</li>
+</ul>
+<p>Podanie danych jest dobrowolne, ale bez loginu, imienia, nazwiska, adresu e-mail i hasła nie da się założyć konta. Nie podejmujemy wobec Ciebie zautomatyzowanych decyzji ani nie profilujemy.</p>
+
+<h2>7. Bezpieczeństwo</h2>
+<p>Połączenie ze stroną jest szyfrowane (HTTPS), hasła są przechowywane jako skróty, a połączenie z bazą danych jest szyfrowane. Po kilku nieudanych próbach logowania konto jest czasowo blokowane.</p>
+
+<h2>8. Zmiany polityki</h2>
+<p>Gdy zmienimy tę politykę, zaktualizujemy datę wersji na górze strony. O ważnych zmianach poinformujemy w aplikacji.</p>

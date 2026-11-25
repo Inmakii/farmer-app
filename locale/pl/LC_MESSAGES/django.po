@@ -3409,5 +3409,250 @@ msgstr "W obrębie %(region)s nie ma działki o tym numerze."
 msgid "This parcel was not found in the land register."
 msgstr "Nie znaleziono tej działki w ewidencji gruntów."
 
-msgid "Address and parcel hints: Adresy.app (PRG register) and ULDK by GUGiK."
-msgstr "Podpowiedzi adresów i działek: Adresy.app (rejestr PRG) i ULDK GUGiK."
+msgid "DELETE"
+msgstr "USUŃ"
+
+msgid "Your password"
+msgstr "Twoje hasło"
+
+msgid "Enter your password."
+msgstr "Wpisz swoje hasło."
+
+msgid "Confirmation"
+msgstr "Potwierdzenie"
+
+msgid "Type the confirmation word."
+msgstr "Wpisz słowo potwierdzenia."
+
+#, python-format
+msgid "Type the word %(word)s."
+msgstr "Wpisz słowo %(word)s."
+
+msgid "The password is incorrect."
+msgstr "Hasło jest nieprawidłowe."
+
+#, python-format
+msgid "Type %(word)s exactly as shown to confirm."
+msgstr "Aby potwierdzić, wpisz %(word)s dokładnie tak, jak pokazano."
+
+msgid "Your account and all its data have been deleted."
+msgstr "Twoje konto i wszystkie jego dane zostały usunięte."
+
+msgctxt "page title"
+msgid "Delete account"
+msgstr "Usuń konto"
+
+msgid "Delete account"
+msgstr "Usuń konto"
+
+#, python-format
+msgid "The account “%(username)s” and all its data will be deleted permanently."
+msgstr "Konto „%(username)s” i wszystkie jego dane zostaną trwale usunięte."
+
+#, python-format
+msgid "Fields: %(count)s, with their cultivations, works, sprayings and harvests"
+msgstr "Pola: %(count)s, razem z uprawami, pracami, opryskami i zbiorami"
+
+#, python-format
+msgid "Error reports: %(count)s, with their attachments"
+msgstr "Zgłoszenia błędów: %(count)s, razem z załącznikami"
+
+msgid "your name, email address and password"
+msgstr "Twoje imię i nazwisko, adres e-mail i hasło"
+
+msgid "This cannot be undone. Crop types you added stay in the shared catalog, because other users can use them."
+msgstr "Tego nie da się cofnąć. Dodane przez Ciebie rodzaje upraw zostaną we wspólnym katalogu, bo mogą z nich korzystać inni użytkownicy."
+
+msgid "Delete my account"
+msgstr "Usuń moje konto"
+
+msgid "Coordinates (latitude, longitude)"
+msgstr "Współrzędne (szerokość, długość)"
+
+msgid "Open in Google Maps"
+msgstr "Otwórz w Mapach Google"
+
+msgid "Map"
+msgstr "Mapa"
+
+msgid "Aerial photo"
+msgstr "Zdjęcie lotnicze"
+
+msgid "Searching…"
+msgstr "Szukam…"
+
+msgid "Nothing was found. Try the locality name or move the map yourself."
+msgstr "Nic nie znaleziono. Wpisz nazwę miejscowości albo przesuń mapę samodzielnie."
+
+msgid "Search is not available right now. Find the field on the map yourself."
+msgstr "Wyszukiwanie jest teraz niedostępne. Znajdź pole na mapie samodzielnie."
+
+msgid "Found. Now click the exact place of the field on the map."
+msgstr "Znaleziono. Teraz kliknij na mapie dokładne miejsce pola."
+
+msgid "Finding your location…"
+msgstr "Ustalam Twoją lokalizację…"
+
+msgid "Your location is not available. Allow location access in the browser or click the map."
+msgstr "Twoja lokalizacja jest niedostępna. Zezwól przeglądarce na dostęp do lokalizacji albo kliknij mapę."
+
+msgid "Point chosen. You can drag the marker to correct it."
+msgstr "Punkt wybrany. Możesz przeciągnąć znacznik, aby go poprawić."
+
+msgid "Find the field on the map"
+msgstr "Znajdź pole na mapie"
+
+msgid "Address or locality, e.g. Wiejska 4, Warszawa"
+msgstr "Adres lub miejscowość, np. Wiejska 4, Warszawa"
+
+msgid "My location"
+msgstr "Moja lokalizacja"
+
+msgid "Map: click to mark the field"
+msgstr "Mapa: kliknij, aby zaznaczyć pole"
+
+msgid "Click the map where the field is. You can drag the marker afterwards; the coordinates fill in by themselves."
+msgstr "Kliknij na mapie miejsce, w którym jest pole. Potem możesz przeciągnąć znacznik; współrzędne uzupełnią się same."
+
+msgid "Map with the location of the field"
+msgstr "Mapa z położeniem pola"
+
+msgid "Address and parcel hints: Adresy.app (PRG register) and ULDK by GUGiK. Map: OpenStreetMap and the GUGiK orthophoto."
+msgstr "Podpowiedzi adresów i działek: Adresy.app (rejestr PRG) i ULDK GUGiK. Mapa: OpenStreetMap i ortofotomapa GUGiK."
+
+msgid "time"
+msgstr "czas"
+
+msgid "request code"
+msgstr "kod żądania"
+
+msgid "method"
+msgstr "metoda"
+
+msgid "duration (ms)"
+msgstr "czas trwania (ms)"
+
+msgid "fields with errors"
+msgstr "pola z błędami"
+
+msgid "error"
+msgstr "błąd"
+
+msgid "errors"
+msgstr "błędy"
+
+msgid "user activity"
+msgstr "aktywność użytkowników"
+
+msgid "error code"
+msgstr "kod błędu"
+
+msgid "username"
+msgstr "nazwa użytkownika"
+
+msgid "What the user did before the report"
+msgstr "Co użytkownik robił przed zgłoszeniem"
+
+msgid "last actions"
+msgstr "ostatnie działania"
+
+msgid "All activity of this user"
+msgstr "Cała aktywność tego użytkownika"
+
+msgid "No recorded activity."
+msgstr "Brak zapisanej aktywności."
+
+msgid "Newest first, up to the moment the report was sent."
+msgstr "Od najnowszych, do chwili wysłania zgłoszenia."
+
+msgid "not signed in"
+msgstr "niezalogowany"
+
+msgid "browser error"
+msgstr "błąd przeglądarki"
+
+msgid "Something went wrong"
+msgstr "Coś poszło nie tak"
+
+msgid "The page could not be shown because of an error on our side. Try again in a moment."
+msgstr "Nie udało się wyświetlić strony z powodu błędu po naszej stronie. Spróbuj ponownie za chwilę."
+
+msgid "Error code"
+msgstr "Kod błędu"
+
+msgid "If the problem comes back, send us a report. The code helps us find exactly what happened."
+msgstr "Jeśli problem się powtórzy, wyślij nam zgłoszenie. Kod pomoże nam dokładnie ustalić, co się stało."
+
+msgid "Home page"
+msgstr "Strona główna"
+
+msgid "it is attached to the report."
+msgstr "zostanie dołączony do zgłoszenia."
+
+msgid "Account number"
+msgstr "Numer konta"
+
+msgid "the record of your activity in the app"
+msgstr "zapis Twojej aktywności w aplikacji"
+
+msgid "I have read the privacy policy"
+msgstr "Potwierdzam zapoznanie się z polityką prywatności"
+
+msgid "To create an account, confirm that you have read the privacy policy."
+msgstr "Aby założyć konto, potwierdź zapoznanie się z polityką prywatności."
+
+msgctxt "page title"
+msgid "Privacy policy"
+msgstr "Polityka prywatności"
+
+msgid "Privacy policy"
+msgstr "Polityka prywatności"
+
+msgid "Your data"
+msgstr "Twoje dane"
+
+#, python-format
+msgid "Version of %(version)s"
+msgstr "Wersja z %(version)s"
+
+msgid "Download my data"
+msgstr "Pobierz moje dane"
+
+#, python-format
+msgid "I have read the <a href=\"%(privacy_url)s\" target=\"_blank\" rel=\"noopener\">privacy policy</a> and know how my data is used."
+msgstr "Potwierdzam zapoznanie się z <a href=\"%(privacy_url)s\" target=\"_blank\" rel=\"noopener\">polityką prywatności</a> i wiem, jak są wykorzystywane moje dane."
+
+#, python-format
+msgid "If you want to keep a copy, <a href=\"%(export_url)s\">download your data</a> first."
+msgstr "Jeśli chcesz zachować kopię, najpierw <a href=\"%(export_url)s\">pobierz swoje dane</a>."
+
+msgid "policy version"
+msgstr "wersja polityki"
+
+msgid "accepted at"
+msgstr "data akceptacji"
+
+msgid "privacy policy acceptance"
+msgstr "akceptacja polityki prywatności"
+
+msgid "privacy policy acceptances"
+msgstr "akceptacje polityki prywatności"
+
+msgctxt "page title"
+msgid "About the app"
+msgstr "O aplikacji"
+
+msgid "About the app"
+msgstr "O aplikacji"
+
+msgid "Flyer"
+msgstr "Ulotka"
+
+msgid "What Farmer App is and what it is for. The page fits on one A4 sheet, so you can print it or save it as a PDF."
+msgstr "Czym jest Farmer App i do czego służy. Strona mieści się na jednej kartce A4, więc możesz ją wydrukować albo zapisać jako PDF."
+
+msgid "Print or save as PDF"
+msgstr "Drukuj lub zapisz jako PDF"
+
+msgid "Farmer App flyer"
+msgstr "Ulotka Farmer App"
