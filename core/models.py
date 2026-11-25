@@ -40,7 +40,6 @@ class Field(models.Model):
 
     class LocationMethod(models.TextChoices):
         ADDRESS = "ADDRESS", _("Address")
-        GPS = "GPS", _("GPS coordinates")
         MAP = "MAP", _("Point on a map")
         PARCEL = "PARCEL", _("Parcel identifier")
 

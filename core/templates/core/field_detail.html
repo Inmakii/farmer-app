@@ -39,7 +39,7 @@
             {% if field.location_method == "ADDRESS" or field.address %}
                 <div><dt>{% translate "Address" %}</dt><dd>{{ field.address|default:"—" }}</dd></div>
             {% endif %}
-            {% if field.location_method == "GPS" or field.location_method == "MAP" or field.latitude is not None or field.longitude is not None %}
+            {% if field.location_method == "MAP" or field.latitude is not None or field.longitude is not None %}
                 {# Latitude and longitude in one row, in the usual "latitude, longitude" order. #}
                 <div class="fact-coords">
                     <dt>{% translate "Coordinates (latitude, longitude)" %}</dt>

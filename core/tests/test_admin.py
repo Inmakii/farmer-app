@@ -289,7 +289,7 @@ class AdminPanelTests(TestCase):
             cultivation = Cultivation.objects.create(
                 field=Field.objects.create(
                     owner=self.farmer, name=f"Pole {index}", area_ha=Decimal("2.00"),
-                    soil_type=Field.SoilType.SANDY, location_method=Field.LocationMethod.GPS,
+                    soil_type=Field.SoilType.SANDY, location_method=Field.LocationMethod.MAP,
                 ),
                 crop=self.crop, season_year=2026, status=Cultivation.Status.PLANNED,
             )

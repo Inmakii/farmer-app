@@ -43,7 +43,7 @@ DEMO_FIELDS = (
             "name": f"{DEMO_MARKER} Pole Północne",
             "area_ha": Decimal("12.50"),
             "soil_type": Field.SoilType.LOAMY,
-            "location_method": Field.LocationMethod.GPS,
+            "location_method": Field.LocationMethod.MAP,
             "address": "",
             "latitude": Decimal("53.123456"),
             "longitude": Decimal("18.123456"),

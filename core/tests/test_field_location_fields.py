@@ -25,8 +25,8 @@ class LocationFieldFormTests(TestCase):
         expected = {
             "parcel_identifier": "PARCEL",
             "address": "ADDRESS",
-            "latitude": "GPS MAP",
-            "longitude": "GPS MAP",
+            "latitude": "MAP",
+            "longitude": "MAP",
         }
         for name, methods in expected.items():
             self.assertEqual(form.fields[name].widget.attrs["data-location-for"], methods)
@@ -77,7 +77,7 @@ class LocationFieldPageTests(TestCase):
 
     def test_detail_still_shows_extra_saved_values(self):
         field = self.create_field(
-            location_method=Field.LocationMethod.GPS, latitude=Decimal("53.1"),
+            location_method=Field.LocationMethod.MAP, latitude=Decimal("53.1"),
             longitude=Decimal("18.1"), parcel_identifier="EXTRA-1",
         )
 
@@ -85,3 +85,31 @@ class LocationFieldPageTests(TestCase):
 
         self.assertIn("EXTRA-1", content)
         self.assertIn("53", content)
+
+
+class GpsMethodRemovedTests(TestCase):
+    """GPS coordinates and a point on a map were the same; only MAP is left."""
+
+    def test_gps_is_not_a_choice(self):
+        self.assertNotIn("GPS", Field.LocationMethod.values)
+        choices = [value for value, _ in FieldForm().fields["location_method"].choices]
+        self.assertNotIn("GPS", choices)
+        self.assertIn("MAP", choices)
+
+    def test_migration_turns_gps_fields_into_map_points(self):
+        from importlib import import_module
+
+        from django.apps import apps
+
+        owner = get_user_model().objects.create_user(username="gps_owner", password="x")
+        field = Field.objects.create(
+            owner=owner, name="Stare pole GPS", area_ha=Decimal("1.00"),
+            soil_type=Field.SoilType.LOAMY, location_method="GPS",
+            latitude=Decimal("53.1"), longitude=Decimal("18.1"),
+        )
+
+        import_module("core.migrations.0008_remove_gps_location_method").gps_to_map(apps, None)
+
+        field.refresh_from_db()
+        self.assertEqual(field.location_method, Field.LocationMethod.MAP)
+        self.assertEqual(field.latitude, Decimal("53.100000"))

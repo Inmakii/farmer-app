@@ -27,7 +27,7 @@ class AccountDeleteTests(TestCase):
         self.crop = Crop.objects.create(name="Pszenica")
         field = Field.objects.create(
             owner=self.user, name="Pole", area_ha=Decimal("1.00"),
-            soil_type=Field.SoilType.LOAMY, location_method=Field.LocationMethod.GPS,
+            soil_type=Field.SoilType.LOAMY, location_method=Field.LocationMethod.MAP,
             latitude=Decimal("52.1"), longitude=Decimal("21.0"),
         )
         Cultivation.objects.create(
@@ -39,7 +39,7 @@ class AccountDeleteTests(TestCase):
         )
         self.other_field = Field.objects.create(
             owner=self.other, name="Pole", area_ha=Decimal("2.00"),
-            soil_type=Field.SoilType.SANDY, location_method=Field.LocationMethod.GPS,
+            soil_type=Field.SoilType.SANDY, location_method=Field.LocationMethod.MAP,
             latitude=Decimal("50"), longitude=Decimal("20"),
         )
         self.client.cookies[settings.LANGUAGE_COOKIE_NAME] = "en"

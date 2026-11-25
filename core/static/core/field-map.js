@@ -1,14 +1,14 @@
 // Field map (Leaflet, vendored in core/vendor/leaflet).
 //  - [data-field-map="pick"] in the field form: search for an address or locality,
 //    "my location", click the map or drag the marker; latitude and longitude
-//    inputs are filled in. Shown only for the GPS and "point on a map" methods.
+//    inputs are filled in. Shown only for the "point on a map" method.
 //  - [data-field-map="view"] on the field page: the saved point.
 // Tiles: OpenStreetMap and the GUGiK orthophoto (both allowed in the CSP img-src).
 (function () {
     "use strict";
 
     var POLAND = [52.07, 19.48];
-    var METHODS_WITH_MAP = ["GPS", "MAP"];
+    var METHODS_WITH_MAP = ["MAP"];
 
     function layers(root) {
         // OSM blocks tile requests without a Referer (403 "Access blocked"). The site's

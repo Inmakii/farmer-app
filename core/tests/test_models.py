@@ -18,7 +18,7 @@ class FarmModelsTests(TestCase):
             name="Pole północne",
             area_ha=Decimal("12.50"),
             soil_type=Field.SoilType.LOAMY,
-            location_method=Field.LocationMethod.GPS,
+            location_method=Field.LocationMethod.MAP,
             latitude=Decimal("52.229676"),
             longitude=Decimal("21.012229"),
         )

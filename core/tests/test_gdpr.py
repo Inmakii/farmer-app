@@ -104,7 +104,7 @@ class DataExportTests(TestCase):
         self.other = users.objects.create_user(username="ola", password=PASSWORD)
         crop = Crop.objects.create(name="Pszenica ozima")
         field = Field.objects.create(owner=self.user, name="Za stodołą", area_ha=Decimal("3.50"),
-                                     soil_type="LOAMY", location_method="GPS",
+                                     soil_type="LOAMY", location_method="MAP",
                                      latitude=Decimal("52.1"), longitude=Decimal("21.0"))
         cultivation = Cultivation.objects.create(field=field, crop=crop, season_year=2026, status="ACTIVE")
         FieldWork.objects.create(cultivation=cultivation, work_type="PLOWING", work_date=date(2026, 3, 1))
