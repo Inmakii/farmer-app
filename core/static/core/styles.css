@@ -639,37 +639,37 @@ tbody tr:hover {
     margin: 0;
 }
 
-/* Narrower screen: logo and buttons in the first row, sections in a scrollable strip below. */
-@media (max-width: 1360px) {
-    .site-header.is-app .nav-shell {
-        position: relative;
-        min-height: 0;
-        display: block;
-        padding-top: 14px;
-    }
+/* Signed-in header: logo and buttons in the first row, the sections in a strip
+   below (scrollable when narrow). Nine sections never fit next to the logo in
+   one row, especially in Ukrainian and English. */
+.site-header.is-app .nav-shell {
+    position: relative;
+    min-height: 0;
+    display: block;
+    padding-top: 14px;
+}
 
-    .site-header.is-app .brand {
-        min-height: 40px;
-    }
+.site-header.is-app .brand {
+    min-height: 40px;
+}
 
-    .site-header.is-app .nav-tools {
-        position: absolute;
-        top: 14px;
-        right: 0;
-    }
+.site-header.is-app .nav-tools {
+    position: absolute;
+    top: 14px;
+    right: 0;
+}
 
-    .site-header.is-app .nav-links {
-        justify-content: flex-start;
-        margin-inline: -10px;
-        padding: 8px 0 6px;
-        overflow-x: auto;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none;
-    }
+.site-header.is-app .nav-links {
+    justify-content: flex-start;
+    margin-inline: -10px;
+    padding: 8px 0 6px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+}
 
-    .site-header.is-app .nav-links::-webkit-scrollbar {
-        display: none;
-    }
+.site-header.is-app .nav-links::-webkit-scrollbar {
+    display: none;
 }
 
 @media (max-width: 900px) {
@@ -712,6 +712,23 @@ tbody tr:hover {
 @media (max-width: 720px) {
     .nav-about {
         display: none;
+    }
+}
+
+/* Visitors' header on a phone: log in, sign up, language and theme leave no
+   room for the name, so only the logo mark shows (the name stays for screen readers). */
+@media (max-width: 560px) {
+    .site-header:not(.is-app) .brand span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    .site-header:not(.is-app) .nav-tools {
+        gap: 4px;
     }
 }
 
